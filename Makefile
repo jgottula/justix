@@ -9,13 +9,14 @@ AS:=nasm
 ASFLAGS:=-fbin -MP -Ox -Wall
 
 
-.PHONY: all clean backup mbr vbr kern
+.PHONY: all clean backup mbr vbr boot kern
 
 # default rule
-all: mbr vbr kern
+all: mbr vbr boot kern
 
 mbr:  bin/mbr.bin
 vbr:  bin/vbr.bin
+boot: bin/boot.bin
 kern: bin/kern.bin
 
 clean:
