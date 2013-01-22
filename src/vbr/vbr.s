@@ -1,6 +1,6 @@
 %include 'common/header.s'
 %include 'common/macro.s'
-%include 'common/fat.s'
+%include 'common/jgfs.s'
 	
 	cpu 386
 	bits 16
