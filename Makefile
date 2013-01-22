@@ -3,11 +3,13 @@
 # The source code of this project is distributed under the terms of the
 # simplified BSD license. See the LICENSE file for details.
 
+TIMESTAMP=$(shell date +'%Y%m%d-%H%M')
+
 AS:=nasm
 ASFLAGS:=-fbin -MP -Ox -Wall
 
 
-.PHONY: all clean mbr vbr kern
+.PHONY: all clean backup mbr vbr kern
 
 # default rule
 all: mbr vbr kern
@@ -18,6 +20,9 @@ kern: bin/kern.bin
 
 clean:
 	rm -rf $(wildcard bin/*) $(wildcard src/*/*.dep)
+
+backup:
+	cd .. && tar -acvf jgsys-$(TIMESTAMP).tar.xz jgsys/
 
 
 # generic binary rule
