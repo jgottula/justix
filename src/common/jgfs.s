@@ -1,9 +1,0 @@
-%define FAT_MD_FLOP_2880 0xf0
-%define FAT_MD_FLOP_1440 0xf0
-%define FAT_MD_FLOP_1200 0xf9
-%define FAT_MD_FLOP_720  0xf9
-%define FAT_MD_FLOP_360  0xfd
-%define FAT_MD_FLOP_320  0xff
-%define FAT_MD_FLOP_180  0xfc
-%define FAT_MD_FLOP_160  0xfe
-%define FAT_MD_FIXED     0xf8
