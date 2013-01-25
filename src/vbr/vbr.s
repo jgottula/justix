@@ -37,13 +37,15 @@ vbr_check_int13_ext:
 	jmp vbr_stop
 	
 vbr_read_jgfs_hdr:
+	mov bp,sp
+	mov si,[bp]
+	
 	push dword 0x00000000         ; block high
 	push dword [si+8]             ; block low
 	push dword JGFS_HDR_OFFSET    ; dest addr (seg:off)
 	push word  0x0001             ; qty blocks
 	push word  BIOS_DADDRPKT_SIZE ; size of packet
 	
-	mov bp,sp
 	inc dword [bp+8]
 	
 	mov dx,[bp+18]
@@ -102,6 +104,7 @@ vbr_check_jgfs_hdr:
 	
 vbr_read_jgfs_rsvd:
 	mov bp,sp
+	
 	mov ax,[JGFS_HDR_OFFSET+JGFS_OFF_S_RSVD]
 	mov [bp+2],ax                ; qty blocks: s_rsvd
 	mov word  [bp+4],BOOT_OFFSET ; dest addr:  0000:8000

@@ -68,8 +68,10 @@ mbr_ready:
 	jmp mbr_stop
 	
 mbr_found_active:
+	push si
+	
 	mov bp,sp
-	mov dx,[bp]
+	mov dx,[bp+2]
 	
 	mov ah,BIOS_DISK_RESET
 	int BIOS_DISK
@@ -84,6 +86,9 @@ mbr_found_active:
 	jmp mbr_stop
 	
 mbr_read_vbr:
+	mov bp,sp
+	mov dx,[bp+2]
+	
 	mov al,0x01
 	mov dh,[si+1]
 	mov cx,[si+2]
@@ -102,6 +107,8 @@ mbr_read_vbr:
 	jmp mbr_stop
 	
 mbr_jump:
+	pop si
+	
 	jmp VBR_OFFSET
 	
 mbr_stop:

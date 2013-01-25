@@ -1,6 +1,12 @@
 	; cx    length
 	; es:bp string
 boot_print_msg:
+	push ax
+	push bx
+	push cx
+	push dx
+	push bp
+	
 	mov bh,0x01
 	
 	push cx
@@ -15,4 +21,9 @@ boot_print_msg:
 	mov ah,BIOS_VID_STR
 	int BIOS_VID
 	
+	pop bp
+	pop dx
+	pop cx
+	pop dx
+	pop bp
 	ret
