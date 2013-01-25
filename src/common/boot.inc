@@ -3,6 +3,14 @@
 %define JGFS_HDR_OFFSET  0x7e00
 %define BOOT_OFFSET      0x8000
 
+%define MBR_SIZE         0x1b8
+%define VBR_SIZE         0x200
+%define BOOT_SIZE        0x1000
+
+%define MBR_ENTRY        0x7c00
+
+%define STACK_ADDR       0x7c00
+
 %define MBR_OFF_PTABLE   0x1b8
 %define MBR_OFF_PART1    0x1be
 %define MBR_OFF_PART2    0x1ce

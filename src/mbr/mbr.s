@@ -19,14 +19,14 @@ mbr_init:
 	mov fs,ax
 	mov gs,ax
 	
-	mov sp,0x7c00
+	mov sp,STACK_ADDR
 	
 	push dx
 	
 .move_mbr:
-	mov si,0x7c00
+	mov si,MBR_ENTRY
 	mov di,MBR_OFFSET
-	mov cx,0x0200
+	mov cx,MBR_SIZE
 	rep movsd
 	
 	jmp 0x0000:mbr_ready
@@ -124,4 +124,4 @@ mbr_data:
 	db `Disk read failed!\r\n`
 	
 mbr_fill:
-	fill_to MBR_OFF_PTABLE,0x00
+	fill_to MBR_SIZE,0x00

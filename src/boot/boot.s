@@ -18,6 +18,7 @@ boot_begin:
 	mov bp,boot_data.msg_hello
 	call boot_print_msg
 	
+boot_find_mem:
 	
 	
 boot_stop:
@@ -34,4 +35,4 @@ boot_data:
 	db `JGSYS BOOT\r\n`
 	
 boot_fill:
-	fill_to 0x1000,0x00
+	fill_to BOOT_SIZE,0x00
