@@ -1,9 +1,8 @@
-%define BIOS_VIDEO  0x10
-%define BIOS_DISK   0x13
-%define BIOS_SERIAL 0x14
-%define BIOS_MISC   0x15
-%define BIOS_KEYBD  0x16
-%define BIOS_RTC    0x17
+%define BIOS_VID_STR 0x13
+
+%define BIOS_DISK_RESET  0x00
+%define BIOS_DISK_STATUS 0x01
+%define BIOS_DISK_READ   0x02
 
 %define BLACK     0b0000
 %define BLUE      0b0001
