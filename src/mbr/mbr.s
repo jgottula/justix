@@ -3,18 +3,16 @@
 %include 'common/bios.s'
 %include 'common/mbr.s'
 	
+%define MBR_OFFSET 0x0c00
+	
 	cpu 386
 	bits 16
 	
-	org 0x7c00
+	org MBR_OFFSET
 	section .text align=1
 	
 mbr_init:
 	cli
-	jmp 0x0000:.adjust_cs
-	
-.adjust_cs:
-	push dx
 	
 	xor ax,ax
 	mov ss,ax
@@ -24,16 +22,37 @@ mbr_init:
 	mov gs,ax
 	
 	mov sp,0x7c00
-	sti
+	
+	push dx
+	
+.move_mbr:
+	mov si,0x7c00
+	mov di,MBR_OFFSET
+	mov cx,0x0200
+	rep movsd
+	
+	jmp 0x0000:mbr_ready
 	
 mbr_ready:
+	sti
+	
+	mov al,0x01
+	
+	mov ah,BIOS_VID_PAGE
+	int BIOS_VID
+	
+	mov bh,0x01
 	mov dx,0x0000
+	
+	mov ah,BIOS_VID_SETCUR
+	int BIOS_VID
+	
 	mov cx,11
 	mov bp,mbr_data.msg_hello
 	call mbr_print_msg
 	
 	mov cx,4
-	mov si,MBR_PART1
+	mov si,(MBR_OFFSET+MBR_PART1)
 	
 .part_loop:
 	mov al,[ds:si]
@@ -44,7 +63,6 @@ mbr_ready:
 	loop .part_loop
 	
 .no_active:
-	mov dx,0x0100
 	mov cx,16
 	mov bp,mbr_data.msg_err_noactive
 	call mbr_print_msg
@@ -52,51 +70,63 @@ mbr_ready:
 	jmp mbr_stop
 	
 mbr_found_active:
-	mov al,1
-	mov dh,[ds:si+1]
-	mov cx,[ds:si+2]
-	mov bx,0x7e00
+	mov bp,sp
+	mov dx,[bp]
+	
+	mov ah,BIOS_DISK_RESET
+	int BIOS_DISK
+	
+	jnc .reset_ok
+	
+.reset_fail:
+	mov cx,17
+	mov bp,mbr_data.msg_err_reset
+	call mbr_print_msg
+	
+	jmp mbr_stop
+	
+.reset_ok:
+	mov al,0x01
+	mov dh,[si+1]
+	mov cx,[si+2]
+	mov bx,0x7c00
 	
 	mov ah,BIOS_DISK_READ
-	int 0x13
+	int BIOS_DISK
 	
 	jnc mbr_jump
 	
 .read_fail:
-	mov dx,0x0100
-	mov cx,14
+	mov cx,16
 	mov bp,mbr_data.msg_err_read
 	call mbr_print_msg
 	
 	jmp mbr_stop
 	
 mbr_jump:
-	pop dx
-	mov dh,[ds:si+1]
-	push dx
-	
-	mov dx,[ds:si+2]
-	push dx
-	
-	jmp 0x7e00
+	jmp 0x7c00
 	
 mbr_stop:
 	cli
 	hlt
 	jmp mbr_stop
 	
-	
-	; params:
-	; cx length
-	; dx row:col
-	; bp src
+	; cx    length
+	; es:bp string
 mbr_print_msg:
-	mov al,0b01 ; mode: advance cursor
-	mov bh,0x00 ; page
+	mov bh,0x01
+	
+	push cx
+	mov ah,BIOS_VID_GETCUR
+	int BIOS_VID
+	pop cx
+	
+	mov al,0x01
+	mov bh,0x01
 	mov bl,BIOS_COLOR(LTGRAY, BLACK)
 	
 	mov ah,BIOS_VID_STR
-	int 0x10
+	int BIOS_VID
 	
 	ret
 	
@@ -106,8 +136,10 @@ mbr_data:
 	db `JGSYS MBR\r\n`
 .msg_err_noactive:
 	db `NO ACTIVE PART\r\n`
+.msg_err_reset:
+	db `DISK RESET FAIL\r\n`
 .msg_err_read:
-	db `READ FAILURE\r\n`
+	db `DISK READ FAIL\r\n`
 	
 mbr_fill:
 	fill_to 0x1b8,0x00
