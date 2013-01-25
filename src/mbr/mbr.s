@@ -1,9 +1,7 @@
-%include 'common/header.s'
-%include 'common/macro.s'
-%include 'common/bios.s'
-%include 'common/mbr.s'
-	
-%define MBR_OFFSET 0x0c00
+%include 'common/header.inc'
+%include 'common/macro.inc'
+%include 'common/boot.inc'
+%include 'common/bios.inc'
 	
 	cpu 386
 	bits 16
@@ -49,23 +47,23 @@ mbr_ready:
 	
 	mov cx,11
 	mov bp,mbr_data.msg_hello
-	call mbr_print_msg
+	call boot_print_msg
 	
 	mov cx,4
-	mov si,(MBR_OFFSET+MBR_PART1)
+	mov si,(MBR_OFFSET+MBR_OFF_PART1)
 	
 .part_loop:
 	mov al,[ds:si]
 	bt ax,7
 	jc mbr_found_active
 	
-	add si,0x10
+	add si,MBR_PART_SIZE
 	loop .part_loop
 	
 .no_active:
-	mov cx,16
+	mov cx,22
 	mov bp,mbr_data.msg_err_noactive
-	call mbr_print_msg
+	call boot_print_msg
 	
 	jmp mbr_stop
 	
@@ -76,20 +74,20 @@ mbr_found_active:
 	mov ah,BIOS_DISK_RESET
 	int BIOS_DISK
 	
-	jnc .reset_ok
+	jnc mbr_read_vbr
 	
 .reset_fail:
-	mov cx,17
+	mov cx,20
 	mov bp,mbr_data.msg_err_reset
-	call mbr_print_msg
+	call boot_print_msg
 	
 	jmp mbr_stop
 	
-.reset_ok:
+mbr_read_vbr:
 	mov al,0x01
 	mov dh,[si+1]
 	mov cx,[si+2]
-	mov bx,0x7c00
+	mov bx,VBR_OFFSET
 	
 	mov ah,BIOS_DISK_READ
 	int BIOS_DISK
@@ -97,49 +95,33 @@ mbr_found_active:
 	jnc mbr_jump
 	
 .read_fail:
-	mov cx,16
+	mov cx,19
 	mov bp,mbr_data.msg_err_read
-	call mbr_print_msg
+	call boot_print_msg
 	
 	jmp mbr_stop
 	
 mbr_jump:
-	jmp 0x7c00
+	jmp VBR_OFFSET
 	
 mbr_stop:
 	cli
 	hlt
 	jmp mbr_stop
 	
-	; cx    length
-	; es:bp string
-mbr_print_msg:
-	mov bh,0x01
 	
-	push cx
-	mov ah,BIOS_VID_GETCUR
-	int BIOS_VID
-	pop cx
-	
-	mov al,0x01
-	mov bh,0x01
-	mov bl,BIOS_COLOR(LTGRAY, BLACK)
-	
-	mov ah,BIOS_VID_STR
-	int BIOS_VID
-	
-	ret
+%include 'common/boot.s'
 	
 	
 mbr_data:
 .msg_hello:
 	db `JGSYS MBR\r\n`
 .msg_err_noactive:
-	db `NO ACTIVE PART\r\n`
+	db `No active partition!\r\n`
 .msg_err_reset:
-	db `DISK RESET FAIL\r\n`
+	db `Disk reset failed!\r\n`
 .msg_err_read:
-	db `DISK READ FAIL\r\n`
+	db `Disk read failed!\r\n`
 	
 mbr_fill:
-	fill_to 0x1b8,0x00
+	fill_to MBR_OFF_PTABLE,0x00

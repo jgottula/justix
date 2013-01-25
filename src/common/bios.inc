@@ -40,3 +40,5 @@
 %define WHITE     0b1111
 
 %define BIOS_COLOR(_fg, _bg) (_fg | (_bg << 4))
+
+%define BIOS_DADDRPKT_SIZE 0x10

@@ -1,9 +1,8 @@
-%include 'common/header.s'
-%include 'common/macro.s'
-%include 'common/bios.s'
-%include 'common/jgfs.s'
-	
-%define VBR_OFFSET 0x7c00
+%include 'common/header.inc'
+%include 'common/macro.inc'
+%include 'common/boot.inc'
+%include 'common/bios.inc'
+%include 'common/jgfs.inc'
 	
 	cpu 386
 	bits 16
@@ -19,12 +18,12 @@ vbr_begin:
 	
 	mov cx,11
 	mov bp,vbr_data.msg_hello
-	call vbr_print_msg
+	call boot_print_msg
 	
 vbr_check_int13_ext:
 	mov bp,sp
 	mov dx,[bp+2]
-	mov bx,0x55aa
+	mov bx,BIOS_BOOT_FLAG
 	
 	mov ah,BIOS_DISK_EXT_CHK
 	int BIOS_DISK
@@ -34,15 +33,15 @@ vbr_check_int13_ext:
 .int13_ext_fail:
 	mov cx,17
 	mov bp,vbr_data.msg_err_ext
-	call vbr_print_msg
+	call boot_print_msg
 	jmp vbr_stop
 	
 vbr_read_jgfs_hdr:
-	push dword 0x00000000 ; block high
-	push dword [si+8]     ; block low
-	push dword 0x00007e00 ; dest addr (seg:off)
-	push word  0x0001     ; qty blocks
-	push word  0x0010     ; size of packet
+	push dword 0x00000000         ; block high
+	push dword [si+8]             ; block low
+	push dword JGFS_HDR_OFFSET    ; dest addr (seg:off)
+	push word  0x0001             ; qty blocks
+	push word  BIOS_DADDRPKT_SIZE ; size of packet
 	
 	mov bp,sp
 	inc dword [bp+8]
@@ -56,13 +55,18 @@ vbr_read_jgfs_hdr:
 	jnc vbr_check_jgfs_hdr
 	
 .read_fail:
-	mov cx,22
+	mov cx,18
+	mov bp,vbr_data.msg_err_read
+	call boot_print_msg
+	
+	mov cx,15
 	mov bp,vbr_data.msg_err_read_hdr
-	call vbr_print_msg
+	call boot_print_msg
+	
 	jmp vbr_stop
 	
 vbr_check_jgfs_hdr:
-	mov si,0x7e00
+	mov si,JGFS_HDR_OFFSET
 	mov di,vbr_data.jgfs
 	mov cx,6
 	
@@ -85,23 +89,23 @@ vbr_check_jgfs_hdr:
 	
 .check_fail_magic:
 	mov bp,vbr_data.msg_err_jgfs_magic
-	mov cx,16
+	mov cx,17
 	jmp .check_fail_common
 	
 .check_fail_version:
 	mov bp,vbr_data.msg_err_jgfs_version
-	mov cx,18
+	mov cx,28
 	
 .check_fail_common:
-	call vbr_print_msg
+	call boot_print_msg
 	jmp vbr_stop
 	
 vbr_read_jgfs_rsvd:
 	mov bp,sp
-	mov ax,[0x7e0a]
-	mov [bp+2],ax           ; qty blocks: s_rsvd
-	mov word  [bp+4],0x8000 ; dest addr:  0000:8000
-	inc dword [bp+8]        ; block low:  +1
+	mov ax,[JGFS_HDR_OFFSET+JGFS_OFF_S_RSVD]
+	mov [bp+2],ax                ; qty blocks: s_rsvd
+	mov word  [bp+4],BOOT_OFFSET ; dest addr:  0000:8000
+	inc dword [bp+8]             ; block low:  +1
 	
 	mov dx,[bp+18]
 	mov si,sp
@@ -112,16 +116,21 @@ vbr_read_jgfs_rsvd:
 	jnc vbr_jump
 	
 .read_fail:
-	mov cx,23
+	mov cx,18
+	mov bp,vbr_data.msg_err_read
+	call boot_print_msg
+	
+	mov cx,17
 	mov bp,vbr_data.msg_err_read_rsvd
-	call vbr_print_msg
+	call boot_print_msg
+	
 	jmp vbr_stop
 	
 vbr_jump:
-	add sp,0x10
+	add sp,BIOS_DADDRPKT_SIZE
 	pop si
 	
-	jmp 0x8000
+	jmp BOOT_OFFSET
 	
 vbr_stop:
 	cli
@@ -129,45 +138,29 @@ vbr_stop:
 	jmp vbr_stop
 	
 	
-	; cx    length
-	; es:bp string
-vbr_print_msg:
-	mov bh,0x01
-	
-	push cx
-	mov ah,BIOS_VID_GETCUR
-	int BIOS_VID
-	pop cx
-	
-	mov al,0x01
-	mov bh,0x01
-	mov bl,BIOS_COLOR(LTGRAY, BLACK)
-	
-	mov ah,BIOS_VID_STR
-	int BIOS_VID
-	
-	ret
+%include 'common/boot.s'
 	
 	
 vbr_data:
 .jgfs:
-	db `JGFS`,0x03,0x00
+	db JGFS_MAGIC,JGFS_VER_MAJOR,JGFS_VER_MINOR
 .msg_hello:
 	db `JGSYS VBR\r\n`
 .msg_err_ext:
-	db `NO INT 0x13 EXT\r\n`
+	db `No LBA support!\r\n`
+.msg_err_read:
+	db `Disk read failed! `
 .msg_err_read_hdr:
-	db `DISK READ FAIL (HDR)\r\n`
+	db `(JGFS header)\r\n`
 .msg_err_read_rsvd:
-	db `DISK READ FAIL (RSVD)\r\n`
+	db `(stage2 loader)\r\n`
 .msg_err_jgfs_magic:
-	db `JGFS NOT FOUND\r\n`
+	db `JGFS not found!\r\n`
 .msg_err_jgfs_version:
-	db `JGFS BAD VERSION\r\n`
+	db `Incompatible JGFS version!\r\n`
 	
 vbr_fill:
-	fill_to 0x1fe,0x00
+	fill_to VBR_OFF_BOOTFLAG,0x00
 	
 vbr_flag:
-	db 0x55
-	db 0xaa
+	dw_be BIOS_BOOT_FLAG
