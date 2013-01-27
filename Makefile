@@ -14,10 +14,10 @@ ASFLAGS:=-fbin -MP -Ox -Wall
 # default rule
 all: mbr vbr boot kern
 
-mbr:  out/bin/mbr
-vbr:  out/bin/vbr
-boot: out/bin/boot
-kern: out/bin/kern
+mbr:  out/bin/mbr  out/hex/mbr
+vbr:  out/bin/vbr  out/hex/vbr
+boot: out/bin/boot out/hex/boot
+kern: out/bin/kern out/hex/kern
 
 clean:
 	rm -rf $(wildcard out/*/*) $(wildcard src/*/*.dep)
@@ -26,7 +26,9 @@ backup:
 	cd .. && tar -acvf jgsys-$(TIMESTAMP).tar.xz jgsys/
 
 
-# generic binary rule
+out/hex/%: out/bin/%
+	xxd -a $^ >$@
+
 out/bin/%: Makefile
 	$(AS) $(ASFLAGS) -dMAPFILE=out/map/$* -o $@ -isrc/ -isrc/$*/ -lout/lst/$* -MD src/$*/$*.dep src/$*/$*.s
 
