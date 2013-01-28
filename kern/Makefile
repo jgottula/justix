@@ -40,7 +40,7 @@ all: kern
 kern: out/kern.bin out/kern.elf out/kern.map out/kern.dump
 
 clean:
-	rm -rf $(wildcard out/*) $(shell find src -type f -iname '*.dep' -or -iname '*.o' -or -iname '*.inc')
+	rm -rf $(wildcard out/*) $(shell find src -type f \( -iname '*.dep' -or -iname '*.o' -or -iname '*.inc' \) )
 
 
 out/kern.dump: out/kern.elf Makefile
