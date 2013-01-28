@@ -39,7 +39,7 @@ clean:
 
 
 out/kern.dump: out/kern.elf Makefile
-	$(OBJDUMP) -xD $< >$@
+	$(OBJDUMP) -CdlsSx -M intel-mnemonic,i386 $< >$@
 
 out/kern.map: out/kern.elf Makefile
 	$(NM) -AClnS $< >$@
