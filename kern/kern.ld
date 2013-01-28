@@ -5,16 +5,16 @@ KERN_OFFSET = 0x00100000;
 SECTIONS {
 	ENTRY(kern_entry)
 	
-	.text.start (KERN_OFFSET) : {
+	.text.init (KERN_OFFSET) : {
 	_INIT_START = .;
 		src/core/init.o(.text)
 	_INIT_END = .;
 	}
 	
 	.text ALIGN (0x1000) : {
-	_INIT_START = .;
+	_TEXT_START = .;
 		*(.text)
-	_INIT_END = .;
+	_TEXT_END = .;
 	}
 	
 	.data ALIGN (0x1000) : {
