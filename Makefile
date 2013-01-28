@@ -21,4 +21,4 @@ clean:
 	$(MAKE) -C kern clean
 
 backup:
-	cd .. && tar -acvf jgsys-$(TIMESTAMP).tar.xz jgsys/
+	cd .. && tar -acvf backup/jgsys-$(TIMESTAMP).tar.xz jgsys/
