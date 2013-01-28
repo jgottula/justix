@@ -1,7 +1,7 @@
-	extern kern_setup_idt
-	
 	cpu 586
 	bits 32
+	
+%include 'core/idt.inc'
 	
 	section .text
 	
