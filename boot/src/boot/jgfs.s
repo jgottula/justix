@@ -99,7 +99,7 @@ boot_jgfs_fat_load:
 	; out:
 	; AX value
 boot_jgfs_fat_read:
-	mov ax,[eax*2+JGFS_FAT_OFFSET]
+	mov ax,[es:eax*2+JGFS_FAT_OFFSET]
 	
 	ret
 	
