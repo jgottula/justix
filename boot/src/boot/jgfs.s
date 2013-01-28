@@ -95,19 +95,12 @@ boot_jgfs_fat_load:
 	
 	
 	; in:
-	; AX addr
+	; EAX addr
 	; out:
 	; AX value
 boot_jgfs_fat_read:
-	push esi
+	mov ax,[eax*2+JGFS_FAT_OFFSET]
 	
-	movzx esi,ax
-	shl esi,1
-	add esi,JGFS_FAT_OFFSET
-	
-	mov ax,[es:esi]
-	
-	pop esi
 	ret
 	
 	
