@@ -180,22 +180,6 @@ boot_mem_e881_e801:
 	stc
 	ret
 	
-	; CF clear on success
-boot_mem_88:
-	
-	
-.done:
-	;mov cx,20
-	;xor eax,eax
-	;rep stosd
-	
-	clc
-	ret
-	
-.fail:
-	stc
-	ret
-	
 boot_mem_dump_map:
 	push si
 	push eax

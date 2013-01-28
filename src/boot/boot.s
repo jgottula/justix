@@ -2,6 +2,7 @@
 %include 'common/macro.inc'
 %include 'common/boot.inc'
 %include 'common/bios.inc'
+%include 'common/gdt.inc'
 %include 'common/jgfs.inc'
 	
 	cpu 386
@@ -50,17 +51,16 @@ boot_enable_a20:
 	jmp boot_stop
 	
 boot_find_mem:
-	;call boot_mem_e820
-	;jnc boot_go_unreal
+	call boot_mem_e820
+	jnc .mem_done
 	
 	call boot_mem_int12
 	jc .mem_fail
 	
 	call boot_mem_e881_e801
-	jnc boot_go_unreal
+	jnc .mem_done
 	
-	call boot_mem_88
-	jnc boot_go_unreal
+	; not implemented: int 0x15 ah=0x88
 	
 .mem_fail:
 	mov cx,34
@@ -69,11 +69,15 @@ boot_find_mem:
 	
 	jmp boot_stop
 	
-boot_go_unreal:
+.mem_done:
 	call boot_mem_dump_map
 	
+boot_go_unreal:
+	call boot_enter_unreal
 	
-	
+	mov bx,0x0f01
+	mov eax,0x000b9000
+	mov [fs:eax],bx
 	
 boot_stop:
 	cli
@@ -83,6 +87,7 @@ boot_stop:
 	
 %include 'boot/a20.s'
 %include 'boot/mem.s'
+%include 'boot/unreal.s'
 	
 	
 %define BOOT_CODE_PRINT_CHR
