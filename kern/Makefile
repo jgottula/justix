@@ -6,7 +6,7 @@
 PREFIX:=/usr/lib/cross-i586-elf/i586-elf/bin
 
 AS:=nasm
-CC:=i586-elf-gcc
+CC:=ccache i586-elf-gcc
 
 LD     :=$(PREFIX)/ld
 OBJCOPY:=$(PREFIX)/objcopy
