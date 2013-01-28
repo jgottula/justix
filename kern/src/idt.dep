@@ -1,4 +1,0 @@
-src/idt.o: src/idt.s
-
-src/idt.s:
-

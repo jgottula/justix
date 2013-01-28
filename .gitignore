@@ -1,5 +1,7 @@
 *.sublime-*
 *.dep
+*.o
+kern/src/*/*.inc
 boot/out/
 kern/out/
 test/*.img

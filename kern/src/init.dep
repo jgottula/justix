@@ -1,4 +1,0 @@
-src/init.o: src/init.s
-
-src/init.s:
-
