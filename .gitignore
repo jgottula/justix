@@ -1,3 +1,5 @@
 *.sublime-*
-out/
-src/*/*.dep
+*.dep
+boot/out/
+kern/out/
+test/*.img
