@@ -1,9 +1,11 @@
 #ifdef __ASSEMBLY__
 
-extern kern_setup_idt
+%ifndef JGSYS_KERN_CORE_IDT
+extern idt_setup
+%endif
 
 #else
 
-extern void kern_setup_idt;
+
 
 #endif

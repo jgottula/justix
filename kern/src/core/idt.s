@@ -1,61 +1,36 @@
-	global kern_setup_idt
-kern_setup_idt:
-	lidt [idt.info]
+%define JGSYS_KERN_CORE_IDT
+%include 'common/header.inc'
+%include 'core/idt.inc'
+%include 'core/exception.inc'
+	
+	section .text
+	
+	global idt_setup:function
+idt_setup:
+	mov eax,0x0d
+	mov ebx,trap_gpf
+	call idt_setup_trap
+	
+	lidt [idt_table.info]
 	
 	ret
 	
-isr_doublefault:
+idt_setup_trap:
+	mov word [idt_table+eax*8],bx
+	mov word [idt_table+eax*8+2],0x10
+	mov byte [idt_table+eax*8+4],0x00
+	mov byte [idt_table+eax*8+5],0b10001111
+	shr ebx,16
+	mov word [idt_table+eax*8+6],bx
 	
-	iret
+	ret
 	
-isr_gpfault:
 	
-	iret
+	section .data
 	
-idt:
-.int00: dq 0
-.int01: dq 0
-.int02: dq 0
-.int03: dq 0
-.int04: dq 0
-.int05: dq 0
-.int06: dq 0
-.int07: dq 0
-.int08:
-	dw ((isr_doublefault-$$) & 0xffff)
-	dw 0x10
-	db 0x00
-	db 0b10001111
-	dw (((isr_doublefault-$$) >> 16) & 0xffff)
-.int09: dq 0
-.int0a: dq 0
-.int0b: dq 0
-.int0c: dq 0
-.int0d:
-	dw ((isr_gpfault-$$) & 0xffff)
-	dw 0x10
-	db 0x00
-	db 0b10001111
-	dw (((isr_gpfault-$$) >> 16) & 0xffff)
-.int0e: dq 0
-.int0f: dq 0
-.int10: dq 0
-.int11: dq 0
-.int12: dq 0
-.int13: dq 0
-.int14: dq 0
-.int15: dq 0
-.int16: dq 0
-.int17: dq 0
-.int18: dq 0
-.int19: dq 0
-.int1a: dq 0
-.int1b: dq 0
-.int1c: dq 0
-.int1d: dq 0
-.int1e: dq 0
-.int1f: dq 0
-.end:
+	global idt_table:data
+idt_table:
+	times 0x100 dq 0
 .info:
-	dw (.end-idt)-1
-	dd idt
+	dw ((.info-idt_table)-1)
+	dd idt_table
