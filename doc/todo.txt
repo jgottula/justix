@@ -1,0 +1,21 @@
+todo list
+
+kern:
+- init tasks
+  - gdt
+  - idt
+  - load segment registers
+  - set up the stack
+  - enable interrupts
+- write exception handlers
+- vga output
+- serial output
+  - get this working on helium
+  - check that remserial works
+  - get minicom set up nicely
+- gdb serial support
+- paging
+- atapi
+
+features that would be cool:
+- self-update (read serial, write to zipdisk)
