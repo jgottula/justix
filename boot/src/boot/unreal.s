@@ -50,5 +50,5 @@ unreal_gdt:
 	db (KERN_OFFSET >> 24) & 0xff
 .end:
 .info:
-	dw (.end-.null)-1
+	dw (.end-unreal_gdt)-1
 	dd unreal_gdt

@@ -1,0 +1,18 @@
+out/bin/mbr: src/mbr/mbr.s src/common/header.inc \
+  src/common/macro.inc src/common/boot.inc src/common/bios.inc \
+  src/common/video.inc src/common/boot.s
+
+src/mbr/mbr.s:
+
+src/common/header.inc:
+
+src/common/macro.inc:
+
+src/common/boot.inc:
+
+src/common/bios.inc:
+
+src/common/video.inc:
+
+src/common/boot.s:
+

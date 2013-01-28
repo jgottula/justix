@@ -1,0 +1,34 @@
+out/bin/boot: src/boot/boot.s src/common/header.inc \
+  src/common/macro.inc src/common/boot.inc src/common/bios.inc \
+  src/common/video.inc src/common/gdt.inc src/common/jgfs.inc \
+  src/boot/a20.s src/boot/mem.s src/boot/unreal.s \
+  src/boot/jgfs.s src/common/boot.s src/common/string.s
+
+src/boot/boot.s:
+
+src/common/header.inc:
+
+src/common/macro.inc:
+
+src/common/boot.inc:
+
+src/common/bios.inc:
+
+src/common/video.inc:
+
+src/common/gdt.inc:
+
+src/common/jgfs.inc:
+
+src/boot/a20.s:
+
+src/boot/mem.s:
+
+src/boot/unreal.s:
+
+src/boot/jgfs.s:
+
+src/common/boot.s:
+
+src/common/string.s:
+
