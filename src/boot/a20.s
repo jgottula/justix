@@ -39,11 +39,13 @@ boot_test_a20:
 	sti
 	ret
 	
+	
 boot_enable_a20_bios:
 	mov ax,BIOS_SYS_A20_ENABLE
 	int 0x15
 	
 	ret
+	
 	
 boot_enable_a20_fast:
 	in al,0x92
@@ -51,6 +53,7 @@ boot_enable_a20_fast:
 	out 0x92,al
 	
 	ret
+	
 	
 boot_enable_a20_8042:
 	; not implemented

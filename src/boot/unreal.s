@@ -1,6 +1,5 @@
 	; out:
-	; FS flat 32-bit segment
-	; GS flat 32-bit segment
+	; ES flat 32-bit segment
 boot_enter_unreal:
 	cli
 	
@@ -8,8 +7,7 @@ boot_enter_unreal:
 	mov fs,ax
 	mov gs,ax
 	
-	push fs
-	push gs
+	push es
 	
 	lgdt [unreal_gdt.info]
 	
@@ -20,18 +18,17 @@ boot_enter_unreal:
 	
 	; set fs and gs to descriptor 1
 	mov bx,0x08
-	mov fs,bx
-	mov gs,bx
+	mov es,bx
 	
 	; leave protected mode
 	and al,~0x01
 	mov cr0,eax
 	
-	pop gs
-	pop fs
+	pop es
 	
 	sti
 	ret
+	
 	
 unreal_gdt:
 .null:

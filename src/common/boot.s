@@ -5,7 +5,7 @@ boot_print_chr:
 	push bx
 	
 	mov bh,0x01
-	mov bl,BIOS_COLOR(LTGRAY, BLACK)
+	mov bl,COLOR(LTGRAY, BLACK)
 	
 	mov ah,BIOS_VID_TELETYPE
 	int 0x10
@@ -14,7 +14,8 @@ boot_print_chr:
 	pop ax
 	ret
 %endif
-
+	
+	
 %ifdef BOOT_CODE_PRINT_STR
 	; CX    length
 	; ES:BP string
@@ -30,7 +31,7 @@ boot_print_str:
 	
 	mov al,0x01
 	mov bh,0x01
-	mov bl,BIOS_COLOR(LTGRAY, BLACK)
+	mov bl,COLOR(LTGRAY, BLACK)
 	
 	mov ah,BIOS_VID_STR
 	int 0x10
@@ -38,7 +39,8 @@ boot_print_str:
 	popa
 	ret
 %endif
-
+	
+	
 %ifdef BOOT_CODE_PRINT_HEX
 	; EAX dword
 boot_print_dword:
@@ -52,6 +54,7 @@ boot_print_dword:
 	
 	ret
 	
+	
 	; AX word
 boot_print_word:
 	push ax
@@ -64,6 +67,7 @@ boot_print_word:
 	
 	ret
 	
+	
 	; AL byte
 boot_print_byte:
 	push ax
@@ -75,6 +79,7 @@ boot_print_byte:
 	call boot_print_nibble
 	
 	ret
+	
 	
 	; AL nibble
 boot_print_nibble:
@@ -95,7 +100,8 @@ boot_print_nibble:
 	pop ax
 	ret
 %endif
-
+	
+	
 %ifdef BOOT_CODE_LBA_TO_CHS
 	; in:
 	; EAX lba

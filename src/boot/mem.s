@@ -37,6 +37,7 @@ boot_mem_e820:
 	stc
 	ret
 	
+	
 	; CF clear on success
 boot_mem_int12:
 	mov di,MEM_MAP_OFFSET
@@ -79,6 +80,7 @@ boot_mem_int12:
 .fail:
 	stc
 	ret
+	
 	
 	; CF clear on success
 boot_mem_e881_e801:
@@ -179,6 +181,7 @@ boot_mem_e881_e801:
 .fail:
 	stc
 	ret
+	
 	
 boot_mem_dump_map:
 	push si

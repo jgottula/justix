@@ -2,6 +2,7 @@
 %include 'common/macro.inc'
 %include 'common/boot.inc'
 %include 'common/bios.inc'
+%include 'common/video.inc'
 %include 'common/gdt.inc'
 %include 'common/jgfs.inc'
 	
@@ -12,23 +13,21 @@
 	section .text align=1
 	
 	; from the vbr:
+	; CH heads/cylinder
+	; CL sectors/track
 	; DL boot disk
 	; SI partition entry
 boot_begin:
-	push dx
-	push si
+	mov [boot_data.param_head],ch
+	mov [boot_data.param_sect],cl
+	
+	mov [boot_data.boot_disk],dx
+	mov [boot_data.boot_part_entry],si
 	
 	mov cx,12
 	mov bp,boot_data.msg_hello
 	call boot_print_str
 	
-	; TODO:
-	; - enable A20 gate
-	; - query memory
-	; - enter unreal mode
-	; - load the kernel
-	; - go to protected mode
-	; - jump to the kernel
 boot_enable_a20:
 	call boot_test_a20
 	jnc boot_find_mem
@@ -72,12 +71,78 @@ boot_find_mem:
 .mem_done:
 	call boot_mem_dump_map
 	
-boot_go_unreal:
+boot_load_kernel:
 	call boot_enter_unreal
 	
-	mov bx,0x0f01
-	mov eax,0x000b9000
-	mov [fs:eax],bx
+	call boot_jgfs_fat_load
+	jnc .fat_load_ok
+	
+.fat_load_fail:
+	mov cx,25
+	mov bp,boot_data.msg_err_jgfs_fat
+	call boot_print_str
+	
+	jmp boot_stop
+	
+.fat_load_ok:
+	movzx eax,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_ROOT_DE+JGFS_DE_OFF_BEGIN]
+	mov edi,JGFS_CLUST_OFFSET
+	
+	call boot_jgfs_read_clust
+	jnc .root_clust_ok
+	
+.root_clust_fail:
+	mov cx,38
+	mov bp,boot_data.msg_err_jgfs_root_dc
+	call boot_print_str
+	
+	jmp boot_stop
+	
+.root_clust_ok:
+	mov ebp,boot_data.kern_filename
+	call boot_jgfs_lookup_child
+	
+	jnc .found_kern
+	
+.not_found:
+	mov cx,28
+	mov bp,boot_data.msg_err_jgfs_kern_lookup
+	call boot_print_str
+	
+	jmp boot_stop
+	
+.found_kern:
+	mov ax,[ebp+JGFS_DE_OFF_TYPE]
+	cmp ax,JGFS_TYPE_FILE
+	
+	je .type_ok
+	
+.type_fail:
+	mov cx,27
+	mov bp,boot_data.msg_err_jgfs_kern_type
+	call boot_print_str
+	
+	jmp boot_stop
+	
+.type_ok:
+	mov esi,ebp
+	mov edi,KERN_OFFSET
+	
+	call boot_jgfs_read_file
+	
+	jnc boot_enter_kernel
+	
+.load_fail:
+	mov cx,28
+	mov bp,boot_data.msg_err_jgfs_kern_load
+	call boot_print_str
+	
+	jmp boot_stop
+	
+boot_enter_kernel:
+	
+	
+	jmp KERN_OFFSET
 	
 boot_stop:
 	cli
@@ -88,6 +153,8 @@ boot_stop:
 %include 'boot/a20.s'
 %include 'boot/mem.s'
 %include 'boot/unreal.s'
+%include 'boot/jgfs.s'
+%include 'boot/prot.s'
 	
 	
 %define BOOT_CODE_PRINT_CHR
@@ -95,6 +162,7 @@ boot_stop:
 %define BOOT_CODE_PRINT_HEX
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
+%include 'common/string.s'
 	
 	
 boot_data:
@@ -104,6 +172,26 @@ boot_data:
 	db `A20 gate could not be enabled!\r\n`
 .msg_err_mem:
 	db `Could not get system memory map!\r\n`
+.msg_err_jgfs_fat:
+	db `Could not load the FAT!\r\n`
+.msg_err_jgfs_root_dc:
+	db `Could not load the root dir cluster!\r\n`
+.msg_err_jgfs_kern_lookup:
+	db `Could not find the kernel!\r\n`
+.msg_err_jgfs_kern_type:
+	db `The kernel is not a file!\r\n`
+.msg_err_jgfs_kern_load:
+	db `Could not load the kernel!\r\n`
+.kern_filename:
+	db `kern\0`
+.boot_disk:
+	db 0x00
+.boot_part_entry:
+	dw 0x0000
+.param_sect:
+	db 0x00
+.param_head:
+	db 0x00
 	
 boot_fill:
 	fill_to BOOT_SIZE,0x00

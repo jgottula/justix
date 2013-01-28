@@ -2,6 +2,7 @@
 %include 'common/macro.inc'
 %include 'common/boot.inc'
 %include 'common/bios.inc'
+%include 'common/video.inc'
 	
 	cpu 386
 	bits 16

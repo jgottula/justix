@@ -2,6 +2,7 @@
 %include 'common/macro.inc'
 %include 'common/boot.inc'
 %include 'common/bios.inc'
+%include 'common/video.inc'
 %include 'common/jgfs.inc'
 	
 	cpu 386
@@ -106,7 +107,7 @@ vbr_read_jgfs_rsvd:
 	
 	call boot_lba_to_chs
 	
-	mov ax,[JGFS_HDR_OFFSET+JGFS_OFF_S_RSVD]
+	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
 	
 	mov bx,BOOT_OFFSET
 	
@@ -127,6 +128,9 @@ vbr_read_jgfs_rsvd:
 	jmp vbr_stop
 	
 vbr_jump:
+	mov ch,[vbr_data.param_head]
+	mov cl,[vbr_data.param_sect]
+	
 	jmp BOOT_OFFSET
 	
 vbr_stop:
