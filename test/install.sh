@@ -31,7 +31,7 @@ if [[ "$1" == "mount="* ]]; then
 fi
 
 echo "Running make first..."
-make all
+make all || exit 1
 
 echo "Writing MBR to $DEV"
 dd if=boot/out/bin/mbr of="$DEV" bs=440 count=1
