@@ -27,7 +27,7 @@ backup:
 
 
 out/hex/%: out/bin/%
-	xxd -a $^ >$@
+	xxd -a $^ $@
 
 out/bin/%: Makefile
 	$(AS) $(ASFLAGS) -dMAPFILE=out/map/$* -o $@ -isrc/ -isrc/$*/ -lout/lst/$* -MD src/$*/$*.dep src/$*/$*.s
