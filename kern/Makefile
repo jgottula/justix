@@ -50,7 +50,7 @@ out/kern.map: out/kern.elf Makefile
 	$(NM) -ACnS $< >$@
 
 out/kern.bin: out/kern.elf kern.ld Makefile
-	$(OBJCOPY) -O binary $< $@
+	$(OBJCOPY) -S -O binary $< $@
 
 out/kern.elf: $(OBJ_ALL) Makefile
 	$(LD) $(LDFLAGS) -o $@ $(OBJ_ALL)
