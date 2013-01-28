@@ -189,7 +189,7 @@ boot_jgfs_read_file:
 	
 .read_loop:
 	call boot_jgfs_read_clust
-	jc .read_fail
+	jc .done
 	
 	add edi,ecx
 	
@@ -198,14 +198,8 @@ boot_jgfs_read_file:
 	cmp ax,JGFS_FAT_EOF
 	jne .read_loop
 	
-.read_ok:
 	clc
 	
-	popad
-	ret
-	
-.read_fail:
-	stc
-	
+.done:
 	popad
 	ret

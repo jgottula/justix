@@ -34,13 +34,20 @@ unreal_gdt:
 .null:
 	dd 0x00000000
 	dd 0x00000000
-.flat:
+.data:
 	dw 0xffff
 	dw 0x0000
 	db 0x00
 	db GDT_ACC_PR | 0x10 | GDT_ACC_RW
 	db 0x0f | GDT_FL_GR | GDT_FL_SZ
 	db 0x00
+.code:
+	dw 0xffff
+	dw (KERN_OFFSET & 0xffff)
+	db (KERN_OFFSET >> 16) & 0xff
+	db GDT_ACC_PR | 0x10 | GDT_ACC_EX | GDT_ACC_RW
+	db 0x0f | GDT_FL_GR | GDT_FL_SZ
+	db (KERN_OFFSET >> 24) & 0xff
 .end:
 .info:
 	dw (.end-.null)-1

@@ -140,9 +140,15 @@ boot_load_kernel:
 	jmp boot_stop
 	
 boot_enter_kernel:
+	cli
 	
+	; enter protected mode
+	mov eax,cr0
+	or al,0x01
+	mov cr0,eax
 	
-	jmp KERN_OFFSET
+	; long jump into the kernel
+	jmp 0x10:0x0000
 	
 boot_stop:
 	cli
@@ -154,7 +160,6 @@ boot_stop:
 %include 'boot/mem.s'
 %include 'boot/unreal.s'
 %include 'boot/jgfs.s'
-%include 'boot/prot.s'
 	
 	
 %define BOOT_CODE_PRINT_CHR
