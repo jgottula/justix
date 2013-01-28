@@ -1,6 +1,6 @@
 %define JGFS_MAGIC          `JGFS`
 %define JGFS_VER_MAJOR        0x03
-%define JGFS_VER_MINOR        0x00
+%define JGFS_VER_MINOR        0x01
 
 %define JGFS_HDR_OFF_S_TOTAL 0x006
 %define JGFS_HDR_OFF_S_RSVD  0x00a
