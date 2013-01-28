@@ -2,7 +2,6 @@
 %include 'common/macro.inc'
 %include 'common/boot.inc'
 %include 'common/bios.inc'
-%include 'common/8042.inc'
 %include 'common/jgfs.inc'
 	
 	cpu 386
@@ -31,23 +30,15 @@ boot_begin:
 	; - jump to the kernel
 boot_enable_a20:
 	call boot_test_a20
-	jnc .success
-	
-	mov cx,27
-	mov bp,boot_data.msg_a20_bios
-	call boot_print_str
+	jnc boot_find_mem
 	
 	call boot_enable_a20_bios
 	call boot_test_a20
-	jnc .success
-	
-	mov cx,27
-	mov bp,boot_data.msg_a20_fast
-	call boot_print_str
+	jnc boot_find_mem
 	
 	call boot_enable_a20_fast
 	call boot_test_a20
-	jnc .success
+	jnc boot_find_mem
 	
 	; not implemented: 8042 a20 enable
 	
@@ -58,24 +49,18 @@ boot_enable_a20:
 	
 	jmp boot_stop
 	
-.success:
-	mov cx,18
-	mov bp,boot_data.msg_a20_success
-	call boot_print_str
-	
 boot_find_mem:
-	mov edx,0x534d4150
-	xor ebx,ebx
-	mov ecx,20
-	mov di,MEM_MAP_OFFSET
+	;call boot_mem_e820
+	;jnc boot_go_unreal
 	
-	mov eax,BIOS_SYS_MEM_MAP
-	int 0x15
-	
+	call boot_mem_int12
 	jc .mem_fail
 	
-	cmp eax,0x534d4150
-	je .mem_loop
+	call boot_mem_e881_e801
+	jnc boot_go_unreal
+	
+	call boot_mem_88
+	jnc boot_go_unreal
 	
 .mem_fail:
 	mov cx,34
@@ -84,42 +69,11 @@ boot_find_mem:
 	
 	jmp boot_stop
 	
-.mem_loop:
-	mov eax,[di]
-	call boot_print_dword
-	
-	mov al,' '
-	call boot_print_chr
-	
-	mov eax,[di+8]
-	call boot_print_dword
-	
-	mov al,' '
-	call boot_print_chr
-	
-	mov eax,[di+16]
-	call boot_print_dword
-	
-	mov al,`\n`
-	call boot_print_chr
-	mov al,`\r`
-	call boot_print_chr
-	
-	or ebx,ebx
-	jz .mem_done
-	
-	add di,20
-	mov ecx,20
-	
-	mov eax,BIOS_SYS_MEM_MAP
-	int 0x15
-	
-	jmp .mem_loop
-	
-.mem_done:
+boot_go_unreal:
+	call boot_mem_dump_map
 	
 	
-	; after the loop, sort the map (?)
+	
 	
 boot_stop:
 	cli
@@ -128,6 +82,7 @@ boot_stop:
 	
 	
 %include 'boot/a20.s'
+%include 'boot/mem.s'
 	
 	
 %define BOOT_CODE_PRINT_CHR
@@ -140,12 +95,6 @@ boot_stop:
 boot_data:
 .msg_hello:
 	db `JGSYS BOOT\r\n`
-.msg_a20_bios:
-	db `Trying BIOS A20 enable...\r\n`
-.msg_a20_fast:
-	db `Trying fast A20 enable...\r\n`
-.msg_a20_success:
-	db `A20 gate enabled\r\n`
 .msg_err_a20:
 	db `A20 gate could not be enabled!\r\n`
 .msg_err_mem:

@@ -51,3 +51,7 @@ boot_enable_a20_fast:
 	out 0x92,al
 	
 	ret
+	
+boot_enable_a20_8042:
+	; not implemented
+	ret
