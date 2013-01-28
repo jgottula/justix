@@ -9,6 +9,8 @@
 	org MBR_OFFSET
 	section .text align=1
 	
+	; from the bios:
+	; DL boot disk
 mbr_init:
 	cli
 	
@@ -37,25 +39,26 @@ mbr_ready:
 	mov al,0x01
 	
 	mov ah,BIOS_VID_PAGE
-	int BIOS_VID
+	int 0x10
 	
 	mov bh,0x01
 	mov dx,0x0000
 	
 	mov ah,BIOS_VID_SETCUR
-	int BIOS_VID
+	int 0x10
 	
 	mov cx,11
 	mov bp,mbr_data.msg_hello
-	call boot_print_msg
+	call boot_print_str
 	
+mbr_find_active:
 	mov cx,4
 	mov si,(MBR_OFFSET+MBR_OFF_PART1)
 	
 .part_loop:
-	mov al,[ds:si]
+	mov al,[si]
 	bt ax,7
-	jc mbr_found_active
+	jc mbr_read_vbr
 	
 	add si,MBR_PART_SIZE
 	loop .part_loop
@@ -63,52 +66,43 @@ mbr_ready:
 .no_active:
 	mov cx,22
 	mov bp,mbr_data.msg_err_noactive
-	call boot_print_msg
-	
-	jmp mbr_stop
-	
-mbr_found_active:
-	push si
-	
-	mov bp,sp
-	mov dx,[bp+2]
-	
-	mov ah,BIOS_DISK_RESET
-	int BIOS_DISK
-	
-	jnc mbr_read_vbr
-	
-.reset_fail:
-	mov cx,20
-	mov bp,mbr_data.msg_err_reset
-	call boot_print_msg
+	call boot_print_str
 	
 	jmp mbr_stop
 	
 mbr_read_vbr:
-	mov bp,sp
-	mov dx,[bp+2]
+	pop dx
+	push dx
 	
-	mov al,0x01
-	mov dh,[si+1]
-	mov cx,[si+2]
+	mov ah,BIOS_DISK_PARAM
+	int 0x13
+	
+	pop bx
+	mov dl,bl
+	
+	and cl,0x3f
+	inc dh
+	
+	mov eax,[si+MBR_PART_OFF_LBA]
+	call boot_lba_to_chs
+	
 	mov bx,VBR_OFFSET
 	
+	mov al,0x01
+	
 	mov ah,BIOS_DISK_READ
-	int BIOS_DISK
+	int 0x13
 	
 	jnc mbr_jump
 	
 .read_fail:
 	mov cx,19
 	mov bp,mbr_data.msg_err_read
-	call boot_print_msg
+	call boot_print_str
 	
 	jmp mbr_stop
 	
 mbr_jump:
-	pop si
-	
 	jmp VBR_OFFSET
 	
 mbr_stop:
@@ -117,6 +111,8 @@ mbr_stop:
 	jmp mbr_stop
 	
 	
+%define BOOT_CODE_PRINT_STR
+%define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
 	
 	
@@ -125,10 +121,10 @@ mbr_data:
 	db `JGSYS MBR\r\n`
 .msg_err_noactive:
 	db `No active partition!\r\n`
-.msg_err_reset:
-	db `Disk reset failed!\r\n`
+.msg_err_param:
+	db `Disk param failed!\r\n`
 .msg_err_read:
 	db `Disk read failed!\r\n`
 	
 mbr_fill:
-	fill_to MBR_SIZE,0x00
+	fill_to MBR_CODE_SIZE,0x00

@@ -1,4 +1,3 @@
-%define BIOS_VID          0x10
 %define BIOS_VID_SETMODE  0x00
 %define BIOS_VID_CUR      0x01
 %define BIOS_VID_SETCUR   0x02
@@ -11,7 +10,6 @@
 %define BIOS_VID_SETMODE  0x0f
 %define BIOS_VID_STR      0x13
 
-%define BIOS_DISK           0x13
 %define BIOS_DISK_RESET     0x00
 %define BIOS_DISK_STATUS    0x01
 %define BIOS_DISK_READ      0x02
@@ -21,6 +19,10 @@
 %define BIOS_DISK_EXT_READ  0x42
 %define BIOS_DISK_EXT_WRITE 0x43
 %define BIOS_DISK_EXT_PARAM 0x48
+
+%define BIOS_SYS_A20_ENABLE 0x2401
+%define BIOS_SYS_A20_STATUS 0x2402
+%define BIOS_SYS_MEM_MAP    0xe820
 
 %define BLACK     0b0000
 %define BLUE      0b0001
@@ -42,3 +44,9 @@
 %define BIOS_COLOR(_fg, _bg) (_fg | (_bg << 4))
 
 %define BIOS_DADDRPKT_SIZE 0x10
+
+%define BIOS_MEM_USABLE       1
+%define BIOS_MEM_RESERVED     2
+%define BIOS_MEM_ACPI_RECLAIM 3
+%define BIOS_MEM_ACPI_NVS     4
+%define BIOS_MEM_BAD_RAM      5

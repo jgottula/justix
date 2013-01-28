@@ -2,23 +2,29 @@
 %define VBR_OFFSET       0x7c00
 %define JGFS_HDR_OFFSET  0x7e00
 %define BOOT_OFFSET      0x8000
+%define MEM_MAP_OFFSET   0x7000
 
-%define MBR_SIZE         0x1b8
-%define VBR_SIZE         0x200
+%define MBR_SIZE         0x0200
+%define MBR_CODE_SIZE    0x01b8
+
+%define VBR_SIZE         0x0200
+
 %define BOOT_SIZE        0x1000
 
 %define MBR_ENTRY        0x7c00
 
 %define STACK_ADDR       0x7c00
 
-%define MBR_OFF_PTABLE   0x1b8
-%define MBR_OFF_PART1    0x1be
-%define MBR_OFF_PART2    0x1ce
-%define MBR_OFF_PART3    0x1de
-%define MBR_OFF_PART4    0x1ee
+%define MBR_OFF_PTABLE   0x01b8
+%define MBR_OFF_PART1    0x01be
+%define MBR_OFF_PART2    0x01ce
+%define MBR_OFF_PART3    0x01de
+%define MBR_OFF_PART4    0x01ee
 
-%define MBR_PART_SIZE    0x10
+%define MBR_PART_SIZE    0x0010
 
-%define VBR_OFF_BOOTFLAG 0x1fe
+%define MBR_PART_OFF_LBA 0x0008
+
+%define VBR_OFF_BOOTFLAG 0x01fe
 
 %define BIOS_BOOT_FLAG   0x55aa

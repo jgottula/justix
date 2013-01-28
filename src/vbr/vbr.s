@@ -11,59 +11,52 @@
 	section .text align=1
 	
 	; from the mbr:
-	; [sp] disk number
-	;  si  partition entry
+	; DL boot disk
+	; SI partition entry
 vbr_begin:
-	push si
-	
 	mov cx,11
 	mov bp,vbr_data.msg_hello
-	call boot_print_msg
+	call boot_print_str
 	
-vbr_check_int13_ext:
-	mov bp,sp
-	mov dx,[bp+2]
-	mov bx,BIOS_BOOT_FLAG
+vbr_load_param:
+	push si
+	push dx
 	
-	mov ah,BIOS_DISK_EXT_CHK
-	int BIOS_DISK
+	mov ah,BIOS_DISK_PARAM
+	int 0x13
 	
-	jnc vbr_read_jgfs_hdr
+	and cl,0x3f
+	mov [vbr_data.param_sect],cl
 	
-.int13_ext_fail:
-	mov cx,17
-	mov bp,vbr_data.msg_err_ext
-	call boot_print_msg
-	jmp vbr_stop
+	inc dh
+	mov [vbr_data.param_head],dh
+	
+	pop bx
+	mov dl,bl
 	
 vbr_read_jgfs_hdr:
-	mov bp,sp
-	mov si,[bp]
+	mov eax,[si+MBR_PART_OFF_LBA]
+	inc eax
 	
-	push dword 0x00000000         ; block high
-	push dword [si+8]             ; block low
-	push dword JGFS_HDR_OFFSET    ; dest addr (seg:off)
-	push word  0x0001             ; qty blocks
-	push word  BIOS_DADDRPKT_SIZE ; size of packet
+	call boot_lba_to_chs
 	
-	inc dword [bp+8]
+	mov al,0x01
 	
-	mov dx,[bp+18]
-	mov si,sp
+	mov bx,JGFS_HDR_OFFSET
 	
-	mov ah,BIOS_DISK_EXT_READ
-	int BIOS_DISK
+	mov ah,BIOS_DISK_READ
+	int 0x13
 	
 	jnc vbr_check_jgfs_hdr
 	
 .read_fail:
 	mov cx,18
 	mov bp,vbr_data.msg_err_read
-	call boot_print_msg
+	call boot_print_str
 	
 	mov cx,15
 	mov bp,vbr_data.msg_err_read_hdr
-	call boot_print_msg
+	call boot_print_str
 	
 	jmp vbr_stop
 	
@@ -99,40 +92,41 @@ vbr_check_jgfs_hdr:
 	mov cx,28
 	
 .check_fail_common:
-	call boot_print_msg
+	call boot_print_str
 	jmp vbr_stop
 	
 vbr_read_jgfs_rsvd:
-	mov bp,sp
+	pop si
+	
+	mov cl,[vbr_data.param_sect]
+	mov dh,[vbr_data.param_head]
+	
+	mov eax,[si+MBR_PART_OFF_LBA]
+	add eax,2
+	
+	call boot_lba_to_chs
 	
 	mov ax,[JGFS_HDR_OFFSET+JGFS_OFF_S_RSVD]
-	mov [bp+2],ax                ; qty blocks: s_rsvd
-	mov word  [bp+4],BOOT_OFFSET ; dest addr:  0000:8000
-	inc dword [bp+8]             ; block low:  +1
 	
-	mov dx,[bp+18]
-	mov si,sp
+	mov bx,BOOT_OFFSET
 	
-	mov ah,BIOS_DISK_EXT_READ
-	int BIOS_DISK
+	mov ah,BIOS_DISK_READ
+	int 0x13
 	
 	jnc vbr_jump
 	
 .read_fail:
 	mov cx,18
 	mov bp,vbr_data.msg_err_read
-	call boot_print_msg
+	call boot_print_str
 	
-	mov cx,17
+	mov cx,18
 	mov bp,vbr_data.msg_err_read_rsvd
-	call boot_print_msg
+	call boot_print_str
 	
 	jmp vbr_stop
 	
 vbr_jump:
-	add sp,BIOS_DADDRPKT_SIZE
-	pop si
-	
 	jmp BOOT_OFFSET
 	
 vbr_stop:
@@ -141,6 +135,8 @@ vbr_stop:
 	jmp vbr_stop
 	
 	
+%define BOOT_CODE_PRINT_STR
+%define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
 	
 	
@@ -149,18 +145,20 @@ vbr_data:
 	db JGFS_MAGIC,JGFS_VER_MAJOR,JGFS_VER_MINOR
 .msg_hello:
 	db `JGSYS VBR\r\n`
-.msg_err_ext:
-	db `No LBA support!\r\n`
 .msg_err_read:
 	db `Disk read failed! `
 .msg_err_read_hdr:
 	db `(JGFS header)\r\n`
 .msg_err_read_rsvd:
-	db `(stage2 loader)\r\n`
+	db `(stage 2 loader)\r\n`
 .msg_err_jgfs_magic:
 	db `JGFS not found!\r\n`
 .msg_err_jgfs_version:
 	db `Incompatible JGFS version!\r\n`
+.param_sect:
+	db 0x00
+.param_head:
+	db 0x00
 	
 vbr_fill:
 	fill_to VBR_OFF_BOOTFLAG,0x00
