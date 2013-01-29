@@ -16,7 +16,7 @@ NM     :=$(PREFIX)/nm
 
 ASFLAGS:=-felf -MP -Ox -Wall
 CPPFLAGS:=-std=gnu11 -Wall -x assembler-with-cpp -D__ASSEMBLY__
-CFLAGS:=-std=gnu11 -O0 -ggdb -Wall -Wextra -ffreestanding -nodefaultlibs -nostdlib -march=pentium-mmx -mtune=pentium-mmx
+CFLAGS:=-std=gnu11 -O2 -ggdb -Wall -Wextra -ffreestanding -fno-omit-frame-pointer -nodefaultlibs -nostdlib -march=pentium-mmx -mtune=pentium-mmx
 LDFLAGS:=-Tkern.ld
 
 
