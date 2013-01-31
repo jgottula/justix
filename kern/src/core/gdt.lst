@@ -1,0 +1,80 @@
+     1                                  %include 'common/header.inc'
+     2                              <1> # 1 "src/common/header.h"
+     3                              <1> # 1 "<command-line>"
+     4                              <1> # 1 "src/common/header.h"
+     5                              <1> 
+     6                              <1> 
+     7                              <1>  cpu 586
+     8                              <1>  bits 32
+     9                              <1> 
+    10                              <1> %include 'common/macros.inc'
+    11                              <2> # 1 "src/common/macros.h"
+    12                              <2> # 1 "<command-line>"
+    13                              <2> # 1 "src/common/macros.h"
+    14                              <2> 
+    15                              <2> 
+    16                              <2> 
+    17                              <2> 
+    18                              <2> 
+    19                              <2> 
+    20                              <2> 
+    21                              <2> %macro frame 0-1
+    22                              <2>  push ebp
+    23                              <2>  mov ebp,esp
+    24                              <2> %if %0 == 1
+    25                              <2>  sub esp,%1
+    26                              <2> %endif
+    27                              <2> %endm
+    28                              <2> 
+    29                              <2> %macro unframe 0
+    30                              <2>  mov esp,ebp
+    31                              <2>  pop ebp
+    32                              <2> %endm
+    33                                  %include 'core/gdt.inc'
+    34                              <1> # 1 "src/core/gdt.h"
+    35                              <1> # 1 "<command-line>"
+    36                              <1> # 1 "src/core/gdt.h"
+    37                              <1> # 18 "src/core/gdt.h"
+    38                              <1> %define GDT_ACC_AC 0x01
+    39                              <1> %define GDT_ACC_RW 0x02
+    40                              <1> %define GDT_ACC_DC 0x04
+    41                              <1> %define GDT_ACC_EX 0x08
+    42                              <1> %define GDT_ACC_PRIVL 0x60
+    43                              <1> %define GDT_ACC_PR 0x80
+    44                              <1> 
+    45                              <1> %define GDT_FL_GR 0x80
+    46                              <1> %define GDT_FL_SZ 0x40
+    47                                  	
+    48                                  	section .text
+    49                                  	
+    50                                  	global gdt_setup:function
+    51                                  gdt_setup:
+    52 00000000 260F0115[18000000]      	lgdt [es:gdt_table.info]
+    53                                  	
+    54 00000008 C3                      	ret
+    55                                  	
+    56                                  	
+    57                                  	section .data
+    58                                  	
+    59                                  	global gdt_table:data
+    60                                  gdt_table:
+    61                                  .null:
+    62 00000000 00000000                	dd 0x00000000
+    63 00000004 00000000                	dd 0x00000000
+    64                                  .data:
+    65 00000008 FFFF                    	dw 0xffff
+    66 0000000A 0000                    	dw 0x0000
+    67 0000000C 00                      	db 0x00
+    68 0000000D 92                      	db GDT_ACC_PR | 0x10 | GDT_ACC_RW
+    69 0000000E CF                      	db 0x0f | GDT_FL_GR | GDT_FL_SZ
+    70 0000000F 00                      	db 0x00
+    71                                  .code:
+    72 00000010 FFFF                    	dw 0xffff
+    73 00000012 0000                    	dw 0x0000
+    74 00000014 00                      	db 0x00
+    75 00000015 9A                      	db GDT_ACC_PR | 0x10 | GDT_ACC_EX | GDT_ACC_RW
+    76 00000016 CF                      	db 0x0f | GDT_FL_GR | GDT_FL_SZ
+    77 00000017 00                      	db 0x00
+    78                                  .info:
+    79 00000018 1700                    	dw ((.info-gdt_table)-1)
+    80 0000001A [00000000]              	dd gdt_table

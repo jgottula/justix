@@ -1,12 +1,10 @@
 %include 'common/header.inc'
-%include 'lib/debug.inc'
-%include 'core/gdt.inc'
-%include 'core/idt.inc'
 	
 	extern gdt_setup
 	extern idt_setup
+	extern debug_clear_screen
 	
-	section .text
+	section .text.init
 	
 	global kern_entry:function
 kern_entry:

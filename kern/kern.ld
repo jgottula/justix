@@ -2,12 +2,13 @@ OUTPUT_FORMAT(elf32-i386)
 
 KERN_OFFSET = 0x00100000;
 
+ENTRY(kern_entry)
+
 SECTIONS {
-	ENTRY(kern_entry)
 	
 	.text.init (KERN_OFFSET) : {
 	_INIT_START = .;
-		src/core/init.o(.text)
+		*(.text.init)
 	_INIT_END = .;
 	}
 	

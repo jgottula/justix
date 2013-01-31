@@ -1,0 +1,152 @@
+     1                                  %include 'common/header.inc'
+     2                              <1> # 1 "src/common/header.h"
+     3                              <1> # 1 "<command-line>"
+     4                              <1> # 1 "src/common/header.h"
+     5                              <1> 
+     6                              <1> 
+     7                              <1>  cpu 586
+     8                              <1>  bits 32
+     9                              <1> 
+    10                              <1> %include 'common/macros.inc'
+    11                              <2> # 1 "src/common/macros.h"
+    12                              <2> # 1 "<command-line>"
+    13                              <2> # 1 "src/common/macros.h"
+    14                              <2> 
+    15                              <2> 
+    16                              <2> 
+    17                              <2> 
+    18                              <2> 
+    19                              <2> 
+    20                              <2> 
+    21                              <2> %macro frame 0-1
+    22                              <2>  push ebp
+    23                              <2>  mov ebp,esp
+    24                              <2> %if %0 == 1
+    25                              <2>  sub esp,%1
+    26                              <2> %endif
+    27                              <2> %endm
+    28                              <2> 
+    29                              <2> %macro unframe 0
+    30                              <2>  mov esp,ebp
+    31                              <2>  pop ebp
+    32                              <2> %endm
+    33                                  	
+    34                                  	extern gdt_setup
+    35                                  	extern idt_setup
+    36                                  	extern debug_clear_screen
+    37                                  	
+    38                                  	section .text.init
+    39                                  	
+    40                                  	global kern_entry:function
+    41                                  kern_entry:
+    42 00000000 0FB7E4                  	movzx esp,sp
+    43                                  	
+    44 00000003 E8(00000000)            	call gdt_setup
+    45                                  	
+    46 00000008 EA[0F000000]1000        	jmp long 0x10:.long_jump
+    47                                  .long_jump:
+    48 0000000F 66B80800                	mov ax,0x08
+    49 00000013 8ED0                    	mov ss,ax
+    50 00000015 8ED8                    	mov ds,ax
+    51 00000017 8EC0                    	mov es,ax
+    52 00000019 8EE0                    	mov fs,ax
+    53 0000001B 8EE8                    	mov gs,ax
+    54                                  	
+    55 0000001D BC[00100000]            	mov esp,kern_stack_bottom
+    56                                  	
+    57 00000022 E8(00000000)            	call idt_setup
+    58                                  	
+    59 00000027 CD0D                    	int 0x0d
+    60 00000029 CD0D                    	int 0x0d
+    61                                  	
+    62 0000002B E8(00000000)            	call debug_clear_screen
+    63                                  	
+    64                                  	;sti
+    65                                  	
+    66                                  	; serial?
+    67                                  ;   outb(PORT + 1, 0x00);    // Disable all interrupts
+    68                                  ;   outb(PORT + 3, 0x80);    // Enable DLAB (set baud rate divisor)
+    69                                  ;   outb(PORT + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
+    70                                  ;   outb(PORT + 1, 0x00);    //                  (hi byte)
+    71                                  ;   outb(PORT + 3, 0x03);    // 8 bits, no parity, one stop bit
+    72                                  ;   outb(PORT + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
+    73                                  ;   outb(PORT + 4, 0x0B);    // IRQs enabled, RTS/DSR set
+    74 00000030 66BAF903                	mov dx,0x3f8+1
+    75 00000034 66B80000                	mov ax,0x00
+    76 00000038 66EF                    	out dx,ax
+    77 0000003A 66BAF903                	mov dx,0x3f8+1
+    78 0000003E 66B80000                	mov ax,0x00
+    79 00000042 66EF                    	out dx,ax
+    80 00000044 66BAFB03                	mov dx,0x3f8+3
+    81 00000048 66B88000                	mov ax,0x80
+    82 0000004C 66EF                    	out dx,ax
+    83 0000004E 66BAF803                	mov dx,0x3f8+0
+    84 00000052 66B80300                	mov ax,0x03
+    85 00000056 66EF                    	out dx,ax
+    86 00000058 66BAF903                	mov dx,0x3f8+1
+    87 0000005C 66B80000                	mov ax,0x00
+    88 00000060 66EF                    	out dx,ax
+    89 00000062 66BAFB03                	mov dx,0x3f8+3
+    90 00000066 66B80300                	mov ax,0x03
+    91 0000006A 66EF                    	out dx,ax
+    92 0000006C 66BAFA03                	mov dx,0x3f8+2
+    93 00000070 66B8C700                	mov ax,0xc7
+    94 00000074 66EF                    	out dx,ax
+    95 00000076 66BAFC03                	mov dx,0x3f8+4
+    96 0000007A 66B80B00                	mov ax,0x0b
+    97 0000007E 66EF                    	out dx,ax
+    98                                  	
+    99 00000080 B065                    	mov al,'e'
+   100 00000082 E6E9                    	out 0xe9,al
+   101 00000084 B039                    	mov al,'9'
+   102 00000086 E6E9                    	out 0xe9,al
+   103                                  	
+   104 00000088 66BA008A                	mov dx,0x8a00
+   105 0000008C 66B8008A                	mov ax,0x8a00
+   106 00000090 66EF                    	out dx,ax
+   107 00000092 66B8E08A                	mov ax,0x8ae0
+   108 00000096 66EF                    	out dx,ax
+   109                                  	
+   110 00000098 B048                    	mov al,'H'
+   111 0000009A E826000000              	call serial_write_char
+   112 0000009F B069                    	mov al,'i'
+   113 000000A1 E81F000000              	call serial_write_char
+   114                                  	
+   115 000000A6 66C70500900B004870      	mov word [0xb9000],0x7000|'H'
+   116 000000AF 66C70502900B006970      	mov word [0xb9002],0x7000|'i'
+   117                                  	
+   118 000000B8 66C705620400000000      	mov word [0x462],0x00
+   119                                  	
+   120                                  kern_stop:
+   121 000000C1 FA                      	cli
+   122 000000C2 F4                      	hlt
+   123 000000C3 EBFC                    	jmp kern_stop
+   124                                  	
+   125                                  serial_write_char:
+   126 000000C5 6650                    	push ax
+   127 000000C7 6652                    	push dx
+   128                                  	
+   129 000000C9 66BAFD03                	mov dx,0x3f8+5
+   130                                  	
+   131                                  .wait:
+   132 000000CD EC                      	in al,dx
+   133 000000CE A820                    	test al,0x20
+   134 000000D0 74FB                    	jz .wait
+   135                                  	
+   136 000000D2 6658                    	pop ax
+   137                                  	
+   138 000000D4 66BAF803                	mov dx,0x3f8+0
+   139 000000D8 EE                      	out dx,al
+   140                                  	
+   141 000000D9 665A                    	pop dx
+   142                                  	
+   143 000000DB C3                      	ret
+   144                                  	
+   145                                  	
+   146                                  	section .bss
+   147                                  	
+   148                                  	global kern_stack_top:data
+   149                                  kern_stack_top:
+   150 00000000 <res 00001000>          	resb 0x1000
+   151                                  	global kern_stack_bottom:data
+   152                                  kern_stack_bottom:

@@ -1,0 +1,6 @@
+     1                                  %include 'disk/ata.inc'
+     2                              <1> # 1 "src/disk/ata.h"
+     3                              <1> # 1 "<command-line>"
+     4                              <1> # 1 "src/disk/ata.h"
+     5                                  
+     6                                  

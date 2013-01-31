@@ -1,0 +1,46 @@
+     1                                  %include 'common/header.inc'
+     2                              <1> # 1 "src/common/header.h"
+     3                              <1> # 1 "<command-line>"
+     4                              <1> # 1 "src/common/header.h"
+     5                              <1> 
+     6                              <1> 
+     7                              <1>  cpu 586
+     8                              <1>  bits 32
+     9                              <1> 
+    10                              <1> %include 'common/macros.inc'
+    11                              <2> # 1 "src/common/macros.h"
+    12                              <2> # 1 "<command-line>"
+    13                              <2> # 1 "src/common/macros.h"
+    14                              <2> 
+    15                              <2> 
+    16                              <2> 
+    17                              <2> 
+    18                              <2> 
+    19                              <2> 
+    20                              <2> 
+    21                              <2> %macro frame 0-1
+    22                              <2>  push ebp
+    23                              <2>  mov ebp,esp
+    24                              <2> %if %0 == 1
+    25                              <2>  sub esp,%1
+    26                              <2> %endif
+    27                              <2> %endm
+    28                              <2> 
+    29                              <2> %macro unframe 0
+    30                              <2>  mov esp,ebp
+    31                              <2>  pop ebp
+    32                              <2> %endm
+    33                                  %include 'core/exception.inc'
+    34                              <1> # 1 "src/core/exception.h"
+    35                              <1> # 1 "<command-line>"
+    36                              <1> # 1 "src/core/exception.h"
+    37                                  	
+    38                                  	section .text
+    39                                  	
+    40                                  	global trap_gpf:function
+    41                                  trap_gpf:
+    42 00000000 66C70506900B004770      	mov word [0xb9006],0x7000|'G'
+    43 00000009 66C70508900B005070      	mov word [0xb9008],0x7000|'P'
+    44 00000012 66C7050A900B004670      	mov word [0xb900a],0x7000|'F'
+    45                                  	
+    46 0000001B CF                      	iret

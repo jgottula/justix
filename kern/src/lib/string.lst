@@ -1,0 +1,103 @@
+     1                                  %include 'common/header.inc'
+     2                              <1> # 1 "src/common/header.h"
+     3                              <1> # 1 "<command-line>"
+     4                              <1> # 1 "src/common/header.h"
+     5                              <1> 
+     6                              <1> 
+     7                              <1>  cpu 586
+     8                              <1>  bits 32
+     9                              <1> 
+    10                              <1> %include 'common/macros.inc'
+    11                              <2> # 1 "src/common/macros.h"
+    12                              <2> # 1 "<command-line>"
+    13                              <2> # 1 "src/common/macros.h"
+    14                              <2> 
+    15                              <2> 
+    16                              <2> 
+    17                              <2> 
+    18                              <2> 
+    19                              <2> 
+    20                              <2> 
+    21                              <2> %macro frame 0-1
+    22                              <2>  push ebp
+    23                              <2>  mov ebp,esp
+    24                              <2> %if %0 == 1
+    25                              <2>  sub esp,%1
+    26                              <2> %endif
+    27                              <2> %endm
+    28                              <2> 
+    29                              <2> %macro unframe 0
+    30                              <2>  mov esp,ebp
+    31                              <2>  pop ebp
+    32                              <2> %endm
+    33                                  	
+    34                                  	section .text
+    35                                  	
+    36                                  	global strlen:function
+    37                                  strlen:
+    38                                  	frame
+    39 00000000 55                  <1>  push ebp
+    40 00000001 89E5                <1>  mov ebp,esp
+    41                              <1> %if %0 == 1
+    42                              <1>  sub esp,%1
+    43                              <1> %endif
+    44                                  	
+    45 00000003 57                      	push edi
+    46 00000004 8B7D04                  	mov edi,[ebp+4]
+    47                                  	
+    48 00000007 31C0                    	xor eax,eax
+    49 00000009 89C1                    	mov ecx,eax
+    50 0000000B F7D1                    	not ecx
+    51                                  	
+    52 0000000D FC                      	cld
+    53 0000000E F2AE                    	repne scasb
+    54                                  	
+    55 00000010 F7D1                    	not ecx
+    56 00000012 49                      	dec ecx
+    57                                  	
+    58 00000013 89C8                    	mov eax,ecx
+    59                                  	
+    60 00000015 5F                      	pop edi
+    61                                  	
+    62                                  	unframe
+    63 00000016 89EC                <1>  mov esp,ebp
+    64 00000018 5D                  <1>  pop ebp
+    65 00000019 C3                      	ret
+    66                                  	
+    67                                  	
+    68                                  	global strcmp:function
+    69                                  strcmp:
+    70                                  	
+    71                                  	
+    72 0000001A C3                      	ret
+    73                                  	
+    74                                  	
+    75                                  	global memcmp:function
+    76                                  memcmp:
+    77                                  	frame
+    78 0000001B 55                  <1>  push ebp
+    79 0000001C 89E5                <1>  mov ebp,esp
+    80                              <1> %if %0 == 1
+    81                              <1>  sub esp,%1
+    82                              <1> %endif
+    83                                  	
+    84 0000001E 56                      	push esi
+    85 0000001F 57                      	push edi
+    86                                  	
+    87 00000020 8B7504                  	mov esi,[ebp+4]
+    88 00000023 8B7D08                  	mov edi,[ebp+8]
+    89 00000026 8B4D0C                  	mov ecx,[ebp+12]
+    90                                  	
+    91 00000029 FC                      	cld
+    92 0000002A F2A6                    	repne cmpsb
+    93                                  	
+    94 0000002C 8B06                    	mov eax,[esi]
+    95 0000002E 2B07                    	sub eax,[edi]
+    96                                  	
+    97 00000030 5F                      	pop edi
+    98 00000031 5E                      	pop esi
+    99                                  	
+   100                                  	unframe
+   101 00000032 89EC                <1>  mov esp,ebp
+   102 00000034 5D                  <1>  pop ebp
+   103 00000035 C3                      	ret
