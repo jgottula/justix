@@ -36,7 +36,7 @@ if [[ "$1" == "loopdev="* ]]; then
 	echo "Using $LOOPDEV as loopback device"
 fi
 
-modprobe loop
+sudo modprobe loop
 
 echo "Cleaning up first..."
 killall -TERM jgfs
