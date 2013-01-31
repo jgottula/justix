@@ -1,8 +1,7 @@
-#ifdef __ASSEMBLY__
+#ifndef JGSYS_KERN_COMMON_MACROS
+#define JGSYS_KERN_COMMON_MACROS
 
 
-
-#else
 
 
 

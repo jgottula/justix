@@ -1,4 +1,3 @@
-%define JGSYS_KERN_CORE_GDT
 %include 'common/header.inc'
 %include 'core/gdt.inc'
 	

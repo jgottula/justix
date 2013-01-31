@@ -1,7 +1,8 @@
-%define JGSYS_KERN_CORE_IDT
 %include 'common/header.inc'
 %include 'core/idt.inc'
 %include 'core/exception.inc'
+	
+	extern trap_gpf
 	
 	section .text
 	

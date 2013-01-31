@@ -1,4 +1,5 @@
 %include 'common/header.inc'
+%include 'core/exception.inc'
 	
 	section .text
 	

@@ -1,8 +1,7 @@
-#ifdef __ASSEMBLY__
+#ifndef JGSYS_KERN_CORE_EXCEPTION
+#define JGSYS_KERN_CORE_EXCEPTION
 
-extern trap_gpf
 
-#else
 
 
 
