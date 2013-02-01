@@ -59,8 +59,8 @@ mbr_find_active:
 	
 .part_loop:
 	mov al,[si]
-	bt ax,7
-	jc mbr_read_vbr
+	test al,0x80
+	jnz mbr_read_vbr
 	
 	add si,MBR_PART_SIZE
 	loop .part_loop
