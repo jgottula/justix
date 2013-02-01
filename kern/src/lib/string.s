@@ -60,3 +60,17 @@ func memset
 	rep stosb
 	
 func_end
+	
+	
+func memcpy
+	params dst,src,size
+	save esi,edi
+	
+	mov edi,[%$dst]
+	mov esi,[%$src]
+	mov ecx,[%$size]
+	
+	cld
+	rep movsb
+	
+func_end
