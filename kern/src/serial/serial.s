@@ -34,6 +34,9 @@ func serial_init
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
 	
+	test ebx,0xffff
+	jz .exit
+	
 	; set the DLAB
 	invoke serial_in,ebx,SER_OFF_LCR
 	or eax,0x80
@@ -68,6 +71,9 @@ func serial_send
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
 	
+	test ebx,0xffff
+	jz .exit
+	
 .send_wait:
 	invoke serial_in,ebx,SER_OFF_LSR
 	test eax,0x20
@@ -85,6 +91,9 @@ func serial_recv
 	
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
+	
+	test ebx,0xffff
+	jz .exit
 	
 .recv_wait:
 	invoke serial_in,ebx,SER_OFF_LSR
