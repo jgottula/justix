@@ -91,11 +91,9 @@
 %pop
 %endm
 
-/* TODO: fix this */
-%macro extern_maybe 1
-%ifndef %1
-	extern %1
-%endif
+%macro gdata 1
+	global %1:data
+%1:
 %endm
 
 #endif
