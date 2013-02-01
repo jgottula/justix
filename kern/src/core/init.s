@@ -25,6 +25,7 @@ kern_entry:
 	mov gs,ax
 	
 	mov esp,kern_stack_bottom
+	mov ebp,0x00000000
 	
 	call idt_setup
 	
@@ -49,13 +50,23 @@ kern_entry:
 	mov word [0xb9010],0x7000|'r'
 	mov word [0xb9012],0x7000|'n'
 	
+	call a
+a:	frame
+	call b
+b:	frame
+	call c
+c:	frame
+	call d
+d:	frame
+	invoke debug_stack_trace,ebp
+	
 	jmp $
 	
 	
 	section .rodata
 	
 kern_hello:
-	db `JGSYS kern\r\n`
+	strz `JGSYS kern\n`
 	
 	
 	section .bss
