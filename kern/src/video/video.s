@@ -1,12 +1,16 @@
 %include 'common/header.inc'
+%include 'lib/string.inc'
 %include 'video/video.inc'
 	
 	section .text
 	
-func video_set_cur
-params cur
+	; NOTE: this stuff is all deprecated and should be replaced by the virtual
+	;       8086 monitor and video bios (int 0x10) calls
 	
-	mov ax,[cur]
+func video_set_cur
+	params cur
+	
+	mov ax,[%$cur]
 	
 	mov byte [0x3d4],0x0e
 	mov byte [0x3d5],ah
@@ -16,19 +20,10 @@ params cur
 	
 func_end
 	
+	
 func video_clear_screen
-	save edi
 	
-	mov eax,0x00000000
-	mov edi,0x000b9000
-	mov ecx,0x00001000
-	
-	rep stosd
-	
-	mov byte [0x3d4],0x0e
-	mov byte [0x3d5],0x00
-	
-	mov byte [0x3d4],0x0f
-	mov byte [0x3d5],0x00
+	invoke memset,0xb9000,0x00,0x1000
+	invoke video_set_cur,0x0000
 	
 func_end
