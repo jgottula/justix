@@ -3,9 +3,6 @@
 
 #ifndef __ASSEMBLY__
 
-#include <stdbool.h>
-#include <stdint.h>
-
 
 void video_set_cur(uint16_t cur);
 void video_clear_screen(void);

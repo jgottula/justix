@@ -41,10 +41,6 @@
 #define SER_OFF_SR  0x07 // rw       scratch register
 
 
-#include <stdbool.h>
-#include <stdint.h>
-
-
 /* returns a bitmask of serial devices found (bit 0 = found serial 0) */
 uint8_t serial_detect(void);
 void serial_init(uint8_t dev, uint16_t divisor, uint8_t config);

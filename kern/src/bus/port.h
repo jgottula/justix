@@ -3,10 +3,6 @@
 
 #ifndef __ASSEMBLY__
 
-#include <stdbool.h>
-#include <stdint.h>
-
-
 #define really_inline static inline __attribute__((always_inline))
 
 

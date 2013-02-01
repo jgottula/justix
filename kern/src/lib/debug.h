@@ -3,10 +3,6 @@
 
 #ifndef __ASSEMBLY__
 
-#include <stdbool.h>
-#include <stdint.h>
-
-
 void debug_write_str(const char *str);
 void debug_write_fmt(const char *str, ...);
 void debug_write_hex4(uint8_t hex);
