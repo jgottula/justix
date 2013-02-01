@@ -46,7 +46,7 @@ clean:
 
 
 out/kern.dump: out/kern.elf Makefile
-	$(OBJDUMP) -aCdfhpS -M intel-mnemonic,i386 $< >$@
+	$(OBJDUMP) -aCdfhp -M intel-mnemonic,i386 $< >$@
 
 out/kern.map: out/kern.elf Makefile
 	$(NM) -ACnS $< >$@
