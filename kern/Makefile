@@ -49,7 +49,7 @@ out/kern.dump: out/kern.elf Makefile
 	$(OBJDUMP) -aCdfhp -M intel-mnemonic,i386 $< >$@
 
 out/kern.map: out/kern.elf Makefile
-	$(NM) -ACnS $< >$@
+	$(NM) -CnS $< >$@
 
 out/kern.bin: out/kern.elf kern.ld Makefile
 	$(OBJCOPY) -S -O binary $< $@
