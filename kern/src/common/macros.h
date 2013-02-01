@@ -27,7 +27,7 @@
 	
 %rep %0-1
 %rotate -1
-	push %1
+	push dword %1
 %endrep
 	
 	call %$invoke_func
