@@ -1,6 +1,5 @@
 %include 'common/header.inc'
 %include 'lib/debug.inc'
-%include 'core/init.inc'
 	
 	section .text
 	
@@ -15,11 +14,10 @@ func debug_stack_trace
 	
 .trace_loop:
 	or esi,esi
-	jz .last
+	jz .exit
 	
 	; get the return value
-	mov eax,[esi+4]
-	invoke debug_write_fmt,str_stack_trace_line_fmt,ebx,eax
+	invoke debug_write_fmt,str_stack_trace_line_fmt,ebx,[esi+4]
 	
 	; follow the chain
 	mov esi,[esi]
@@ -27,9 +25,6 @@ func debug_stack_trace
 	inc ebx
 	
 	jmp .trace_loop
-	
-.last:
-	invoke debug_write_fmt,str_stack_trace_line_fmt,ebx,kern_entry
 	
 func_end
 	
