@@ -5,10 +5,9 @@
 	
 func strlen
 	params s
-	locals foo
 	save edi
 	
-	mov edi,[s]
+	mov edi,[%$s]
 	
 	xor eax,eax
 	mov ecx,eax
@@ -37,14 +36,27 @@ func memcmp
 	params m1,m2,size
 	save esi,edi
 	
-	mov esi,[ebp+4]
-	mov edi,[ebp+8]
-	mov ecx,[ebp+12]
+	mov esi,[%$m1]
+	mov edi,[%$m2]
+	mov ecx,[%$size]
 	
 	cld
 	repne cmpsb
 	
 	mov eax,[esi]
 	sub eax,[edi]
+	
+func_end
+	
+	
+func memset
+	params mem,val,size
+	save edi
+	
+	mov eax,[%$val]
+	mov ecx,[%$size]
+	mov edi,[%$mem]
+	
+	rep stosb
 	
 func_end
