@@ -3,6 +3,7 @@
 %include 'core/gdt.inc'
 %include 'core/idt.inc'
 %include 'lib/debug.inc'
+%include 'video/video.inc'
 	
 	section .text.init
 	
@@ -28,7 +29,7 @@ kern_entry:
 	int 0x0d
 	int 0x0d
 	
-	call debug_clear_screen
+	call video_clear_screen
 	
 	invoke debug_stack_trace,0xaa,0xbb,0xcc
 	

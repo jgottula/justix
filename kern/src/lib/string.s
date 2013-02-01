@@ -5,7 +5,7 @@
 	
 func strlen
 	params s
-	locals foo:dword
+	locals foo
 	save edi
 	
 	mov edi,[s]
@@ -27,17 +27,15 @@ func_end
 	
 func strcmp
 	params s1,s2
-	locals bar
 	
-	mov edi,[bar]
+	; TODO
 	
 func_end
 	
 	
-	global memcmp:function
-memcmp:
-	;frame
-	;save esi,edi
+func memcmp
+	params m1,m2,size
+	save esi,edi
 	
 	mov esi,[ebp+4]
 	mov edi,[ebp+8]
@@ -49,6 +47,4 @@ memcmp:
 	mov eax,[esi]
 	sub eax,[edi]
 	
-	;unsave esi,edi
-	;unframe
-	ret
+func_end

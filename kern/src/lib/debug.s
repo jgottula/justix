@@ -1,49 +1,7 @@
 %include 'common/header.inc'
+%include 'lib/debug.inc'
 	
 	section .text
-	
-	; ax new cursor
-video_set_cur:
-	mov byte [0x3d4],0x0e
-	mov byte [0x3d5],ah
-	
-	mov byte [0x3d4],0x0f
-	mov byte [0x3d5],al
-	
-	ret
-	
-	; ax new cursor
-video_set_page:
-	mov byte [0x3d4],0x0e
-	mov byte [0x3d5],ah
-	
-	mov byte [0x3d4],0x0f
-	mov byte [0x3d5],al
-	
-	ret
-	
-	
-	global debug_clear_screen:function
-	; void debug_clear_screen(void)
-debug_clear_screen:
-	;frame
-	;save edi
-	
-	mov eax,0x00000000
-	mov edi,0x000b9000
-	mov ecx,0x00001000
-	
-	rep stosd
-	
-	mov byte [0x3d4],0x0e
-	mov byte [0x3d5],0x00
-	
-	mov byte [0x3d4],0x0f
-	mov byte [0x3d5],0x00
-	
-	;unsave edi
-	;unframe
-	ret
 	
 	
 	global debug_print_char:function
