@@ -1,4 +1,5 @@
 %include 'common/header.inc'
+%include 'lib/string.inc'
 	
 	section .text
 	

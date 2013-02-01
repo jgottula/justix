@@ -1,4 +1,5 @@
 %include 'common/header.inc'
+%include 'core/init.inc'
 %include 'core/gdt.inc'
 %include 'core/idt.inc'
 %include 'lib/debug.inc'
