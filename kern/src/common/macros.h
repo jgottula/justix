@@ -31,6 +31,10 @@
 %endrep
 	
 	call %$invoke_func
+	
+%if %0 > 1
+	add esp,(4*(%0-1))
+%endif
 %pop
 %endm
 
