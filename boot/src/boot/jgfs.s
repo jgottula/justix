@@ -46,12 +46,12 @@ boot_jgfs_read_clust:
 	pushad
 	
 	; multiply by sect per clust
-	movzx ecx,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
+	movzx ecx,word [es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
 	mul ecx
 	
 	; add reserved/fat sectors as offset
-	mov dx,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
-	add dx,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
+	mov dx,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	add dx,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
 	movzx edx,dx
 	
 	add eax,edx
@@ -125,7 +125,7 @@ boot_jgfs_lookup_child:
 	inc ecx
 	
 	; get cluster size
-	movzx eax,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
+	movzx eax,word [es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
 	shl eax,9
 	
 	; end pointer
@@ -177,10 +177,10 @@ boot_jgfs_lookup_child:
 boot_jgfs_read_file:
 	pushad
 	
-	movzx ecx,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
+	movzx ecx,word [es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
 	shl cx,9
 	
-	movzx eax,word [esi+JGFS_DE_OFF_BEGIN]
+	movzx eax,word [es:esi+JGFS_DE_OFF_BEGIN]
 	
 .read_loop:
 	call boot_jgfs_read_clust
