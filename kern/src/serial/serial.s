@@ -74,6 +74,12 @@ func serial_send
 	test ebx,0xffff
 	jz .exit
 	
+	mov eax,[%$chr]
+	cmp al,`\n`
+	jnz .send_wait
+	
+	invoke serial_send,ebx,
+	
 .send_wait:
 	invoke serial_in,ebx,SER_OFF_LSR
 	test eax,0x20
