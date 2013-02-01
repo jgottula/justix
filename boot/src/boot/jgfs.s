@@ -3,7 +3,7 @@
 	; EDI buffer
 	; out:
 	; CF set on error
-boot_jgfs_read_sector:
+boot_jgfs_read_sect:
 	pushad
 	
 	mov si,[boot_data.boot_part_entry]
@@ -57,7 +57,7 @@ boot_jgfs_read_clust:
 	add eax,edx
 	
 .read_loop:
-	call boot_jgfs_read_sector
+	call boot_jgfs_read_sect
 	jc .done
 	
 	inc eax
