@@ -30,6 +30,23 @@ if [[ "$1" == "mount="* ]]; then
 	echo "Using $MOUNT as mount point"
 fi
 
+if [[ ! -e "$DEV" ]]; then
+	echo "Device $DEV does not exist"
+	exit 1
+fi
+if [[ ! -e "$PART" ]]; then
+	echo "Partition $PART does not exist"
+	exit 1
+fi
+if [[ ! -e "$MOUNT" ]]; then
+	echo "Mount point $MOUNT does not exist"
+	exit 1
+fi
+if [[ ! -d "$MOUNT" ]]; then
+	echo "Mount point $MOUNT is not a directory"
+	exit 1
+fi
+
 echo "Running make first..."
 make all || exit 1
 
