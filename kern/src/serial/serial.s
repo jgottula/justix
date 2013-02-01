@@ -68,17 +68,17 @@ func serial_send
 	params dev,chr
 	save ebx
 	
-	mov ebx,[%$dev]
-	movzx ebx,word [serial_irq+ebx*2]
+	mov ecx,[%$dev]
+	movzx ebx,word [serial_irq+ecx*2]
 	
 	or bx,bx
 	jz .exit
 	
 	mov eax,[%$chr]
-	cmp al,`\n`
-	jnz .send_wait
+	cmp al,10
+	jne .send_wait
 	
-	invoke serial_send,ebx,
+	invoke serial_send,ecx,`\r`
 	
 .send_wait:
 	invoke serial_in,ebx,SER_OFF_LSR
