@@ -82,6 +82,7 @@
 %endm
 
 %macro func_end 0
+.exit:
 %ifdef %$saved
 	unsave %$saved
 %endif
