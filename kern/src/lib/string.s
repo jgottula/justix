@@ -2,12 +2,12 @@
 	
 	section .text
 	
-	global strlen:function
-strlen:
-	frame
+func strlen
+	params s
+	locals foo:dword
+	save edi
 	
-	push edi
-	mov edi,[ebp+4]
+	mov edi,[%$s]
 	
 	xor eax,eax
 	mov ecx,eax
@@ -21,10 +21,7 @@ strlen:
 	
 	mov eax,ecx
 	
-	pop edi
-	
-	unframe
-	ret
+func_end
 	
 	
 	global strcmp:function
@@ -36,10 +33,8 @@ strcmp:
 	
 	global memcmp:function
 memcmp:
-	frame
-	
-	push esi
-	push edi
+	;frame
+	;save esi,edi
 	
 	mov esi,[ebp+4]
 	mov edi,[ebp+8]
@@ -51,8 +46,6 @@ memcmp:
 	mov eax,[esi]
 	sub eax,[edi]
 	
-	pop edi
-	pop esi
-	
-	unframe
+	;unsave esi,edi
+	;unframe
 	ret

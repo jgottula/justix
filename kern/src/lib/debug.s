@@ -26,9 +26,8 @@ video_set_page:
 	global debug_clear_screen:function
 	; void debug_clear_screen(void)
 debug_clear_screen:
-	frame
-	
-	push edi
+	;frame
+	;save edi
 	
 	mov eax,0x00000000
 	mov edi,0x000b9000
@@ -36,15 +35,14 @@ debug_clear_screen:
 	
 	rep stosd
 	
-	pop edi
-	
 	mov byte [0x3d4],0x0e
 	mov byte [0x3d5],0x00
 	
 	mov byte [0x3d4],0x0f
 	mov byte [0x3d5],0x00
 	
-	unframe
+	;unsave edi
+	;unframe
 	ret
 	
 	
@@ -108,8 +106,8 @@ debug_print_hex32:
 debug_stack_trace:
 	frame
 	
-	mov eax,[ebp+4] ; ebp
-	mov ecx,[ebp+8] ; stack_bottom
+	mov eax,param(0) ; ebp
+	mov ecx,param(1) ; stack_bottom
 	
 .trace_loop:
 	cmp eax,ecx
@@ -119,8 +117,6 @@ debug_stack_trace:
 	
 .done:
 	
-	;push ebp
-	;mov ebp,esp
 	
 	unframe
 	ret

@@ -5,6 +5,7 @@
 	
 	global gdt_setup:function
 gdt_setup:
+	; use extra segment since we are still in unreal mode
 	lgdt [es:gdt_table.info]
 	
 	ret

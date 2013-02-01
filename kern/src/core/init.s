@@ -1,6 +1,6 @@
 %include 'common/header.inc'
+%include 'core/gdt.inc'
 	
-	extern gdt_setup
 	extern idt_setup
 	extern debug_clear_screen
 	
@@ -29,6 +29,9 @@ kern_entry:
 	int 0x0d
 	
 	call debug_clear_screen
+	
+	extern debug_stack_trace
+	invoke debug_stack_trace,0xaa,0xbb,0xcc
 	
 	;sti
 	
