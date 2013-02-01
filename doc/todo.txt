@@ -16,6 +16,9 @@ kern:
 - gdb serial support
 - paging
 - atapi
+- profiling mechanism
+  - use perf counters or pit
+  - print difference in count after function call
 
 features that would be cool:
 - self-update (read serial, write to zipdisk)
