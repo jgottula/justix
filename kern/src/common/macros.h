@@ -46,28 +46,25 @@
 %endrep
 %endm
 
-/* TODO: remember args/locals and undef all of them in func_end */
-/* TODO: allow for sizes? */
+/* TODO: make these truly local (undef'd at func_end) */
 %macro params 1-*
-%assign %$params_off 8
+%stacksize flat
 %rep %0
-%define %$%1 ebp+%[%$params_off]
-%assign %$params_off %$params_off+4
+%arg %1:dword
 %rotate 1
 %endrep
 %endm
 
-/* TODO: remember args/locals and undef all of them in func_end */
-/* TODO: allow for sizes? */
+/* TODO: make these truly local (undef'd at func_end) */
 %macro locals 1+
-%assign %$locals_off 0
+%stacksize flat
+%assign %$localsize 0
 %rep %0
-%define %$%1 ebp-%[%$locals_off]
-%assign %$locals_off %$locals_off+4
+%local %1:dword
 %rotate 1
 %endrep
 	
-	sub esp,%$locals_off
+	sub esp,%$localsize
 %endm
 
 %macro func 1
