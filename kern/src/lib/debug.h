@@ -3,6 +3,10 @@
 
 #ifndef __ASSEMBLY__
 
+#include <stdbool.h>
+#include <stdint.h>
+
+
 void debug_clear_screen(void);
 void debug_print_char(char chr);
 void debug_print_string(const char *str);
