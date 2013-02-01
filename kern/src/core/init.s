@@ -3,6 +3,7 @@
 %include 'core/gdt.inc'
 %include 'core/idt.inc'
 %include 'lib/debug.inc'
+%include 'lib/string.inc'
 %include 'serial/serial.inc'
 %include 'video/video.inc'
 	
@@ -27,10 +28,12 @@ kern_entry:
 	
 	call idt_setup
 	
+	; copy the memory map into kernel memory
+	invoke memcpy,kern_mem_map,MEM_MAP_OFFSET,0x1000
+	
 	invoke serial_detect
 	invoke serial_init,0,SER_38400,SER_8N1
 	
-.infinite:
 	invoke serial_send_str,0,kern_hello
 	
 	; this stuff all needs to GO
@@ -51,7 +54,7 @@ kern_entry:
 	
 	section .rodata
 	
-gdata kern_hello
+kern_hello:
 	db `JGSYS kern\r\n`
 	
 	
@@ -60,3 +63,6 @@ gdata kern_hello
 gdata kern_stack_top
 	resb 0x1000
 gdata kern_stack_bottom
+	
+gdata kern_mem_map
+	resb 0x1000
