@@ -26,6 +26,7 @@ boot_mem_e820:
 	jmp .e820_loop
 	
 .done:
+	cld
 	mov cx,20
 	xor eax,eax
 	rep stosd
@@ -69,6 +70,7 @@ boot_mem_int12:
 	mov dword [di+36],BIOS_MEM_RESERVED ; type
 	
 .done:
+	cld
 	mov cx,20
 	xor eax,eax
 	add di,40
@@ -171,6 +173,7 @@ boot_mem_e881_e801:
 	add di,20
 	
 .done:
+	cld
 	mov cx,20
 	xor eax,eax
 	rep stosd

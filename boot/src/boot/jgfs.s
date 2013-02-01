@@ -23,6 +23,8 @@ boot_jgfs_read_sector:
 	
 	jc .done
 	
+	cld
+	
 	mov ecx,0x200
 	mov esi,JGFS_SECT_OFFSET
 	

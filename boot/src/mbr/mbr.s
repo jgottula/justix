@@ -27,6 +27,7 @@ mbr_init:
 	push dx
 	
 .move_mbr:
+	cld
 	mov si,MBR_ENTRY
 	mov di,MBR_OFFSET
 	mov cx,MBR_SIZE
