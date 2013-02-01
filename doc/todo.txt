@@ -1,18 +1,13 @@
 todo list
 
 kern:
-- init tasks
-  - gdt
-  - idt
-  - load segment registers
-  - set up the stack
-  - enable interrupts
 - write exception handlers
-- vga output
-- serial output
-  - get this working on helium
-  - check that remserial works
-  - get minicom set up nicely
+  - stack trace
+- video
+  - virtual 8086 monitor for video bios interrupts
+- serial
+  - input
+  - interrupts
 - gdb serial support
 - paging
 - atapi
