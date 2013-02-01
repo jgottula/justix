@@ -5,6 +5,10 @@
 
 #else
 
+%ifndef jgsys_kern_core_exception
+extern trap_gpf
+%endif
+
 #endif
 
 #endif

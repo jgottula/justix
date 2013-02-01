@@ -1,7 +1,6 @@
 %include 'common/header.inc'
 %include 'core/idt.inc'
-	
-	extern trap_gpf
+%include 'core/exception.inc'
 	
 	section .text
 	

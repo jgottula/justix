@@ -7,7 +7,7 @@ func strlen
 	locals foo:dword
 	save edi
 	
-	mov edi,[%$s]
+	mov edi,[s]
 	
 	xor eax,eax
 	mov ecx,eax
@@ -24,11 +24,13 @@ func strlen
 func_end
 	
 	
-	global strcmp:function
-strcmp:
+func strcmp
+	params s1,s2
+	locals bar
 	
+	mov edi,[bar]
 	
-	ret
+func_end
 	
 	
 	global memcmp:function

@@ -14,6 +14,12 @@ uint8_t  memcmp(const uint8_t *restrict m1, const uint8_t *restrict m2,
 
 #else
 
+%ifndef jgsys_kern_lib_string
+extern strlen
+extern strcmp
+extern memcmp
+%endif
+
 #endif
 
 #endif

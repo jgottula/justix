@@ -1,8 +1,7 @@
 %include 'common/header.inc'
 %include 'core/gdt.inc'
-	
-	extern idt_setup
-	extern debug_clear_screen
+%include 'core/idt.inc'
+%include 'lib/debug.inc'
 	
 	section .text.init
 	
@@ -30,7 +29,6 @@ kern_entry:
 	
 	call debug_clear_screen
 	
-	extern debug_stack_trace
 	invoke debug_stack_trace,0xaa,0xbb,0xcc
 	
 	;sti

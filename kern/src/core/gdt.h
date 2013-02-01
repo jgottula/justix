@@ -25,7 +25,7 @@
 %assign GDT_FL_GR     0x80
 %assign GDT_FL_SZ     0x40
 
-%if __SRC__ != 'core/gdt.s'
+%ifndef jgsys_kern_core_gdt
 extern gdt_setup
 %endif
 

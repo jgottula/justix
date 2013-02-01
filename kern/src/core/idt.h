@@ -5,6 +5,10 @@
 
 #else
 
+%ifndef jgsys_kern_core_idt
+extern idt_setup
+%endif
+
 #endif
 
 #endif

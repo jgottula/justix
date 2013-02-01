@@ -62,7 +62,7 @@ $(OBJ_C): %.co: %.c Makefile
 	$(CC) $(CFLAGS) -o $@ -Isrc/ -MP -MMD -MF $(<:%.c=%.dep) -c $<
 
 $(OBJ_S): %.so: %.s $(HEADERS_INC) Makefile
-	$(AS) $(ASFLAGS) -d__SRC__=\'$(patsubst src/%,%,$<)\' -o $@ -isrc/ -l$(<:%.s=%.lst) -MD $(<:%.s=%.dep) $<
+	$(AS) $(ASFLAGS)  -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.dep) $<
 
 $(HEADERS_INC): %.inc: %.h Makefile
 	$(CC) $(CPPFLAGS) -E -o $@ $<

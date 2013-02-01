@@ -13,6 +13,16 @@ void debug_stack_trace(void *ebp, void *stack_bottom);
 
 #else
 
+%ifndef jgsys_kern_lib_debug
+extern debug_clear_screen
+extern debug_print_char
+extern debug_print_string
+extern debug_print_hex8
+extern debug_print_hex16
+extern debug_print_hex32
+extern debug_stack_trace
+%endif
+
 #endif
 
 #endif
