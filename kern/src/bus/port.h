@@ -9,7 +9,7 @@
 really_inline uint8_t inb(uint16_t port) {
 	uint8_t val;
 	__asm__ __volatile__(
-		"inb %w1,%0"
+		"inb %1,%0"
 		: "=a" (val)
 		: "Nd" (port));
 	return val;
@@ -18,7 +18,7 @@ really_inline uint8_t inb(uint16_t port) {
 really_inline uint16_t inw(uint16_t port) {
 	uint16_t val;
 	__asm__ __volatile__(
-		"inw %w1,%0"
+		"inw %1,%0"
 		: "=a" (val)
 		: "Nd" (port));
 	return val;
@@ -27,7 +27,7 @@ really_inline uint16_t inw(uint16_t port) {
 really_inline uint32_t ind(uint16_t port) {
 	uint32_t val;
 	__asm__ __volatile__(
-		"inl %w1,%0"
+		"inl %1,%0"
 		: "=a" (val)
 		: "Nd" (port));
 	return val;
@@ -35,21 +35,21 @@ really_inline uint32_t ind(uint16_t port) {
 
 really_inline void outb(uint16_t port, uint8_t val) {
 	__asm__ __volatile__(
-		"outb %w0,%w1"
+		"outb %0,%w1"
 		:
 		: "a" (val), "Nd" (port));
 }
 
 really_inline void outw(uint16_t port, uint16_t val) {
 	__asm__ __volatile__(
-		"outw %w0,%w1"
+		"outw %0,%w1"
 		:
 		: "a" (val), "Nd" (port));
 }
 
 really_inline void outd(uint16_t port, uint32_t val) {
 	__asm__ __volatile__(
-		"outl %w0,%w1"
+		"outl %0,%w1"
 		:
 		: "a" (val), "Nd" (port));
 }
