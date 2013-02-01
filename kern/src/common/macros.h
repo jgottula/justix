@@ -5,6 +5,9 @@
 
 #else
 
+%assign true  1
+%assign false 0
+
 %define param(_n) dword [ebp+(4*(_n+2))]
 %define local(_n) dword [ebp-(4*(_n))]
 
