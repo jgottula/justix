@@ -1,24 +1,42 @@
 %include 'common/header.inc'
 %include 'lib/debug.inc'
+%include 'core/init.inc'
 	
 	section .text
 	
-	global debug_stack_trace:function
-	; void debug_stack_trace(void *ebp, void *stack_bottom)
-debug_stack_trace:
-	frame
+func debug_stack_trace
+	params base_ptr
+	save esi
 	
-	mov eax,param(0) ; ebp
-	mov ecx,param(1) ; stack_bottom
+	invoke debug_write_str,str_stack_trace_header
+	
+	xor ebx,ebx
+	mov esi,[%$base_ptr]
 	
 .trace_loop:
-	cmp eax,ecx
-	jae .done
+	or esi,esi
+	jz .last
+	
+	; get the return value
+	mov eax,[esi+4]
+	invoke debug_write_fmt,str_stack_trace_line_fmt,ebx,eax
+	
+	; follow the chain
+	mov esi,[esi]
+	
+	inc ebx
+	
+	jmp .trace_loop
+	
+.last:
+	invoke debug_write_fmt,str_stack_trace_line_fmt,ebx,kern_entry
+	
+func_end
 	
 	
+	section .rodata
 	
-.done:
-	
-	
-	unframe
-	ret
+str_stack_trace_header:
+	strz `stack trace:\n`
+str_stack_trace_line_fmt:
+	strz `[%i] 0x%d\n`
