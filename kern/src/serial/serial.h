@@ -91,10 +91,11 @@ char serial_recv(uint8_t dev);
 %assign SER_OFF_MSR 0x06 ; r        modem status
 %assign SER_OFF_SR  0x07 ; rw       scratch register
 
+extern serial_send_str
+
 %ifndef jgsys_kern_serial_serial
 extern serial_detect
 extern serial_init
-extern serial_send_str
 extern serial_send
 extern serial_recv
 %endif

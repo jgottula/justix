@@ -11,7 +11,7 @@ func serial_detect
 .dev_loop:
 	; read the IRQ from the BIOS data area
 	mov dx,[0x400+ecx*2]
-	test dx,0xffff
+	or dx,dx
 	jz .nope
 	
 	mov [serial_irq+ecx*2],dx
@@ -34,7 +34,7 @@ func serial_init
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
 	
-	test ebx,0xffff
+	or bx,bx
 	jz .exit
 	
 	; set the DLAB
@@ -71,7 +71,7 @@ func serial_send
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
 	
-	test ebx,0xffff
+	or bx,bx
 	jz .exit
 	
 	mov eax,[%$chr]
@@ -98,7 +98,7 @@ func serial_recv
 	mov ebx,[%$dev]
 	movzx ebx,word [serial_irq+ebx*2]
 	
-	test ebx,0xffff
+	or bx,bx
 	jz .exit
 	
 .recv_wait:
