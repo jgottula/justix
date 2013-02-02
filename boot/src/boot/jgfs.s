@@ -156,14 +156,6 @@ boot_jgfs_fat_read:
 	
 	jnc .read_ok
 	
-.fail_bounds:
-	popad
-	pop esi
-	
-	mov al,JGFS_ERR_BOUNDS_FAT
-	
-	jmp .fail
-	
 .fail_read:
 	; preserve error code
 	mov [.temp],al
@@ -172,6 +164,14 @@ boot_jgfs_fat_read:
 	pop esi
 	
 	mov al,[.temp]
+	
+	jmp .fail
+	
+.fail_bounds:
+	popad
+	pop esi
+	
+	mov al,JGFS_ERR_BOUNDS_FAT
 	
 .fail:
 	stc
