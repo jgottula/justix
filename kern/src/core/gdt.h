@@ -29,7 +29,7 @@ struct gdt_entry {
 	uint8_t  access_rw    :  1;
 	uint8_t  access_dc    :  1;
 	uint8_t  access_ex    :  1;
-	uint8_t  access_one   :  1;
+	uint8_t  access_type  :  1;
 	uint8_t  access_privl :  2;
 	uint8_t  access_pr    :  1;
 	uint8_t  limit_high   :  4;

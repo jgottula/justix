@@ -18,6 +18,10 @@ void kern_main(void) {
 	
 	task_init();
 	
+	while (true) {
+		
+	}
+	
 	/* TODO: find the size of the memory map and allocate just enough space */
 }
 /*	; copy the memory map into kernel memory

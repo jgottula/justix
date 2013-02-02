@@ -18,7 +18,7 @@ void task_init(void) {
 		.access_rw    = 0,
 		.access_dc    = 0,
 		.access_ex    = 1,
-		.access_one   = 1,
+		.access_type  = 0,
 		.access_privl = 3,
 		.access_pr    = 1,
 		.limit_high   = (limit >> 16),
