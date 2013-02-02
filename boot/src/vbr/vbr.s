@@ -35,6 +35,17 @@ vbr_ready:
 	mov bp,vbr_data.msg_hello
 	call boot_print_str
 	
+	cmp dl,0x80
+	jae vbr_load_param
+	
+vbr_flop_compat:
+	; if we came from a floppy, fake a partition entry
+	sub sp,MBR_PART_SIZE
+	mov si,sp
+	
+	xor eax,eax
+	mov [si+MBR_PART_OFF_LBA],eax
+	
 vbr_load_param:
 	push si
 	push dx
