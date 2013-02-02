@@ -77,23 +77,36 @@ vbr_check_jgfs_hdr:
 	
 	loop .check_loop
 	
-	jmp vbr_read_jgfs_rsvd
+	jmp vbr_check_s_rsvd
 	
 .check_fail:
 	cmp cx,2
 	jb .check_fail_version
 	
 .check_fail_magic:
-	mov bp,vbr_data.msg_err_jgfs_magic
 	mov cx,17
+	mov bp,vbr_data.msg_err_jgfs_magic
 	jmp .check_fail_common
 	
 .check_fail_version:
-	mov bp,vbr_data.msg_err_jgfs_version
 	mov cx,28
+	mov bp,vbr_data.msg_err_jgfs_version
 	
 .check_fail_common:
 	call boot_print_str
+	jmp vbr_stop
+	
+vbr_check_s_rsvd:
+	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	cmp ax,((BOOT_SIZE / 0x200) + 2)
+	
+	jae vbr_read_jgfs_rsvd
+	
+.fail:
+	mov cx,45
+	mov bp,vbr_data.msg_err_jgfs_s_rsvd
+	call boot_print_str
+	
 	jmp vbr_stop
 	
 vbr_read_jgfs_rsvd:
@@ -159,6 +172,8 @@ vbr_data:
 	db `JGFS not found!\r\n`
 .msg_err_jgfs_version:
 	db `Incompatible JGFS version!\r\n`
+.msg_err_jgfs_s_rsvd:
+	db `Reserved area too small for stage 2 loader!\r\n`
 .param_sect:
 	db 0x00
 .param_head:
