@@ -10,9 +10,6 @@ trap_code trap_df
 	invoke debug_write_fmt,str_df,eax,[%$code],[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
 	
-	mov word [0xb90a0],0x7000|'D'
-	mov word [0xb90a4],0x7000|'F'
-	
 	; fatal
 	call kern_die
 	
@@ -23,9 +20,6 @@ trap_code trap_gp
 	
 	invoke debug_write_fmt,str_gp,eax,[%$code],[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
-	
-	mov word [0xb90a0],0x7000|'G'
-	mov word [0xb90a2],0x7000|'P'
 	
 	; TODO: do something useful with the problematic task instead of dying
 	call kern_die
