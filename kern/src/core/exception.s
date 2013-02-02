@@ -5,6 +5,17 @@
 	
 	section .text
 	
+trap trap_ud
+	
+	invoke debug_write_fmt,str_ud,eax,[%$cs],[%$eip],[%$eflags]
+	invoke debug_stack_trace,[ebp]
+	
+	; TODO: do something useful with the problematic task instead of dying
+	call kern_die
+	
+trap_end
+	
+	
 trap_code trap_df
 	
 	invoke debug_write_fmt,str_df,eax,[%$code],[%$cs],[%$eip],[%$eflags]
@@ -29,6 +40,8 @@ trap_end
 	
 	section .rodata
 	
+str_ud:
+	strz `INVALID OPCODE @ %xw:%xd (eflags = %xd)\n`
 str_gp:
 	strz `GP FAULT [%xd] @ %xw:%xd (eflags = %xd)\n`
 str_df:

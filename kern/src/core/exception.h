@@ -6,6 +6,7 @@
 #else
 
 %ifndef jgsys_kern_core_exception
+extern trap_ud
 extern trap_df
 extern trap_gp
 %endif

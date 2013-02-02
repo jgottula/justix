@@ -6,6 +6,10 @@
 	
 	global idt_setup:function
 idt_setup:
+	mov eax,0x06
+	mov ecx,trap_ud
+	call idt_setup_trap
+	
 	mov eax,0x08
 	mov ecx,trap_df
 	call idt_setup_trap
