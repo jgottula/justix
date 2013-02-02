@@ -3,6 +3,22 @@
 %include 'core/main.inc'
 %include 'lib/debug.inc'
 	
+%macro auto_trap 1
+trap trap_%1
+	
+	invoke trap_common,0,[%$cs],[%$eip],[%$eflags],str_%1
+	
+trap_end
+%endm
+	
+%macro auto_trap_code 1
+trap_code trap_%1
+	
+	invoke trap_common,[%$code],[%$cs],[%$eip],[%$eflags],str_%1
+	
+trap_end
+%endm
+	
 	section .text
 	
 func trap_common
@@ -19,25 +35,10 @@ func trap_common
 	
 func_end
 	
-trap trap_ud
 	
-	invoke trap_common,0,[%$cs],[%$eip],[%$eflags],str_ud
-	
-trap_end
-	
-	
-trap_code trap_df
-	
-	invoke trap_common,[%$code],[%$cs],[%$eip],[%$eflags],str_df
-	
-trap_end
-	
-	
-trap_code trap_gp
-	
-	invoke trap_common,[%$code],[%$cs],[%$eip],[%$eflags],str_gp
-	
-trap_end
+auto_trap      ud
+auto_trap_code df
+auto_trap_code gp
 	
 	
 	section .rodata
