@@ -37,6 +37,9 @@ void debug_write_fmt(const char *str, ...) {
 			case 'i':
 				debug_write_dec(va_arg(fmt, uint32_t));
 				break;
+			case 's':
+				debug_write_str(va_arg(fmt, const char *));
+				break;
 			default:
 				/* explicitly discard the next parameter of unknown type */
 				(void)va_arg(fmt, uint32_t);
