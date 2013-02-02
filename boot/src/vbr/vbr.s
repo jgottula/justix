@@ -139,9 +139,9 @@ vbr_check_jgfs_hdr:
 	
 vbr_check_s_boot:
 	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
-	cmp ax,(STAGE2_SIZE / 0x200)
+	or ax,ax
 	
-	jae vbr_read_stage2
+	jnz vbr_read_stage2
 	
 .fail:
 	mov bp,vbr_data.msg_err_jgfs_s_boot
