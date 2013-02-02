@@ -233,8 +233,8 @@ stage2_jgfs_lookup_child:
 	mov edi,ebp
 	call memcmp
 	
-	pop esi
 	pop edi
+	pop esi
 	
 	je .found
 	
