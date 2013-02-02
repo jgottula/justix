@@ -27,7 +27,7 @@ stage2_mem_e820:
 	
 .done:
 	cld
-	mov cx,20
+	mov cx,5
 	xor eax,eax
 	rep stosd
 	
@@ -71,7 +71,7 @@ stage2_mem_int12:
 	
 .done:
 	cld
-	mov cx,20
+	mov cx,5
 	xor eax,eax
 	add di,40
 	rep stosd
@@ -174,7 +174,7 @@ stage2_mem_e881_e801:
 	
 .done:
 	cld
-	mov cx,20
+	mov cx,5
 	xor eax,eax
 	rep stosd
 	

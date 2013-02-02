@@ -30,7 +30,7 @@ stage2_jgfs_read_sect:
 	
 	cld
 	
-	mov ecx,0x200
+	mov ecx,0x80
 	mov esi,JGFS_SECT_OFFSET
 	
 	a32 rep movsd

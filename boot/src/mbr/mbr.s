@@ -28,7 +28,7 @@ mbr_init:
 	cld
 	mov si,MBR_ENTRY
 	mov di,MBR_OFFSET
-	mov cx,MBR_SIZE
+	mov cx,(MBR_SIZE/4)
 	rep movsd
 	
 	jmp 0x0000:mbr_ready
