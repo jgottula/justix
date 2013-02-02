@@ -9,6 +9,9 @@
 
 %assign MEM_MAP_OFFSET 0x7000
 
+extern _BSS_START
+extern _BSS_SIZE
+
 %ifndef jgsys_kern_core_init
 extern kern_entry
 

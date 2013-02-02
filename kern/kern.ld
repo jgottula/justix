@@ -5,7 +5,6 @@ KERN_OFFSET = 0x00100000;
 ENTRY(kern_entry)
 
 SECTIONS {
-	
 	.text.init (KERN_OFFSET) : {
 	_INIT_START = .;
 		*(.text.init)
@@ -35,4 +34,6 @@ SECTIONS {
 		*(.bss)
 	_BSS_END = .;
 	}
+	
+	_BSS_SIZE = _BSS_END - _BSS_START;
 }

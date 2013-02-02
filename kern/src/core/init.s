@@ -3,6 +3,7 @@
 %include 'core/gdt.inc'
 %include 'core/idt.inc'
 %include 'core/main.inc'
+%include 'lib/string.inc'
 	
 	section .text.init
 	
@@ -26,7 +27,9 @@ kern_entry:
 	
 	call idt_setup
 	
-	sti
+	invoke memset,_BSS_START,0,_BSS_SIZE
+	
+	;sti
 	
 	call kern_main
 	
