@@ -15,6 +15,20 @@
 	; DL boot disk
 	; SI partition entry
 vbr_begin:
+	cli
+	
+	xor ax,ax
+	mov ss,ax
+	mov ds,ax
+	mov es,ax
+	mov fs,ax
+	mov gs,ax
+	
+	mov sp,STACK_ADDR
+	
+vbr_ready:
+	sti
+	
 	call boot_video_setup
 	
 	mov cx,11
