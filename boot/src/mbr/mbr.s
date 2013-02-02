@@ -109,9 +109,9 @@ mbr_data:
 .msg_hello:
 	strz `JGSYS MBR`
 .msg_err_noactive:
-	strz `No active partition!`
+	strz `No active partition`
 .msg_err_read:
-	strz `Disk read failed!`
+	strz `Read failed`
 	
 mbr_fill:
 	fill_to MBR_CODE_SIZE,0x00

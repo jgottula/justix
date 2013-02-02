@@ -202,19 +202,19 @@ vbr_data:
 .msg_hello:
 	strz `JGSYS VBR`
 .msg_err_param:
-	strz `Disk param failed!`
+	strz `Param failed`
 .msg_err_read:
-	strz `Disk read failed:`
+	strz `Read failed:`
 .msg_err_read_hdr:
 	strz `JGFS header`
 .msg_err_read_stage2:
-	strz `stage 2 loader`
+	strz `stage2 loader`
 .msg_err_jgfs_magic:
-	strz `JGFS not found!`
+	strz `JGFS missing`
 .msg_err_jgfs_version:
-	strz `Incompatible JGFS version!`
+	strz `JGFS incompatible`
 .msg_err_jgfs_s_boot:
-	strz `Boot area too small for stage 2 loader!`
+	strz `stage2 missing`
 .param_sect:
 	db 0x00
 .param_head:
