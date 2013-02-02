@@ -11,7 +11,7 @@
 	
 trap_code trap_gpf
 	
-	invoke debug_write_fmt,str_gpf,eax,[ebp+4],[ebp+12],[ebp+8],[ebp+16]
+	invoke debug_write_fmt,str_gpf,eax,[%$code],[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
 	
 	mov word [0xb90a0],0x7000|'G'
