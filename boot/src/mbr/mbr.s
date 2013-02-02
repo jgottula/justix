@@ -19,8 +19,6 @@ mbr_init:
 	mov ss,ax
 	mov ds,ax
 	mov es,ax
-	mov fs,ax
-	mov gs,ax
 	
 	mov sp,STACK_ADDR
 	
