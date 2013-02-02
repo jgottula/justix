@@ -57,7 +57,7 @@ vbr_read_jgfs_hdr:
 	
 	call boot_lba_to_chs
 	
-	mov al,JGFS_HDR_SECT
+	mov al,0x01
 	
 	mov bx,JGFS_HDR_OFFSET
 	
