@@ -53,6 +53,9 @@ fi
 echo "Running make first..."
 make all || exit 1
 
+echo "Making new JGFS on $PART"
+../jgfs/bin/mkjgfs -Z "$PART" || exit 1
+
 echo "Writing MBR to $DEV"
 dd if=boot/out/bin/mbr of="$DEV" bs=440 count=1
 
@@ -61,9 +64,6 @@ dd if=boot/out/bin/vbr of="$PART" bs=512 count=1
 
 echo "Writing STAGE2 to $PART"
 dd if=boot/out/bin/stage2 of="$PART" bs=512 seek=2
-
-echo "Making new JGFS on $PART"
-../jgfs/bin/mkjgfs -Z "$PART" || exit 1
 
 echo "Mounting JGFS to $MOUNT"
 mkdir -p "$MOUNT"
