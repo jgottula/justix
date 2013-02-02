@@ -38,9 +38,22 @@ vbr_ready:
 vbr_load_param:
 	push si
 	push dx
+	push es
 	
 	mov ah,BIOS_DISK_PARAM
 	int 0x13
+	
+	jnc .param_ok
+	
+.param_fail:
+	mov cx,20
+	mov bp,vbr_data.msg_err_param
+	call boot_print_str
+	
+	jmp vbr_stop
+	
+.param_ok:
+	pop es
 	
 	and cl,0x3f
 	mov [vbr_data.param_sect],cl
@@ -179,6 +192,8 @@ vbr_data:
 	db JGFS_MAGIC,JGFS_VER_MAJOR,JGFS_VER_MINOR
 .msg_hello:
 	db `JGSYS VBR\r\n`
+.msg_err_param:
+	db `Disk param failed!\r\n`
 .msg_err_read:
 	db `Disk read failed! `
 .msg_err_read_hdr:
