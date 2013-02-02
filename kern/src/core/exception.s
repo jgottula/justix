@@ -1,6 +1,6 @@
 %include 'common/header.inc'
 %include 'core/exception.inc'
-%include 'core/init.inc'
+%include 'core/main.inc'
 %include 'lib/debug.inc'
 	
 	section .text
