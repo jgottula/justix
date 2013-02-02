@@ -1,3 +1,16 @@
+%ifdef BOOT_CODE_VIDEO_SETUP
+boot_video_setup:
+	push ax
+	
+	mov al,0x01
+	
+	mov ah,BIOS_VID_PAGE
+	int 0x10
+	
+	pop ax
+	ret
+%endif
+
 %ifdef BOOT_CODE_PRINT_CHR
 	; AL ascii char
 boot_print_chr:

@@ -15,6 +15,8 @@
 	; DL boot disk
 	; SI partition entry
 vbr_begin:
+	call boot_video_setup
+	
 	mov cx,11
 	mov bp,vbr_data.msg_hello
 	call boot_print_str
@@ -152,6 +154,7 @@ vbr_stop:
 	jmp vbr_stop
 	
 	
+%define BOOT_CODE_VIDEO_SETUP
 %define BOOT_CODE_PRINT_STR
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'

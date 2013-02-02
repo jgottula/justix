@@ -38,16 +38,7 @@ mbr_init:
 mbr_ready:
 	sti
 	
-	mov al,0x01
-	
-	mov ah,BIOS_VID_PAGE
-	int 0x10
-	
-	mov bh,0x01
-	mov dx,0x0000
-	
-	mov ah,BIOS_VID_SETCUR
-	int 0x10
+	call boot_video_setup
 	
 	mov cx,11
 	mov bp,mbr_data.msg_hello
@@ -113,6 +104,7 @@ mbr_stop:
 	jmp mbr_stop
 	
 	
+%define BOOT_CODE_VIDEO_SETUP
 %define BOOT_CODE_PRINT_STR
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
