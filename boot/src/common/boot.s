@@ -10,8 +10,8 @@ boot_video_setup:
 	pop ax
 	ret
 %endif
-
-
+	
+	
 %ifdef BOOT_CODE_PRINT_CHR
 	; AL ascii char
 boot_print_chr:
@@ -28,8 +28,8 @@ boot_print_chr:
 	pop ax
 	ret
 %endif
-
-
+	
+	
 %ifdef BOOT_CODE_PRINT_LINE
 	; BP string
 boot_print_line:
