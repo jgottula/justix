@@ -193,27 +193,27 @@ stage2_data:
 .msg_hello:
 	strz `JGSYS STAGE2`
 .msg_err_a20:
-	strz `A20 gate could not be enabled!`
+	strz `A20 gate could not be enabled`
 .msg_err_mem:
-	strz `Could not get system memory map!`
+	strz `Could not get system memory map`
 .msg_err_jgfs_root_dc:
-	strz `Could not load the root dir cluster!`
+	strz `Could not load the root dir cluster`
 .msg_err_jgfs_kern_lookup:
-	strz `Could not find the kernel!`
+	strz `Could not find the kernel`
 .msg_err_jgfs_kern_type:
-	strz `The kernel is not a file!`
+	strz `The kernel is not a file`
 .msg_err_jgfs_kern_load:
 	strz `Could not load the kernel:`
 .msg_jgfs_err_int13:
-	strz `Read error!`
+	strz `Read failed`
 .msg_jgfs_err_bounds_sect:
-	strz `Sector bounds check failed!`
+	strz `Sector bounds violation`
 .msg_jgfs_err_bounds_fat:
-	strz `FAT bounds check failed!`
+	strz `FAT bounds violation`
 .msg_jgfs_err_fat_chain:
-	strz `Bad FAT chain!`
+	strz `Bad FAT chain`
 .msg_jgfs_err_unknown:
-	strz `Unknown JGFS error!`
+	strz `Unknown JGFS error`
 .kern_filename:
 	strz `kern`
 .boot_disk:
