@@ -98,9 +98,9 @@ vbr_check_jgfs_hdr:
 	
 vbr_check_s_boot:
 	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
-	cmp ax,(BOOT_SIZE / 0x200)
+	cmp ax,(STAGE2_SIZE / 0x200)
 	
-	jae vbr_read_jgfs_boot
+	jae vbr_read_stage2
 	
 .fail:
 	mov cx,41
@@ -109,7 +109,7 @@ vbr_check_s_boot:
 	
 	jmp vbr_stop
 	
-vbr_read_jgfs_boot:
+vbr_read_stage2:
 	pop si
 	
 	mov cl,[vbr_data.param_sect]
@@ -122,7 +122,7 @@ vbr_read_jgfs_boot:
 	
 	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
 	
-	mov bx,BOOT_OFFSET
+	mov bx,STAGE2_OFFSET
 	
 	mov ah,BIOS_DISK_READ
 	int 0x13
@@ -135,7 +135,7 @@ vbr_read_jgfs_boot:
 	call boot_print_str
 	
 	mov cx,18
-	mov bp,vbr_data.msg_err_read_boot
+	mov bp,vbr_data.msg_err_read_stage2
 	call boot_print_str
 	
 	jmp vbr_stop
@@ -144,7 +144,7 @@ vbr_jump:
 	mov ch,[vbr_data.param_head]
 	mov cl,[vbr_data.param_sect]
 	
-	jmp BOOT_OFFSET
+	jmp STAGE2_OFFSET
 	
 vbr_stop:
 	cli
@@ -166,7 +166,7 @@ vbr_data:
 	db `Disk read failed! `
 .msg_err_read_hdr:
 	db `(JGFS header)\r\n`
-.msg_err_read_boot:
+.msg_err_read_stage2:
 	db `(stage 2 loader)\r\n`
 .msg_err_jgfs_magic:
 	db `JGFS not found!\r\n`

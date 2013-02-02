@@ -4,7 +4,7 @@
 %define MEM_MAP_OFFSET        0x7000
 %define VBR_OFFSET            0x7c00
 %define JGFS_HDR_OFFSET       0x7e00
-%define BOOT_OFFSET           0x8000
+%define STAGE2_OFFSET         0x8000
 %define JGFS_FAT_BMP_OFFSET  0x10000
 %define JGFS_FAT_OFFSET      0x10200
 %define KERN_OFFSET         0x100000
@@ -12,7 +12,7 @@
 %define MBR_SIZE            0x0200
 %define MBR_CODE_SIZE       0x01b8
 %define VBR_SIZE            0x0200
-%define BOOT_SIZE           0x1000
+%define STAGE2_SIZE         0x1000
 
 %define MBR_ENTRY           0x7c00
 

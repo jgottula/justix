@@ -7,14 +7,14 @@ AS:=nasm
 ASFLAGS:=-fbin -MP -Ox -Wall
 
 
-.PHONY: all clean mbr vbr boot
+.PHONY: all clean mbr vbr stage2
 
 # default rule
-all: mbr vbr boot
+all: mbr vbr stage2
 
-mbr:  out/bin/mbr  out/hex/mbr
-vbr:  out/bin/vbr  out/hex/vbr
-boot: out/bin/boot out/hex/boot
+mbr:    out/bin/mbr    out/hex/mbr
+vbr:    out/bin/vbr    out/hex/vbr
+stage2: out/bin/stage2 out/hex/stage2
 
 clean:
 	rm -rf $(wildcard out/*/*) $(wildcard src/*/*.dep)

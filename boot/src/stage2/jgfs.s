@@ -4,22 +4,22 @@
 	; out:
 	; CF set on error
 	; AL set on error
-boot_jgfs_read_sect:
+stage2_jgfs_read_sect:
 	pushad
 	
 	; bounds check
 	cmp eax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_TOTAL]
 	jae .fail_bounds
 	
-	mov si,[boot_data.boot_part_entry]
+	mov si,[stage2_data.boot_part_entry]
 	add eax,[si+MBR_PART_OFF_LBA]
 	
-	mov dh,[boot_data.param_head]
-	mov cl,[boot_data.param_sect]
+	mov dh,[stage2_data.param_head]
+	mov cl,[stage2_data.param_sect]
 	
 	call boot_lba_to_chs
 	
-	mov dl,[boot_data.boot_disk]
+	mov dl,[stage2_data.boot_disk]
 	mov bx,JGFS_SECT_OFFSET
 	mov al,0x01
 	
@@ -62,7 +62,7 @@ boot_jgfs_read_sect:
 	; out:
 	; CF set on error
 	; AL set on error
-boot_jgfs_read_clust:
+stage2_jgfs_read_clust:
 	pushad
 	
 	; multiply by sect per clust
@@ -78,7 +78,7 @@ boot_jgfs_read_clust:
 	add eax,edx
 	
 .read_loop:
-	call boot_jgfs_read_sect
+	call stage2_jgfs_read_sect
 	jc .fail
 	
 	inc eax
@@ -105,7 +105,7 @@ boot_jgfs_read_clust:
 	db 0x00
 	
 	
-boot_jgfs_fat_init:
+stage2_jgfs_fat_init:
 	pushad
 	
 	cld
@@ -126,7 +126,7 @@ boot_jgfs_fat_init:
 	; out:
 	; AX value
 	; CF set on failure to dynamically load fat
-boot_jgfs_fat_read:
+stage2_jgfs_fat_read:
 	push esi
 	push dx
 	
@@ -154,7 +154,7 @@ boot_jgfs_fat_read:
 	add ax,JGFS_BOOT_SECT
 	add ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
 	
-	call boot_jgfs_read_sect
+	call stage2_jgfs_read_sect
 	
 	jnc .read_ok
 	
@@ -203,7 +203,7 @@ boot_jgfs_fat_read:
 	; out:
 	; EBP child (dir ent in parent)
 	; CF  set on failure to find child
-boot_jgfs_lookup_child:
+stage2_jgfs_lookup_child:
 	push eax
 	push ecx
 	push esi
@@ -267,7 +267,7 @@ boot_jgfs_lookup_child:
 	; out:
 	; CF set on failure
 	; AL error on failure
-boot_jgfs_read_file:
+stage2_jgfs_read_file:
 	pushad
 	
 	movzx ecx,word [es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
@@ -276,12 +276,12 @@ boot_jgfs_read_file:
 	movzx eax,word [es:esi+JGFS_DE_OFF_BEGIN]
 	
 .read_loop:
-	call boot_jgfs_read_clust
+	call stage2_jgfs_read_clust
 	jc .fail_read_clust
 	
 	add edi,ecx
 	
-	call boot_jgfs_fat_read
+	call stage2_jgfs_fat_read
 	jc .fail_fat_read
 	
 	cmp ax,JGFS_FAT_EOF

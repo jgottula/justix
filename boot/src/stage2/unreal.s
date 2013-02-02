@@ -1,6 +1,6 @@
 	; out:
 	; ES flat 32-bit segment
-boot_enter_unreal:
+stage2_enter_unreal:
 	cli
 	
 	xor ax,ax

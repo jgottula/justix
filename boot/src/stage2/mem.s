@@ -1,5 +1,5 @@
 	; CF clear on success
-boot_mem_e820:
+stage2_mem_e820:
 	mov edx,0x534d4150
 	xor ebx,ebx
 	mov ecx,20
@@ -40,7 +40,7 @@ boot_mem_e820:
 	
 	
 	; CF clear on success
-boot_mem_int12:
+stage2_mem_int12:
 	mov di,MEM_MAP_OFFSET
 	
 	int 0x12
@@ -85,7 +85,7 @@ boot_mem_int12:
 	
 	
 	; CF clear on success
-boot_mem_e881_e801:
+stage2_mem_e881_e801:
 	mov di,MEM_MAP_OFFSET+40
 	
 	mov ax,0xe881
@@ -186,7 +186,7 @@ boot_mem_e881_e801:
 	ret
 	
 	
-boot_mem_dump_map:
+stage2_mem_dump_map:
 	push si
 	push eax
 	

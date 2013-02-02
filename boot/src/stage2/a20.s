@@ -1,5 +1,5 @@
 	; CF clear if A20 enabled
-boot_test_a20:
+stage2_test_a20:
 	cli
 	pusha
 	push ds
@@ -40,14 +40,14 @@ boot_test_a20:
 	ret
 	
 	
-boot_enable_a20_bios:
+stage2_enable_a20_bios:
 	mov ax,BIOS_SYS_A20_ENABLE
 	int 0x15
 	
 	ret
 	
 	
-boot_enable_a20_fast:
+stage2_enable_a20_fast:
 	in al,0x92
 	or al,0x02
 	out 0x92,al
@@ -55,6 +55,6 @@ boot_enable_a20_fast:
 	ret
 	
 	
-boot_enable_a20_8042:
+stage2_enable_a20_8042:
 	; not implemented
 	ret
