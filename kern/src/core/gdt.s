@@ -18,18 +18,32 @@ gdt_table:
 .null:
 	dd 0x00000000
 	dd 0x00000000
-.data:
+.kern_data:
 	dw 0xffff
 	dw 0x0000
 	db 0x00
 	db GDT_ACC_PR | 0x10 | GDT_ACC_RW
 	db 0x0f | GDT_FL_GR | GDT_FL_SZ
 	db 0x00
-.code:
+.kern_code:
 	dw 0xffff
 	dw 0x0000
 	db 0x00
 	db GDT_ACC_PR | 0x10 | GDT_ACC_EX | GDT_ACC_RW
+	db 0x0f | GDT_FL_GR | GDT_FL_SZ
+	db 0x00
+.user_data:
+	dw 0xffff
+	dw 0x0000
+	db 0x00
+	db GDT_ACC_PR | 0x70 | GDT_ACC_RW
+	db 0x0f | GDT_FL_GR | GDT_FL_SZ
+	db 0x00
+.user_code:
+	dw 0xffff
+	dw 0x0000
+	db 0x00
+	db GDT_ACC_PR | 0x70 | GDT_ACC_EX | GDT_ACC_RW
 	db 0x0f | GDT_FL_GR | GDT_FL_SZ
 	db 0x00
 .info:
