@@ -1,5 +1,5 @@
 #include <bus/pci.h>
-#include <bus/port.h>
+#include <common/port.h>
 #include <lib/debug.h>
 
 
