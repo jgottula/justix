@@ -10,14 +10,14 @@ usage() {
 }
 
 if [[ "$1" == "dev="* ]]; then
-	DEV="/dev/${1#dev=}"
+	DEV="${1#dev=}"
 	shift
 	
 	echo "Using $DEV as device"
 fi
 
 if [[ "$1" == "part="* ]]; then
-	PART="/dev/${1#part=}"
+	PART="${1#part=}"
 	shift
 	
 	echo "Using $PART as partition"
