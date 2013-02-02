@@ -63,7 +63,7 @@ echo "Writing STAGE2 to $PART"
 dd if=boot/out/bin/stage2 of="$PART" bs=512 seek=2
 
 echo "Making new JGFS on $PART"
-../jgfs/bin/mkjgfs "$PART" || exit 1
+../jgfs/bin/mkjgfs -Z "$PART" || exit 1
 
 echo "Mounting JGFS to $MOUNT"
 mkdir -p "$MOUNT"
