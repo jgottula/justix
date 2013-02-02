@@ -142,31 +142,31 @@ boot_load_kernel:
 	
 .load_fail_int13:
 	mov cx,13
-	mov bp,boot_data.msg_err_jgfs_int13
+	mov bp,boot_data.msg_jgfs_err_int13
 	
 	jmp .load_fail_rejoin
 	
 .load_fail_bounds_sect:
 	mov cx,29
-	mov bp,boot_data.msg_err_jgfs_bounds_sect
+	mov bp,boot_data.msg_jgfs_err_bounds_sect
 	
 	jmp .load_fail_rejoin
 	
 .load_fail_bounds_fat:
 	mov cx,26
-	mov bp,boot_data.msg_err_jgfs_bounds_fat
+	mov bp,boot_data.msg_jgfs_err_bounds_fat
 	
 	jmp .load_fail_rejoin
 	
 .load_fail_fat_chain:
 	mov cx,16
-	mov bp,boot_data.msg_err_jgfs_fat_chain
+	mov bp,boot_data.msg_jgfs_err_fat_chain
 	
 	jmp .load_fail_rejoin
 	
 .load_fail_unknown:
 	mov cx,21
-	mov bp,boot_data.msg_err_jgfs_unknown
+	mov bp,boot_data.msg_jgfs_err_unknown
 	
 .load_fail_rejoin:
 	call boot_print_str
@@ -220,15 +220,15 @@ boot_data:
 	db `The kernel is not a file!\r\n`
 .msg_err_jgfs_kern_load:
 	db `Could not load the kernel:\r\n`
-.msg_err_jgfs_int13:
+.msg_jgfs_err_int13:
 	db `Read error!\r\n`
-.msg_err_jgfs_bounds_sect:
+.msg_jgfs_err_bounds_sect:
 	db `Sector bounds check failed!\r\n`
-.msg_err_jgfs_bounds_fat:
+.msg_jgfs_err_bounds_fat:
 	db `FAT bounds check failed!\r\n`
-.msg_err_jgfs_fat_chain:
+.msg_jgfs_err_fat_chain:
 	db `Bad FAT chain!\r\n`
-.msg_err_jgfs_unknown:
+.msg_jgfs_err_unknown:
 	db `Unknown JGFS error!\r\n`
 .kern_filename:
 	db `kern\0`
