@@ -9,10 +9,7 @@
 	; and register in idt
 	; TODO: macro for trap/trap_end
 	
-	global trap_gpf:function
-trap_gpf:
-	frame
-	pushad
+trap_code trap_gpf
 	
 	invoke debug_write_fmt,str_gpf,eax,[ebp+4],[ebp+12],[ebp+8],[ebp+16]
 	invoke debug_stack_trace,[ebp]
@@ -24,12 +21,7 @@ trap_gpf:
 	; TODO: do something useful with the problematic task instead of dying
 	call kern_die
 	
-	popad
-	unframe
-	
-	; pop the error code
-	add esp,4
-	iret
+trap_end
 	
 	
 	section .rodata
