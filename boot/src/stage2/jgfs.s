@@ -28,11 +28,10 @@ stage2_jgfs_read_sect:
 	
 	jc .fail_int13
 	
-	cld
-	
 	mov ecx,0x80
 	mov esi,JGFS_SECT_OFFSET
 	
+	cld
 	a32 rep movsd
 	
 .ok:
@@ -108,13 +107,12 @@ stage2_jgfs_read_clust:
 stage2_jgfs_fat_init:
 	pushad
 	
-	cld
-	
 	mov ecx,JGFS_MAX_FAT_SECT
 	xor eax,eax
 	mov edi,JGFS_FAT_BMP_OFFSET
 	
 	; zero out the fat sector bitmap
+	cld
 	a32 rep es stosb
 	
 	popad

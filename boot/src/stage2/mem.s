@@ -26,9 +26,10 @@ stage2_mem_e820:
 	jmp .e820_loop
 	
 .done:
-	cld
-	mov cx,5
 	xor eax,eax
+	mov cx,5
+	
+	cld
 	rep stosd
 	
 	clc
@@ -70,10 +71,11 @@ stage2_mem_int12:
 	mov dword [di+36],BIOS_MEM_RESERVED ; type
 	
 .done:
-	cld
-	mov cx,5
 	xor eax,eax
+	mov cx,5
 	add di,40
+	
+	cld
 	rep stosd
 	
 	clc
@@ -173,9 +175,10 @@ stage2_mem_e881_e801:
 	add di,20
 	
 .done:
-	cld
-	mov cx,5
 	xor eax,eax
+	mov cx,5
+	
+	cld
 	rep stosd
 	
 	clc
