@@ -69,11 +69,11 @@ echo "Mounting JGFS to $MOUNT"
 mkdir -p "$MOUNT"
 sudo umount "$MOUNT"
 ../jgfs/bin/jgfs "$PART" "$MOUNT" &
-sleep 1
+sleep 0.5
 
 echo "Copying KERN to JGFS"
 cp kern/out/kern.bin "$MOUNT/kern"
-sleep 1
+sleep 0.5
 
 echo "Unmounting JGFS"
 killall -TERM jgfs
