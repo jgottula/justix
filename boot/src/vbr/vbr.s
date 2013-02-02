@@ -31,9 +31,8 @@ vbr_ready:
 	
 	call boot_video_setup
 	
-	mov cx,11
 	mov bp,vbr_data.msg_hello
-	call boot_print_str
+	call boot_print_line
 	
 	; TODO: handle recent windows mbr which puts part entry in ds:bp
 	
@@ -66,9 +65,8 @@ vbr_load_param:
 	jnc .param_ok
 	
 .param_fail:
-	mov cx,20
 	mov bp,vbr_data.msg_err_param
-	call boot_print_str
+	call boot_print_line
 	
 	jmp vbr_stop
 	
@@ -100,13 +98,11 @@ vbr_read_jgfs_hdr:
 	jnc vbr_check_jgfs_hdr
 	
 .read_fail:
-	mov cx,18
 	mov bp,vbr_data.msg_err_read
-	call boot_print_str
+	call boot_print_line
 	
-	mov cx,15
 	mov bp,vbr_data.msg_err_read_hdr
-	call boot_print_str
+	call boot_print_line
 	
 	jmp vbr_stop
 	
@@ -133,16 +129,14 @@ vbr_check_jgfs_hdr:
 	jb .check_fail_version
 	
 .check_fail_magic:
-	mov cx,17
 	mov bp,vbr_data.msg_err_jgfs_magic
 	jmp .check_fail_common
 	
 .check_fail_version:
-	mov cx,28
 	mov bp,vbr_data.msg_err_jgfs_version
 	
 .check_fail_common:
-	call boot_print_str
+	call boot_print_line
 	jmp vbr_stop
 	
 vbr_check_s_boot:
@@ -152,9 +146,8 @@ vbr_check_s_boot:
 	jae vbr_read_stage2
 	
 .fail:
-	mov cx,41
 	mov bp,vbr_data.msg_err_jgfs_s_boot
-	call boot_print_str
+	call boot_print_line
 	
 	jmp vbr_stop
 	
@@ -179,13 +172,11 @@ vbr_read_stage2:
 	jnc vbr_jump
 	
 .read_fail:
-	mov cx,18
 	mov bp,vbr_data.msg_err_read
-	call boot_print_str
+	call boot_print_line
 	
-	mov cx,18
 	mov bp,vbr_data.msg_err_read_stage2
-	call boot_print_str
+	call boot_print_line
 	
 	jmp vbr_stop
 	
@@ -202,7 +193,7 @@ vbr_stop:
 	
 	
 %define BOOT_CODE_VIDEO_SETUP
-%define BOOT_CODE_PRINT_STR
+%define BOOT_CODE_PRINT_LINE
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
 	
@@ -211,21 +202,21 @@ vbr_data:
 .jgfs:
 	db JGFS_MAGIC,JGFS_VER_MAJOR,JGFS_VER_MINOR
 .msg_hello:
-	db `JGSYS VBR\r\n`
+	strz `JGSYS VBR`
 .msg_err_param:
-	db `Disk param failed!\r\n`
+	strz `Disk param failed!`
 .msg_err_read:
-	db `Disk read failed! `
+	strz `Disk read failed:`
 .msg_err_read_hdr:
-	db `(JGFS header)\r\n`
+	strz `JGFS header`
 .msg_err_read_stage2:
-	db `(stage 2 loader)\r\n`
+	strz `stage 2 loader`
 .msg_err_jgfs_magic:
-	db `JGFS not found!\r\n`
+	strz `JGFS not found!`
 .msg_err_jgfs_version:
-	db `Incompatible JGFS version!\r\n`
+	strz `Incompatible JGFS version!`
 .msg_err_jgfs_s_boot:
-	db `Boot area too small for stage 2 loader!\r\n`
+	strz `Boot area too small for stage 2 loader!`
 .param_sect:
 	db 0x00
 .param_head:

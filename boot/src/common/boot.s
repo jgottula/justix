@@ -11,6 +11,7 @@ boot_video_setup:
 	ret
 %endif
 
+
 %ifdef BOOT_CODE_PRINT_CHR
 	; AL ascii char
 boot_print_chr:
@@ -27,26 +28,32 @@ boot_print_chr:
 	pop ax
 	ret
 %endif
-	
-	
-%ifdef BOOT_CODE_PRINT_STR
-	; CX    length
-	; ES:BP string
-boot_print_str:
+
+
+%ifdef BOOT_CODE_PRINT_LINE
+	; BP string
+boot_print_line:
 	pusha
 	
 	mov bh,0x01
-	
-	push cx
-	mov ah,BIOS_VID_GETCUR
-	int 0x10
-	pop cx
-	
-	mov al,0x01
-	mov bh,0x01
 	mov bl,COLOR(LTGRAY, BLACK)
+	mov ah,BIOS_VID_TELETYPE
 	
-	mov ah,BIOS_VID_STR
+.str_loop:
+	mov al,[bp]
+	or al,al
+	jz .done
+	
+	int 0x10
+	
+	inc bp
+	jmp .str_loop
+	
+.done:
+	mov al,`\n`
+	int 0x10
+	
+	mov al,`\r`
 	int 0x10
 	
 	popa

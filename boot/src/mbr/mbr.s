@@ -40,9 +40,8 @@ mbr_ready:
 	
 	call boot_video_setup
 	
-	mov cx,11
 	mov bp,mbr_data.msg_hello
-	call boot_print_str
+	call boot_print_line
 	
 mbr_find_active:
 	mov cx,4
@@ -57,9 +56,8 @@ mbr_find_active:
 	loop .part_loop
 	
 .no_active:
-	mov cx,22
 	mov bp,mbr_data.msg_err_noactive
-	call boot_print_str
+	call boot_print_line
 	
 	jmp mbr_stop
 	
@@ -89,9 +87,8 @@ mbr_read_vbr:
 	jnc mbr_jump
 	
 .read_fail:
-	mov cx,19
 	mov bp,mbr_data.msg_err_read
-	call boot_print_str
+	call boot_print_line
 	
 	jmp mbr_stop
 	
@@ -105,20 +102,18 @@ mbr_stop:
 	
 	
 %define BOOT_CODE_VIDEO_SETUP
-%define BOOT_CODE_PRINT_STR
+%define BOOT_CODE_PRINT_LINE
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
 	
 	
 mbr_data:
 .msg_hello:
-	db `JGSYS MBR\r\n`
+	strz `JGSYS MBR`
 .msg_err_noactive:
-	db `No active partition!\r\n`
-.msg_err_param:
-	db `Disk param failed!\r\n`
+	strz `No active partition!`
 .msg_err_read:
-	db `Disk read failed!\r\n`
+	strz `Disk read failed!`
 	
 mbr_fill:
 	fill_to MBR_CODE_SIZE,0x00

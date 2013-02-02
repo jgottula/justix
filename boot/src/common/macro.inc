@@ -25,4 +25,8 @@
 	db (%1) & 0xff
 %endmacro
 
+%macro strz 1
+	db %1,`\0`
+%endm
+
 %define _BV(_x) (1 << _x)

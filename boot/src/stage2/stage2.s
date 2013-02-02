@@ -24,9 +24,8 @@ stage2_begin:
 	mov [stage2_data.boot_disk],dx
 	mov [stage2_data.boot_part_entry],si
 	
-	mov cx,14
 	mov bp,stage2_data.msg_hello
-	call boot_print_str
+	call boot_print_line
 	
 stage2_enable_a20:
 	call stage2_test_a20
@@ -43,9 +42,8 @@ stage2_enable_a20:
 	; not implemented: 8042 a20 enable
 	
 .fail:
-	mov cx,32
 	mov bp,stage2_data.msg_err_a20
-	call boot_print_str
+	call boot_print_line
 	
 	jmp stage2_stop
 	
@@ -62,9 +60,8 @@ stage2_find_mem:
 	; not implemented: int 0x15 ah=0x88
 	
 .mem_fail:
-	mov cx,34
 	mov bp,stage2_data.msg_err_mem
-	call boot_print_str
+	call boot_print_line
 	
 	jmp stage2_stop
 	
@@ -81,9 +78,8 @@ stage2_load_kernel:
 	jnc .root_clust_ok
 	
 .root_clust_fail:
-	mov cx,38
 	mov bp,stage2_data.msg_err_jgfs_root_dc
-	call boot_print_str
+	call boot_print_line
 	
 	jmp stage2_stop
 	
@@ -94,9 +90,8 @@ stage2_load_kernel:
 	jnc .found_kern
 	
 .not_found:
-	mov cx,28
 	mov bp,stage2_data.msg_err_jgfs_kern_lookup
-	call boot_print_str
+	call boot_print_line
 	
 	jmp stage2_stop
 	
@@ -107,9 +102,8 @@ stage2_load_kernel:
 	je .type_ok
 	
 .type_fail:
-	mov cx,27
 	mov bp,stage2_data.msg_err_jgfs_kern_type
-	call boot_print_str
+	call boot_print_line
 	
 	jmp stage2_stop
 	
@@ -122,9 +116,8 @@ stage2_load_kernel:
 	jnc stage2_enter_kernel
 	
 .load_fail:
-	mov cx,28
 	mov bp,stage2_data.msg_err_jgfs_kern_load
-	call boot_print_str
+	call boot_print_line
 	
 	cmp al,JGFS_ERR_INT13
 	je .load_fail_int13
@@ -141,35 +134,26 @@ stage2_load_kernel:
 	jmp .load_fail_unknown
 	
 .load_fail_int13:
-	mov cx,13
 	mov bp,stage2_data.msg_jgfs_err_int13
-	
 	jmp .load_fail_rejoin
 	
 .load_fail_bounds_sect:
-	mov cx,29
 	mov bp,stage2_data.msg_jgfs_err_bounds_sect
-	
 	jmp .load_fail_rejoin
 	
 .load_fail_bounds_fat:
-	mov cx,26
 	mov bp,stage2_data.msg_jgfs_err_bounds_fat
-	
 	jmp .load_fail_rejoin
 	
 .load_fail_fat_chain:
-	mov cx,16
 	mov bp,stage2_data.msg_jgfs_err_fat_chain
-	
 	jmp .load_fail_rejoin
 	
 .load_fail_unknown:
-	mov cx,21
 	mov bp,stage2_data.msg_jgfs_err_unknown
 	
 .load_fail_rejoin:
-	call boot_print_str
+	call boot_print_line
 	
 .load_fail_done:
 	jmp stage2_stop
@@ -198,7 +182,7 @@ stage2_stop:
 	
 	
 %define BOOT_CODE_PRINT_CHR
-%define BOOT_CODE_PRINT_STR
+%define BOOT_CODE_PRINT_LINE
 %define BOOT_CODE_PRINT_HEX
 %define BOOT_CODE_LBA_TO_CHS
 %include 'common/boot.s'
@@ -207,31 +191,31 @@ stage2_stop:
 	
 stage2_data:
 .msg_hello:
-	db `JGSYS STAGE2\r\n`
+	strz `JGSYS STAGE2`
 .msg_err_a20:
-	db `A20 gate could not be enabled!\r\n`
+	strz `A20 gate could not be enabled!`
 .msg_err_mem:
-	db `Could not get system memory map!\r\n`
+	strz `Could not get system memory map!`
 .msg_err_jgfs_root_dc:
-	db `Could not load the root dir cluster!\r\n`
+	strz `Could not load the root dir cluster!`
 .msg_err_jgfs_kern_lookup:
-	db `Could not find the kernel!\r\n`
+	strz `Could not find the kernel!`
 .msg_err_jgfs_kern_type:
-	db `The kernel is not a file!\r\n`
+	strz `The kernel is not a file!`
 .msg_err_jgfs_kern_load:
-	db `Could not load the kernel:\r\n`
+	strz `Could not load the kernel:`
 .msg_jgfs_err_int13:
-	db `Read error!\r\n`
+	strz `Read error!`
 .msg_jgfs_err_bounds_sect:
-	db `Sector bounds check failed!\r\n`
+	strz `Sector bounds check failed!`
 .msg_jgfs_err_bounds_fat:
-	db `FAT bounds check failed!\r\n`
+	strz `FAT bounds check failed!`
 .msg_jgfs_err_fat_chain:
-	db `Bad FAT chain!\r\n`
+	strz `Bad FAT chain!`
 .msg_jgfs_err_unknown:
-	db `Unknown JGFS error!\r\n`
+	strz `Unknown JGFS error!`
 .kern_filename:
-	db `kern\0`
+	strz `kern`
 .boot_disk:
 	db 0x00
 .boot_part_entry:
