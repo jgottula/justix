@@ -67,7 +67,7 @@ echo "Making new JGFS on $PART"
 
 echo "Mounting JGFS to $MOUNT"
 mkdir -p "$MOUNT"
-umount "$MOUNT"
+sudo umount "$MOUNT"
 ../jgfs/bin/jgfs "$PART" "$MOUNT" &
 sleep 1
 
