@@ -7,7 +7,7 @@
 	
 trap trap_ud
 	
-	invoke debug_write_fmt,str_ud,eax,[%$cs],[%$eip],[%$eflags]
+	invoke debug_write_fmt,str_ud,[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
 	
 	; TODO: do something useful with the problematic task instead of dying
@@ -18,7 +18,7 @@ trap_end
 	
 trap_code trap_df
 	
-	invoke debug_write_fmt,str_df,eax,[%$code],[%$cs],[%$eip],[%$eflags]
+	invoke debug_write_fmt,str_df,[%$code],[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
 	
 	; fatal
@@ -29,7 +29,7 @@ trap_end
 	
 trap_code trap_gp
 	
-	invoke debug_write_fmt,str_gp,eax,[%$code],[%$cs],[%$eip],[%$eflags]
+	invoke debug_write_fmt,str_gp,[%$code],[%$cs],[%$eip],[%$eflags]
 	invoke debug_stack_trace,[ebp]
 	
 	; TODO: do something useful with the problematic task instead of dying
