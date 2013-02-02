@@ -6,6 +6,7 @@
 %include 'lib/string.inc'
 %include 'serial/serial.inc'
 %include 'video/video.inc'
+%include 'bus/pci.inc'
 	
 	section .text.init
 	
@@ -35,7 +36,7 @@ kern_entry:
 	invoke serial_detect
 	invoke serial_init,0,SER_38400,SER_8N1
 	
-	invoke serial_send_str,0,kern_hello
+	invoke serial_send_str,0,str_hello
 	
 	; this stuff all needs to GO
 	invoke video_clear_screen
@@ -50,30 +51,31 @@ kern_entry:
 	mov word [0xb9010],0x7000|'r'
 	mov word [0xb9012],0x7000|'n'
 	
-	call a
-a:	frame
-	call b
-b:	frame
-	call c
-c:	frame
-	call d
-d:	frame
-	invoke debug_stack_trace,ebp
+	invoke pci_enum
 	
-	jmp $
+	; trigger a gpf
+	jmp long 0x08:.long_jump
+	
+	global kern_die:function
+kern_die:
+	; TODO: wait a bit before disabling interrupts to allow serial to flush
+	cli
+	hlt
+	jmp kern_die
 	
 	
 	section .rodata
 	
-kern_hello:
+str_hello:
 	strz `JGSYS kern\n`
 	
 	
 	section .bss
 	
+gdata kern_mem_map
+	resb 0x1000
+	
+	
 gdata kern_stack_top
 	resb 0x1000
 gdata kern_stack_bottom
-	
-gdata kern_mem_map
-	resb 0x1000

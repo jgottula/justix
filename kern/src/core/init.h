@@ -11,6 +11,8 @@
 
 %ifndef jgsys_kern_core_init
 extern kern_entry
+extern kern_die
+
 extern kern_stack_top
 extern kern_stack_bottom
 extern kern_mem_map
