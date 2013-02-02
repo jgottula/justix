@@ -7,13 +7,13 @@ AS:=nasm
 ASFLAGS:=-fbin -MP -Ox -Wall
 
 
-.PHONY: all clean mbr vbr stage2
+.PHONY: all clean mbr stage1 stage2
 
 # default rule
-all: mbr vbr stage2
+all: mbr stage1 stage2
 
 mbr:    out/bin/mbr    out/hex/mbr
-vbr:    out/bin/vbr    out/hex/vbr
+stage1: out/bin/stage1 out/hex/stage1
 stage2: out/bin/stage2 out/hex/stage2
 
 clean:

@@ -59,8 +59,8 @@ echo "Making new JGFS on $PART"
 echo "Writing MBR to $DEV"
 dd if=boot/out/bin/mbr of="$DEV" bs=440 count=1
 
-echo "Writing VBR to $PART"
-dd if=boot/out/bin/vbr of="$PART" bs=512 count=1
+echo "Writing STAGE1 to $PART"
+dd if=boot/out/bin/stage1 of="$PART" bs=512 count=1
 
 echo "Writing STAGE2 to $PART"
 dd if=boot/out/bin/stage2 of="$PART" bs=512 seek=2

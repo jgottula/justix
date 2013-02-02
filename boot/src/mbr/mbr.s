@@ -75,7 +75,7 @@ mbr_read_vbr:
 	mov eax,[si+MBR_PART_OFF_LBA]
 	call boot_lba_to_chs
 	
-	mov bx,VBR_OFFSET
+	mov bx,STAGE1_OFFSET
 	
 	mov al,0x01
 	
@@ -91,7 +91,7 @@ mbr_read_vbr:
 	jmp mbr_stop
 	
 mbr_jump:
-	jmp VBR_OFFSET
+	jmp STAGE1_OFFSET
 	
 mbr_stop:
 	cli

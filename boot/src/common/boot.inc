@@ -2,7 +2,7 @@
 %define JGFS_SECT_OFFSET      0x0e00
 %define JGFS_CLUST_OFFSET     0x1000
 %define MEM_MAP_OFFSET        0x7000
-%define VBR_OFFSET            0x7c00
+%define STAGE1_OFFSET         0x7c00
 %define JGFS_HDR_OFFSET       0x7e00
 %define STAGE2_OFFSET         0x8000
 %define JGFS_FAT_BMP_OFFSET  0x10000
@@ -11,7 +11,7 @@
 
 %define MBR_SIZE              0x0200
 %define MBR_CODE_SIZE         0x01b8
-%define VBR_SIZE              0x0200
+%define STAGE1_SIZE           0x0200
 %define STAGE2_SIZE           0x0c00
 
 %define MBR_ENTRY             0x7c00
@@ -28,6 +28,6 @@
 %define MBR_PART_OFF_STATUS   0x0000
 %define MBR_PART_OFF_LBA      0x0008
 
-%define VBR_OFF_BOOTFLAG      0x01fe
+%define STAGE1_OFF_BOOTFLAG   0x01fe
 
 %define BIOS_BOOT_FLAG        0x55aa
