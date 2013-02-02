@@ -51,13 +51,13 @@ boot_enable_a20:
 	
 boot_find_mem:
 	call boot_mem_e820
-	jnc .mem_done
+	jnc boot_load_kernel
 	
 	call boot_mem_int12
 	jc .mem_fail
 	
 	call boot_mem_e881_e801
-	jnc .mem_done
+	jnc boot_load_kernel
 	
 	; not implemented: int 0x15 ah=0x88
 	
@@ -67,9 +67,6 @@ boot_find_mem:
 	call boot_print_str
 	
 	jmp boot_stop
-	
-.mem_done:
-	call boot_mem_dump_map
 	
 boot_load_kernel:
 	call boot_enter_unreal
