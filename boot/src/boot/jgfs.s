@@ -69,8 +69,9 @@ boot_jgfs_read_clust:
 	movzx ecx,word [es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_PER_C]
 	mul ecx
 	
-	; add reserved/fat sectors as offset
-	mov dx,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	; add vbr/hdr/boot/fat sectors as offset
+	mov dx,JGFS_BOOT_SECT
+	add dx,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
 	add dx,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
 	movzx edx,dx
 	
@@ -150,7 +151,8 @@ boot_jgfs_fat_read:
 	cmp ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
 	jae .fail_bounds
 	
-	add ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	add ax,JGFS_BOOT_SECT
+	add ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
 	
 	call boot_jgfs_read_sect
 	

@@ -41,7 +41,7 @@ vbr_read_jgfs_hdr:
 	
 	call boot_lba_to_chs
 	
-	mov al,0x01
+	mov al,JGFS_VBR_SECT
 	
 	mov bx,JGFS_HDR_OFFSET
 	
@@ -77,7 +77,7 @@ vbr_check_jgfs_hdr:
 	
 	loop .check_loop
 	
-	jmp vbr_check_s_rsvd
+	jmp vbr_check_s_boot
 	
 .check_fail:
 	cmp cx,2
@@ -96,31 +96,31 @@ vbr_check_jgfs_hdr:
 	call boot_print_str
 	jmp vbr_stop
 	
-vbr_check_s_rsvd:
-	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
-	cmp ax,((BOOT_SIZE / 0x200) + 2)
+vbr_check_s_boot:
+	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
+	cmp ax,(BOOT_SIZE / 0x200)
 	
-	jae vbr_read_jgfs_rsvd
+	jae vbr_read_jgfs_boot
 	
 .fail:
-	mov cx,45
-	mov bp,vbr_data.msg_err_jgfs_s_rsvd
+	mov cx,41
+	mov bp,vbr_data.msg_err_jgfs_s_boot
 	call boot_print_str
 	
 	jmp vbr_stop
 	
-vbr_read_jgfs_rsvd:
+vbr_read_jgfs_boot:
 	pop si
 	
 	mov cl,[vbr_data.param_sect]
 	mov dh,[vbr_data.param_head]
 	
 	mov eax,[si+MBR_PART_OFF_LBA]
-	add eax,2
+	add eax,JGFS_BOOT_SECT
 	
 	call boot_lba_to_chs
 	
-	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	mov ax,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_BOOT]
 	
 	mov bx,BOOT_OFFSET
 	
@@ -135,7 +135,7 @@ vbr_read_jgfs_rsvd:
 	call boot_print_str
 	
 	mov cx,18
-	mov bp,vbr_data.msg_err_read_rsvd
+	mov bp,vbr_data.msg_err_read_boot
 	call boot_print_str
 	
 	jmp vbr_stop
@@ -166,14 +166,14 @@ vbr_data:
 	db `Disk read failed! `
 .msg_err_read_hdr:
 	db `(JGFS header)\r\n`
-.msg_err_read_rsvd:
+.msg_err_read_boot:
 	db `(stage 2 loader)\r\n`
 .msg_err_jgfs_magic:
 	db `JGFS not found!\r\n`
 .msg_err_jgfs_version:
 	db `Incompatible JGFS version!\r\n`
-.msg_err_jgfs_s_rsvd:
-	db `Reserved area too small for stage 2 loader!\r\n`
+.msg_err_jgfs_s_boot:
+	db `Boot area too small for stage 2 loader!\r\n`
 .param_sect:
 	db 0x00
 .param_head:

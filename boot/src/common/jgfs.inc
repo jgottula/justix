@@ -1,9 +1,10 @@
 %define JGFS_MAGIC          `JGFS`
-%define JGFS_VER_MAJOR        0x03
-%define JGFS_VER_MINOR        0x01
+%define JGFS_VER_MAJOR        0x04
+%define JGFS_VER_MINOR        0x00
+%define JGFS_VER_TOTAL      0x0400
 
 %define JGFS_HDR_OFF_S_TOTAL 0x006
-%define JGFS_HDR_OFF_S_RSVD  0x00a
+%define JGFS_HDR_OFF_S_BOOT  0x00a
 %define JGFS_HDR_OFF_S_FAT   0x00c
 
 %define JGFS_HDR_OFF_S_PER_C 0x00e
@@ -38,6 +39,10 @@
 
 %define JGFS_FENT_PER_SECT   0x100
 %define JGFS_MAX_FAT_SECT    0x100
+
+%define JGFS_VBR_SECT            0
+%define JGFS_HDR_SECT            1
+%define JGFS_BOOT_SECT           2
 
 %define JGFS_ERR_INT13        0x01
 %define JGFS_ERR_BOUNDS_SECT  0x02

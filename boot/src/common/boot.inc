@@ -12,7 +12,7 @@
 %define MBR_SIZE            0x0200
 %define MBR_CODE_SIZE       0x01b8
 %define VBR_SIZE            0x0200
-%define BOOT_SIZE           0x0c00
+%define BOOT_SIZE           0x1000
 
 %define MBR_ENTRY           0x7c00
 
