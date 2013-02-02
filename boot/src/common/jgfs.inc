@@ -40,5 +40,6 @@
 %define JGFS_MAX_FAT_SECT    0x100
 
 %define JGFS_ERR_INT13        0x01
-%define JGFS_ERR_FAT_LOAD     0x02
-%define JGFS_ERR_FAT_CHAIN    0x03
+%define JGFS_ERR_BOUNDS_SECT  0x02
+%define JGFS_ERR_BOUNDS_FAT   0x03
+%define JGFS_ERR_FAT_CHAIN    0x04

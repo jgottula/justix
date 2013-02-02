@@ -3,8 +3,13 @@
 	; EDI buffer
 	; out:
 	; CF set on error
+	; AL set on error
 boot_jgfs_read_sect:
 	pushad
+	
+	; bounds check
+	cmp eax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_TOTAL]
+	jae .fail_bounds
 	
 	mov si,[boot_data.boot_part_entry]
 	add eax,[si+MBR_PART_OFF_LBA]
@@ -21,7 +26,7 @@ boot_jgfs_read_sect:
 	mov ah,BIOS_DISK_READ
 	int 0x13
 	
-	jc .done
+	jc .fail_int13
 	
 	cld
 	
@@ -30,10 +35,24 @@ boot_jgfs_read_sect:
 	
 	a32 rep movsd
 	
-	clc
-	
-.done:
+.ok:
 	popad
+	
+	clc
+	ret
+	
+.fail_bounds:
+	popad
+	mov al,JGFS_ERR_BOUNDS_SECT
+	
+	jmp .fail
+	
+.fail_int13:
+	popad
+	mov al,JGFS_ERR_INT13
+	
+.fail:
+	stc
 	ret
 	
 	
@@ -42,6 +61,7 @@ boot_jgfs_read_sect:
 	; EDI buffer
 	; out:
 	; CF set on error
+	; AL set on error
 boot_jgfs_read_clust:
 	pushad
 	
@@ -58,18 +78,30 @@ boot_jgfs_read_clust:
 	
 .read_loop:
 	call boot_jgfs_read_sect
-	jc .done
+	jc .fail
 	
 	inc eax
 	add edi,0x200
 	
 	loop .read_loop
 	
-	clc
-	
-.done:
+.ok:
 	popad
+	
+	clc
 	ret
+	
+.fail:
+	; preserve error code
+	mov [.temp],al
+	popad
+	mov al,[.temp]
+	
+	stc
+	ret
+	
+.temp:
+	db 0x00
 	
 	
 boot_jgfs_fat_init:
@@ -113,16 +145,35 @@ boot_jgfs_fat_read:
 	lea edi,[es:eax*2+JGFS_FAT_OFFSET]
 	
 	movzx eax,ah
+	
+	; bounds check
+	cmp ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
+	jae .fail_bounds
+	
 	add ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
 	
 	call boot_jgfs_read_sect
 	
 	jnc .read_ok
 	
-.read_fail:
+.fail_bounds:
 	popad
 	pop esi
 	
+	mov al,JGFS_ERR_BOUNDS_FAT
+	
+	jmp .fail
+	
+.fail_read:
+	; preserve error code
+	mov [.temp],al
+	
+	popad
+	pop esi
+	
+	mov al,[.temp]
+	
+.fail:
 	stc
 	ret
 	
@@ -140,6 +191,9 @@ boot_jgfs_fat_read:
 	
 	clc
 	ret
+	
+.temp:
+	db 0x00
 	
 	
 	; in:
@@ -221,12 +275,12 @@ boot_jgfs_read_file:
 	
 .read_loop:
 	call boot_jgfs_read_clust
-	jc .fail_int13
+	jc .fail_read_clust
 	
 	add edi,ecx
 	
 	call boot_jgfs_fat_read
-	jc .fail_fat_load
+	jc .fail_fat_read
 	
 	cmp ax,JGFS_FAT_EOF
 	je .fat_ok
@@ -236,8 +290,8 @@ boot_jgfs_read_file:
 	jz .fail_fat_chain
 	
 	; > FAT_LAST is bad (unless FAT_EOF)
-	cmp ax,JGFS_FAT_LAST+1
-	jae .fail_fat_chain
+	cmp ax,JGFS_FAT_LAST
+	ja .fail_fat_chain
 	
 .fat_ok:
 	jne .read_loop
@@ -248,15 +302,12 @@ boot_jgfs_read_file:
 	popad
 	ret
 	
-.fail_int13:
+.fail_read_clust:
+.fail_fat_read:
+	; preserve error code
+	mov [.temp],al
 	popad
-	mov al,JGFS_ERR_INT13
-	
-	jmp .fail
-	
-.fail_fat_load:
-	popad
-	mov al,JGFS_ERR_FAT_LOAD
+	mov al,[.temp]
 	
 	jmp .fail
 	
@@ -267,3 +318,6 @@ boot_jgfs_read_file:
 .fail:
 	stc
 	ret
+	
+.temp:
+	db 0x00

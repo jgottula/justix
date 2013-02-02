@@ -129,8 +129,11 @@ boot_load_kernel:
 	cmp al,JGFS_ERR_INT13
 	je .load_fail_int13
 	
-	cmp al,JGFS_ERR_FAT_LOAD
-	je .load_fail_fat_load
+	cmp al,JGFS_ERR_BOUNDS_SECT
+	je .load_fail_bounds_sect
+	
+	cmp al,JGFS_ERR_BOUNDS_FAT
+	je .load_fail_bounds_fat
 	
 	cmp al,JGFS_ERR_FAT_CHAIN
 	je .load_fail_fat_chain
@@ -143,9 +146,15 @@ boot_load_kernel:
 	
 	jmp .load_fail_rejoin
 	
-.load_fail_fat_load:
-	mov cx,25
-	mov bp,boot_data.msg_err_jgfs_fat_load
+.load_fail_bounds_sect:
+	mov cx,29
+	mov bp,boot_data.msg_err_jgfs_bounds_sect
+	
+	jmp .load_fail_rejoin
+	
+.load_fail_bounds_fat:
+	mov cx,26
+	mov bp,boot_data.msg_err_jgfs_bounds_fat
 	
 	jmp .load_fail_rejoin
 	
@@ -213,8 +222,10 @@ boot_data:
 	db `Could not load the kernel:\r\n`
 .msg_err_jgfs_int13:
 	db `Read error!\r\n`
-.msg_err_jgfs_fat_load:
-	db `Dynamic FAT load error!\r\n`
+.msg_err_jgfs_bounds_sect:
+	db `Sector bounds check failed!\r\n`
+.msg_err_jgfs_bounds_fat:
+	db `FAT bounds check failed!\r\n`
 .msg_err_jgfs_fat_chain:
 	db `Bad FAT chain!\r\n`
 .msg_err_jgfs_unknown:
