@@ -15,7 +15,7 @@ kern_entry:
 	
 	jmp long SEL_KERN_CODE:.long_jump
 .long_jump:
-	mov ax,0x08
+	mov ax,SEL_KERN_DATA
 	mov ss,ax
 	mov ds,ax
 	mov es,ax
