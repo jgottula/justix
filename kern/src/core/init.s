@@ -25,9 +25,15 @@ kern_entry:
 	mov esp,kern_stack_bottom
 	mov ebp,0x00000000
 	
-	call idt_setup
+	; clear the BSS _before_ we use the stack (which is in the bss)
+	xor eax,eax
+	mov edi,_BSS_START
+	mov ecx,_BSS_SIZE
 	
-	invoke memset,_BSS_START,0,_BSS_SIZE
+	cld
+	rep stosb
+	
+	call idt_setup
 	
 	;sti
 	
