@@ -35,11 +35,16 @@ vbr_ready:
 	mov bp,vbr_data.msg_hello
 	call boot_print_str
 	
-	cmp dl,0x80
-	jae vbr_load_param
+	; si being zero means no mbr probably came before this
+	or si,si
+	jnz vbr_load_param
 	
-vbr_flop_compat:
-	; if we came from a floppy, fake a partition entry
+	; no bootable flag also indicates this situation
+	test byte [si+MBR_PART_OFF_STATUS],0x80
+	jnz vbr_load_param
+	
+vbr_no_mbr:
+	; if there is no mbr, fake a partition entry
 	sub sp,MBR_PART_SIZE
 	mov si,sp
 	
