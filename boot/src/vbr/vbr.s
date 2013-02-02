@@ -35,13 +35,17 @@ vbr_ready:
 	mov bp,vbr_data.msg_hello
 	call boot_print_str
 	
-	; si being zero means no mbr probably came before this
-	or si,si
-	jnz vbr_load_param
+	; TODO: handle recent windows mbr which puts part entry in ds:bp
 	
-	; no bootable flag also indicates this situation
+	; if si is zero, we probably didn't come from an mbr
+	or si,si
+	jz vbr_no_mbr
+	
+	; if we can't find the boot flag, we probably didn't come from an mbr
 	test byte [si+MBR_PART_OFF_STATUS],0x80
-	jnz vbr_load_param
+	jz vbr_no_mbr
+	
+	jmp vbr_load_param
 	
 vbr_no_mbr:
 	; if there is no mbr, fake a partition entry
