@@ -34,4 +34,4 @@ func_end
 str_stack_trace_header:
 	strz `stack trace:\n`
 str_stack_trace_line_fmt:
-	strz `[%i] 0x%d\n`
+	strz `[%i] 0x%xd\n`

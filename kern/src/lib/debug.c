@@ -22,8 +22,15 @@ void debug_write_fmt(const char *str, ...) {
 			case '%':
 				debug_write_chr('%');
 				break;
-			case 'd':
-				debug_write_hex32(*(arg++));
+			case 'x':
+				if (str[2] == 'b') {
+					debug_write_hex8(*(arg++));
+				} else if (str[2] == 'w') {
+					debug_write_hex16(*(arg++));
+				} else if (str[2] == 'd') {
+					debug_write_hex32(*(arg++));
+				}
+				++str;
 				break;
 			case 'i':
 				debug_write_dec(*(arg++));
