@@ -28,7 +28,7 @@ void task_init(void) {
 		.base_high    = (base >> 24),
 	};
 	
-	memcpy(gdt_table + SEL_TSS, &gdt_tss, sizeof(gdt_tss));
+	(&gdt_table)[SEL_TSS] = gdt_tss;
 	
 	memset(&tss_user, 0, sizeof(tss_user));
 	tss_user.ss0        = SEL_KERN_DATA * 8;

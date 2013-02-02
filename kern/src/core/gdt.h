@@ -40,7 +40,7 @@ struct gdt_entry {
 };
 
 
-extern struct gdt_entry *gdt_table;
+extern struct gdt_entry gdt_table;
 
 #else
 

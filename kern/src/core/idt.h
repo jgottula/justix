@@ -15,7 +15,7 @@ struct idt_entry {
 };
 
 
-extern struct idt_entry *idt_table;
+extern struct idt_entry idt_table;
 
 #else
 
