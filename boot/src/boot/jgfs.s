@@ -72,26 +72,18 @@ boot_jgfs_read_clust:
 	ret
 	
 	
-	; CF set on error
-boot_jgfs_fat_load:
+boot_jgfs_fat_init:
 	pushad
 	
-	mov cx,[JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_FAT]
-	movzx eax,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
-	mov edi,JGFS_FAT_OFFSET
+	cld
 	
-.read_loop:
-	call boot_jgfs_read_sector
-	jc .done
+	mov ecx,0x200
+	xor eax,eax
+	mov edi,JGFS_FAT_BMP_OFFSET
 	
-	inc eax
-	add edi,0x200
+	; zero out the fat sector bitmap
+	a32 rep es stosb
 	
-	loop .read_loop
-	
-	clc
-	
-.done:
 	popad
 	ret
 	
@@ -100,9 +92,53 @@ boot_jgfs_fat_load:
 	; EAX addr
 	; out:
 	; AX value
+	; CF set on failure to dynamically load fat
 boot_jgfs_fat_read:
+	push esi
+	push dx
+	
+	; here, we assume that JGFS_FENT_PER_SECT is 256
+	movzx esi,ah
+	mov dl,[es:esi+JGFS_FAT_BMP_OFFSET]
+	or dl,dl
+	
+	pop dx
+	
+	jnz .fat_loaded
+	
+.load_fat:
+	pushad
+	
+	xor al,al
+	lea edi,[es:eax*2+JGFS_FAT_OFFSET]
+	
+	movzx eax,ah
+	add ax,[es:JGFS_HDR_OFFSET+JGFS_HDR_OFF_S_RSVD]
+	
+	call boot_jgfs_read_sect
+	
+	jnc .read_ok
+	
+.read_fail:
+	popad
+	pop esi
+	
+	stc
+	ret
+	
+.read_ok:
+	popad
+	
+	; set the bitmap now
+	movzx esi,ah
+	mov byte [es:esi+JGFS_FAT_BMP_OFFSET],0xff
+	
+.fat_loaded:
+	pop esi
+	
 	mov ax,[es:eax*2+JGFS_FAT_OFFSET]
 	
+	clc
 	ret
 	
 	
@@ -174,6 +210,7 @@ boot_jgfs_lookup_child:
 	; EDI buffer
 	; out:
 	; CF set on failure
+	; AL error on failure
 boot_jgfs_read_file:
 	pushad
 	
@@ -184,17 +221,49 @@ boot_jgfs_read_file:
 	
 .read_loop:
 	call boot_jgfs_read_clust
-	jc .done
+	jc .fail_int13
 	
 	add edi,ecx
 	
 	call boot_jgfs_fat_read
+	jc .fail_fat_load
 	
 	cmp ax,JGFS_FAT_EOF
+	je .fat_ok
+	
+	; FAT_FREE is bad
+	or ax,ax
+	jz .fail_fat_chain
+	
+	; > FAT_LAST is bad (unless FAT_EOF)
+	cmp ax,JGFS_FAT_LAST+1
+	jae .fail_fat_chain
+	
+.fat_ok:
 	jne .read_loop
 	
+.done:
 	clc
 	
-.done:
 	popad
+	ret
+	
+.fail_int13:
+	popad
+	mov al,JGFS_ERR_INT13
+	
+	jmp .fail
+	
+.fail_fat_load:
+	popad
+	mov al,JGFS_ERR_FAT_LOAD
+	
+	jmp .fail
+	
+.fail_fat_chain:
+	popad
+	mov al,JGFS_ERR_FAT_CHAIN
+	
+.fail:
+	stc
 	ret

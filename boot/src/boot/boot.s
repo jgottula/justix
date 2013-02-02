@@ -71,15 +71,7 @@ boot_find_mem:
 boot_load_kernel:
 	call boot_enter_unreal
 	
-	call boot_jgfs_fat_load
-	jnc .fat_load_ok
-	
-.fat_load_fail:
-	mov cx,25
-	mov bp,boot_data.msg_err_jgfs_fat
-	call boot_print_str
-	
-	jmp boot_stop
+	call boot_jgfs_fat_init
 	
 .fat_load_ok:
 	movzx eax,word [JGFS_HDR_OFFSET+JGFS_HDR_OFF_ROOT_DE+JGFS_DE_OFF_BEGIN]
@@ -134,6 +126,43 @@ boot_load_kernel:
 	mov bp,boot_data.msg_err_jgfs_kern_load
 	call boot_print_str
 	
+	cmp al,JGFS_ERR_INT13
+	je .load_fail_int13
+	
+	cmp al,JGFS_ERR_FAT_LOAD
+	je .load_fail_fat_load
+	
+	cmp al,JGFS_ERR_FAT_CHAIN
+	je .load_fail_fat_chain
+	
+	jmp .load_fail_unknown
+	
+.load_fail_int13:
+	mov cx,13
+	mov bp,boot_data.msg_err_jgfs_int13
+	
+	jmp .load_fail_rejoin
+	
+.load_fail_fat_load:
+	mov cx,25
+	mov bp,boot_data.msg_err_jgfs_fat_load
+	
+	jmp .load_fail_rejoin
+	
+.load_fail_fat_chain:
+	mov cx,16
+	mov bp,boot_data.msg_err_jgfs_fat_chain
+	
+	jmp .load_fail_rejoin
+	
+.load_fail_unknown:
+	mov cx,21
+	mov bp,boot_data.msg_err_jgfs_unknown
+	
+.load_fail_rejoin:
+	call boot_print_str
+	
+.load_fail_done:
 	jmp boot_stop
 	
 boot_enter_kernel:
@@ -174,8 +203,6 @@ boot_data:
 	db `A20 gate could not be enabled!\r\n`
 .msg_err_mem:
 	db `Could not get system memory map!\r\n`
-.msg_err_jgfs_fat:
-	db `Could not load the FAT!\r\n`
 .msg_err_jgfs_root_dc:
 	db `Could not load the root dir cluster!\r\n`
 .msg_err_jgfs_kern_lookup:
@@ -183,7 +210,15 @@ boot_data:
 .msg_err_jgfs_kern_type:
 	db `The kernel is not a file!\r\n`
 .msg_err_jgfs_kern_load:
-	db `Could not load the kernel!\r\n`
+	db `Could not load the kernel:\r\n`
+.msg_err_jgfs_int13:
+	db `Read error!\r\n`
+.msg_err_jgfs_fat_load:
+	db `Dynamic FAT load error!\r\n`
+.msg_err_jgfs_fat_chain:
+	db `Bad FAT chain!\r\n`
+.msg_err_jgfs_unknown:
+	db `Unknown JGFS error!\r\n`
 .kern_filename:
 	db `kern\0`
 .boot_disk:

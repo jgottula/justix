@@ -1,12 +1,13 @@
-%define MBR_OFFSET          0x0c00
-%define JGFS_SECT_OFFSET    0x0e00
-%define JGFS_CLUST_OFFSET   0x1000
-%define MEM_MAP_OFFSET      0x7000
-%define VBR_OFFSET          0x7c00
-%define JGFS_HDR_OFFSET     0x7e00
-%define BOOT_OFFSET         0x8000
-%define JGFS_FAT_OFFSET    0x10000
-%define KERN_OFFSET       0x100000
+%define MBR_OFFSET            0x0c00
+%define JGFS_SECT_OFFSET      0x0e00
+%define JGFS_CLUST_OFFSET     0x1000
+%define MEM_MAP_OFFSET        0x7000
+%define VBR_OFFSET            0x7c00
+%define JGFS_HDR_OFFSET       0x7e00
+%define BOOT_OFFSET           0x8000
+%define JGFS_FAT_BMP_OFFSET  0x10000
+%define JGFS_FAT_OFFSET      0x10200
+%define KERN_OFFSET         0x100000
 
 %define MBR_SIZE            0x0200
 %define MBR_CODE_SIZE       0x01b8
