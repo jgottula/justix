@@ -1,4 +1,5 @@
 #include <lib/debug.h>
+#include <stdarg.h>
 #include <serial/serial.h>
 
 
@@ -11,7 +12,8 @@ void debug_write_str(const char *str) {
 }
 
 void debug_write_fmt(const char *str, ...) {
-	uint32_t *arg = (uint32_t *)&str + 1;
+	va_list fmt;
+	va_start(fmt, str);
 	
 	while (*str != '\0') {
 		if (*str == '%') {
@@ -24,19 +26,20 @@ void debug_write_fmt(const char *str, ...) {
 				break;
 			case 'x':
 				if (str[2] == 'b') {
-					debug_write_hex8(*(arg++));
+					debug_write_hex8(va_arg(fmt, uint32_t));
 				} else if (str[2] == 'w') {
-					debug_write_hex16(*(arg++));
+					debug_write_hex16(va_arg(fmt, uint32_t));
 				} else if (str[2] == 'd') {
-					debug_write_hex32(*(arg++));
+					debug_write_hex32(va_arg(fmt, uint32_t));
 				}
 				++str;
 				break;
 			case 'i':
-				debug_write_dec(*(arg++));
+				debug_write_dec(va_arg(fmt, uint32_t));
 				break;
 			default:
-				++arg;
+				/* explicitly discard the next parameter of unknown type */
+				(void)va_arg(fmt, uint32_t);
 			}
 			
 			str += 2;
@@ -46,6 +49,8 @@ void debug_write_fmt(const char *str, ...) {
 			++str;
 		}
 	}
+	
+	va_end(fmt);
 }
 
 void debug_write_hex4(uint8_t hex) {
