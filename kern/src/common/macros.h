@@ -35,6 +35,8 @@
 	db (%1) & 0xff
 %endmacro
 
+; warning, CEIL will behave strangely if _x is zero
+%define CEIL(_x, _step) ((((_x) - 1) / (_step)) + 1)
 %define _BV(_x) (1 << _x)
 
 %define param(_n) dword [ebp+(4*(_n+2))]
