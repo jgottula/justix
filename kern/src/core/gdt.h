@@ -13,11 +13,34 @@
 #define GDT_FL_GR     0x80
 #define GDT_FL_SZ     0x40
 
-#define SEL_NULL      0x00
-#define SEL_KERN_DATA 0x08
-#define SEL_KERN_CODE 0x10
-#define SEL_USER_DATA 0x18
-#define SEL_USER_CODE 0x20
+#define SEL_NULL      0
+#define SEL_KERN_DATA 1
+#define SEL_KERN_CODE 2
+#define SEL_USER_DATA 3
+#define SEL_USER_CODE 4
+#define SEL_TSS       5
+
+
+struct gdt_entry {
+	uint16_t limit_low    : 16;
+	uint16_t base_low     : 16;
+	uint8_t  base_med     :  8;
+	uint8_t  access_ac    :  1;
+	uint8_t  access_rw    :  1;
+	uint8_t  access_dc    :  1;
+	uint8_t  access_ex    :  1;
+	uint8_t  access_one   :  1;
+	uint8_t  access_privl :  2;
+	uint8_t  access_pr    :  1;
+	uint8_t  limit_high   :  4;
+	uint8_t  flags_zero   :  2;
+	uint8_t  flags_sz     :  1;
+	uint8_t  flags_gr     :  1;
+	uint8_t  base_high    :  8;
+};
+
+
+extern struct gdt_entry *gdt_table;
 
 #else
 
@@ -36,8 +59,11 @@
 %assign SEL_KERN_CODE 0x10
 %assign SEL_USER_DATA 0x18
 %assign SEL_USER_CODE 0x20
+%assign SEL_TSS       0x28
 
 %ifndef jgsys_kern_core_gdt
+extern gdt_table
+
 extern gdt_setup
 %endif
 
