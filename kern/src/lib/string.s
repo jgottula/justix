@@ -57,6 +57,7 @@ func memset
 	mov ecx,[%$size]
 	mov edi,[%$mem]
 	
+	cld
 	rep stosb
 	
 func_end
