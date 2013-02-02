@@ -12,7 +12,7 @@ kern_entry:
 	
 	call gdt_setup
 	
-	jmp long SEG_KERN_CODE:.long_jump
+	jmp long SEL_KERN_CODE:.long_jump
 .long_jump:
 	mov ax,0x08
 	mov ss,ax
