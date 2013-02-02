@@ -37,6 +37,7 @@
 %define JGFS_TYPE_SYMLINK     0x04
 
 %define JGFS_FENT_PER_SECT   0x100
+%define JGFS_MAX_FAT_SECT    0x100
 
 %define JGFS_ERR_INT13        0x01
 %define JGFS_ERR_FAT_LOAD     0x02

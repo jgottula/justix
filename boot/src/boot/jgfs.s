@@ -77,7 +77,7 @@ boot_jgfs_fat_init:
 	
 	cld
 	
-	mov ecx,0x200
+	mov ecx,JGFS_MAX_FAT_SECT
 	xor eax,eax
 	mov edi,JGFS_FAT_BMP_OFFSET
 	
