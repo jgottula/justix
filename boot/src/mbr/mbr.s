@@ -49,7 +49,7 @@ mbr_find_active:
 	mov si,(MBR_OFFSET+MBR_OFF_PART1)
 	
 .part_loop:
-	mov al,[si]
+	mov al,[si+MBR_PART_OFF_STATUS]
 	test al,0x80
 	jnz mbr_read_vbr
 	

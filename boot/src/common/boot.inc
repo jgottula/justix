@@ -25,6 +25,7 @@
 %define MBR_OFF_PART4         0x01ee
 
 %define MBR_PART_SIZE         0x0010
+%define MBR_PART_OFF_STATUS   0x0000
 %define MBR_PART_OFF_LBA      0x0008
 
 %define VBR_OFF_BOOTFLAG      0x01fe
