@@ -11,3 +11,10 @@ kern_die:
 	hlt
 	
 	jmp $
+	
+	
+	section .bss
+	
+gdata kern_syscall_stack_top
+	resb 0x1000
+gdata kern_syscall_stack_bottom

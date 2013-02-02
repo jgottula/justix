@@ -22,7 +22,7 @@ kern_entry:
 	mov fs,ax
 	mov gs,ax
 	
-	mov esp,kern_stack_bottom
+	mov esp,kern_init_stack_bottom
 	mov ebp,0x00000000
 	
 	; clear the BSS _before_ we use the stack (which is in the bss)
@@ -42,6 +42,6 @@ kern_entry:
 	
 	section .bss
 	
-gdata kern_stack_top
+gdata kern_init_stack_top
 	resb 0x1000
-gdata kern_stack_bottom
+gdata kern_init_stack_bottom

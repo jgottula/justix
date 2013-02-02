@@ -46,6 +46,8 @@ gdt_table:
 	db GDT_ACC_PR | 0x70 | GDT_ACC_EX | GDT_ACC_RW
 	db 0x0f | GDT_FL_GR | GDT_FL_SZ
 	db 0x00
+.tss:
+	dq 0
 .info:
 	dw ((.info-gdt_table)-1)
 	dd gdt_table

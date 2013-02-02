@@ -2,6 +2,7 @@
 #include <lib/debug.h>
 #include <serial/serial.h>
 #include <bus/pci.h>
+#include <core/task.h>
 
 
 struct mem_map_entry *mem_map;
@@ -11,9 +12,11 @@ void kern_main(void) {
 	serial_detect();
 	serial_init(0, SER_38400, SER_8N1);
 	
-	debug_write_fmt("JGSYS kern\n" __DATE__ " " __TIME__ "\n");
+	debug_write_fmt("JGSYS kern\nCompiled: " __DATE__ " " __TIME__ "\n");
 	
 	pci_enum();
+	
+	task_init();
 	
 	/* TODO: find the size of the memory map and allocate just enough space */
 }
