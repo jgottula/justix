@@ -38,6 +38,9 @@ if [[ ! -e "$PART" ]]; then
 	echo "Partition $PART does not exist"
 	exit 1
 fi
+
+mkdir "$MOUNT"
+
 if [[ ! -e "$MOUNT" ]]; then
 	echo "Mount point $MOUNT does not exist"
 	exit 1
