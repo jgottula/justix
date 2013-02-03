@@ -132,6 +132,7 @@
 %macro trap 1
 %push trap_%1
 %assign %$trap_has_code 0
+%define %$regs   ebp-36
 %define %$eip    ebp+4
 %define %$cs     ebp+8
 %define %$eflags ebp+12
@@ -146,6 +147,7 @@
 %macro trap_code 1
 %push trap_%1
 %assign %$trap_has_code 1
+%define %$regs   ebp-36
 %define %$code   ebp+4
 %define %$eip    ebp+8
 %define %$cs     ebp+12
