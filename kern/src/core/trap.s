@@ -6,7 +6,7 @@
 %macro auto_trap 1
 trap trap_%1
 	
-	invoke trap_common,0,[%$cs],[%$eip],[%$eflags],str_%1
+	invoke trap_common,[%$regs],0,[%$cs],[%$eip],[%$eflags],str_%1
 	
 trap_end
 %endm
@@ -14,7 +14,7 @@ trap_end
 %macro auto_trap_code 1
 trap_code trap_%1
 	
-	invoke trap_common,[%$code],[%$cs],[%$eip],[%$eflags],str_%1
+	invoke trap_common,[%$regs],[%$code],[%$cs],[%$eip],[%$eflags],str_%1
 	
 trap_end
 %endm
@@ -22,12 +22,15 @@ trap_end
 	section .text
 	
 func trap_common
-	params code,cs,eip,eflags,desc
+	params regs,code,cs,eip,eflags,desc
 	
 	invoke debug_write_fmt,str_fmt,[%$desc],[%$code],[%$cs],[%$eip],[%$eflags]
 	
 	mov eax,[ebp]
 	invoke debug_stack_trace,[eax]
+	
+	invoke debug_dump_saved_reg,[%$regs]
+	invoke debug_dump_mem,[%$eip],16
 	
 	; for now, everything is fatal
 	; TODO: salvage cases that aren't fatal
