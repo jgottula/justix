@@ -1,13 +1,21 @@
 #!/bin/sh
 
+MAKE="yes"
 DEV="/dev/loop0"
 PART="/dev/loop0p1"
 MOUNT="/tmp/jgfs"
 
 usage() {
-  echo "usage: $0 [dev=] [part=] [mount=] [bochs|eject]"
+  echo "usage: $0 [nomake] [dev=] [part=] [mount=] [bochs|eject]"
   exit 1
 }
+
+if [[ "$1" == "nomake" ]]; then
+	MAKE="no"
+	shift
+	
+	echo "Skipping make step"
+fi
 
 if [[ "$1" == "dev="* ]]; then
 	DEV="${1#dev=}"
@@ -50,8 +58,10 @@ if [[ ! -d "$MOUNT" ]]; then
 	exit 1
 fi
 
-echo "Running make first..."
-make all || exit 1
+if [[ "$MAKE" == "yes" ]]; then
+	echo "Running make first..."
+	make all || exit 1
+fi
 
 echo "Making new JGFS on $PART"
 ../jgfs/bin/mkjgfs -Z "$PART" || exit 1
