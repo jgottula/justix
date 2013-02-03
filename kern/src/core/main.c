@@ -18,12 +18,15 @@ void kern_main(void) {
 	
 	task_init();
 	
+	task_enter_ring3(user_test);
+	
 	while (true) {
 		
 	}
 	
 	/* TODO: find the size of the memory map and allocate just enough space */
 }
+
 /*	; copy the memory map into kernel memory
 	invoke memcpy,kern_mem_map,MEM_MAP_OFFSET,0x1000
 	

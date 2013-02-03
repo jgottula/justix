@@ -17,6 +17,8 @@ extern struct mem_map_entry *mem_map;
 void kern_main(void);
 void kern_die(void);
 
+void user_test(void);
+
 #else
 
 extern kern_mem_map

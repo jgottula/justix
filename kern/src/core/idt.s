@@ -1,40 +1,37 @@
 %include 'common/header.inc'
 %include 'core/idt.inc'
+%include 'core/gdt.inc'
 %include 'core/trap.inc'
 	
 	section .text
 	
-	global idt_setup:function
-idt_setup:
-	mov eax,0x06
-	mov ecx,trap_ud
-	call idt_setup_trap
+func idt_setup
+	invoke idt_setup_trap,0x06,trap_ud,0b10001111
+	invoke idt_setup_trap,0x08,trap_df,0b10001111
+	invoke idt_setup_trap,0x0d,trap_gp,0b10001111
 	
-	mov eax,0x08
-	mov ecx,trap_df
-	call idt_setup_trap
-	
-	mov eax,0x0d
-	mov ecx,trap_gp
-	call idt_setup_trap
-	
-	mov eax,0x80
-	mov ecx,trap_syscall
-	call idt_setup_trap
+	invoke idt_setup_trap,0x80,trap_syscall,0b11101111
 	
 	lidt [idt_table.info]
 	
-	ret
+func_end
 	
-idt_setup_trap:
-	mov word [idt_table+eax*8],cx
-	mov word [idt_table+eax*8+2],0x10
+	
+func_priv idt_setup_trap
+	params index,addr,flag
+	
+	mov eax,[%$index]
+	mov ecx,[%$addr]
+	mov edx,[%$flag]
+	
+	mov [idt_table+eax*8],cx
+	mov word [idt_table+eax*8+2],SEL_KERN_CODE
 	mov byte [idt_table+eax*8+4],0x00
-	mov byte [idt_table+eax*8+5],0b10001111
+	mov [idt_table+eax*8+5],dl
 	shr ecx,16
-	mov word [idt_table+eax*8+6],cx
+	mov [idt_table+eax*8+6],cx
 	
-	ret
+func_end
 	
 	
 	section .data

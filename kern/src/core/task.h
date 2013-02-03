@@ -36,13 +36,18 @@ struct tss_entry {
 
 void task_init(void);
 void task_flush_tss(void);
+void task_enter_ring3(void *addr);
 
 #else
 
 extern tss_init
 
 %ifndef jgsys_kern_core_task
+extern user_stack_top
+extern user_stack_bottom
+
 extern task_flush_tss
+extern task_enter_ring3
 %endif
 
 #endif

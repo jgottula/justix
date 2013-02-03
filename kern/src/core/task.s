@@ -10,3 +10,39 @@ func task_flush_tss
 	ltr ax
 	
 func_end
+	
+	
+	global task_enter_ring3:function
+task_enter_ring3:
+	; TODO: make sure frame/stack behavior is consistent
+	frame
+	
+	cli
+	
+	mov ax,(SEL_USER_DATA|0b11)
+	mov ds,ax
+	mov es,ax
+	mov fs,ax
+	mov gs,ax
+	
+	pushf
+	pop eax
+	
+	; set IOPL to 3
+	or eax,0x3000
+	
+	push (SEL_USER_DATA|0b11)
+	push user_stack_bottom
+	push eax
+	push (SEL_USER_CODE|0b11)
+	push dword [ebp+8]
+	
+	sti
+	iret
+	
+	
+	section .bss
+	
+gdata user_stack_top
+	resb 0x1000
+gdata user_stack_bottom

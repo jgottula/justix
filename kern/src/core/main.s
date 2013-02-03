@@ -12,6 +12,16 @@ kern_die:
 	
 	jmp $
 	
+func user_test
+	
+	nop
+	nop
+	nop
+	nop
+	int 0x80
+	
+func_end
+	
 	
 	section .bss
 	
