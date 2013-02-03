@@ -17,6 +17,10 @@ task_enter_ring3:
 	; TODO: make sure frame/stack behavior is consistent
 	frame
 	
+	; get eflags while interrupts are as they were
+	pushf
+	pop ecx
+	
 	cli
 	
 	mov ax,(SEL_USER_DATA|0b11)
@@ -25,15 +29,12 @@ task_enter_ring3:
 	mov fs,ax
 	mov gs,ax
 	
-	pushf
-	pop eax
-	
 	; set IOPL to 3
-	or eax,0x3000
+	or ecx,0x3000
 	
 	push (SEL_USER_DATA|0b11)
 	push user_stack_bottom
-	push eax
+	push ecx
 	push (SEL_USER_CODE|0b11)
 	push dword [ebp+8]
 	
