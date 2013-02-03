@@ -42,7 +42,7 @@ func_end
 	
 	
 auto_trap      ud
-auto_trap_code df
+auto_trap      df ; no error code??
 auto_trap_code gp
 	
 	
