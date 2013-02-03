@@ -28,6 +28,8 @@ func strcmp
 	params s1,s2
 	
 	; TODO
+	xor edx,edx
+	div edx
 	
 func_end
 	
