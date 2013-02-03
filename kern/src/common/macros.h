@@ -112,6 +112,13 @@
 	frame
 %endm
 
+%macro func_priv 1
+%push func_%1
+	align 4
+%1:
+	frame
+%endm
+
 %macro func_end 0
 .exit:
 %ifdef %$saved
