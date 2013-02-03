@@ -1,7 +1,7 @@
 %define JGFS_MAGIC          `JGFS`
 %define JGFS_VER_MAJOR        0x04
-%define JGFS_VER_MINOR        0x00
-%define JGFS_VER_TOTAL      0x0400
+%define JGFS_VER_MINOR        0x01
+%define JGFS_VER_TOTAL      0x0401
 
 %define JGFS_HDR_OFF_S_TOTAL 0x006
 %define JGFS_HDR_OFF_S_BOOT  0x00a
@@ -9,7 +9,7 @@
 
 %define JGFS_HDR_OFF_S_PER_C 0x00e
 
-%define JGFS_HDR_OFF_ROOT_DE 0x010
+%define JGFS_HDR_OFF_ROOT_DE 0x02c
 
 %define JGFS_DC_OFF_FIRST_DE 0x000
 
