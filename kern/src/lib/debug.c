@@ -116,11 +116,15 @@ void debug_dump_saved_reg(uint32_t *regs) {
 }
 
 void debug_dump_mem(void *addr, uint32_t len) {
-	uintptr_t start = (uintptr_t)addr & ~0xf;
+	uintptr_t start = (uintptr_t)addr;
 	uintptr_t end   = (uintptr_t)((uint8_t *)addr + len);
 	
+	/* round down to 16 bytes */
+	start &= ~0xf;
+	
+	/* round up to 16 bytes */
 	if ((end & 0xf) != 0) {
-		end &= 0xf;
+		end &= ~0xf;
 		end += 0x10;
 	}
 	
@@ -134,11 +138,13 @@ void debug_dump_mem(void *addr, uint32_t len) {
 			debug_write_fmt("%xd: ", ptr);
 		} else if (i == 8) {
 			debug_write_chr(' ');
-		} else if (i == 15) {
-			debug_write_chr('\n');
 		}
 		
 		debug_write_fmt(" %xb", *ptr);
+		
+		if (i == 15) {
+			debug_write_chr('\n');
+		}
 		
 		++ptr;
 		if (++i >= 0x10) {
