@@ -1,0 +1,11 @@
+#ifndef JGSYS_KERN_COMMON_VERSION
+#define JGSYS_KERN_COMMON_VERSION
+
+#ifndef __ASSEMBLY__
+
+#define VER_COMPILE_DATE __DATE__
+#define VER_COMPILE_TIME __TIME__
+
+#endif
+
+#endif

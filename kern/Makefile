@@ -21,7 +21,8 @@ LDFLAGS:=-Tkern.ld
 
 
 HEADERS:=$(shell find . -type f -name '*.h')
-HEADERS_INC:=$(patsubst %.h,%.inc,$(HEADERS))
+HEADERS_C_ONLY:=./src/common/version.h ./src/common/inline.h ./src/common/port.h
+HEADERS_INC:=$(patsubst %.h,%.inc,$(filter-out $(HEADERS_C_ONLY),$(HEADERS)))
 
 SOURCE_S:=$(shell find . -type f -name '*.s')
 SOURCE_C:=$(shell find . -type f -name '*.c')
@@ -35,6 +36,9 @@ CLEAN:=$(wildcard out/*) $(shell find src -type f \( -iname '*.dep' -or -iname '
 
 
 .PHONY: all clean kern
+
+# always update version.h when building
+.PHONY: src/common/version.h
 
 # default rule
 all: kern

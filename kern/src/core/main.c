@@ -1,4 +1,5 @@
 #include <core/main.h>
+#include <common/version.h>
 #include <lib/debug.h>
 #include <serial/serial.h>
 #include <bus/pci.h>
@@ -12,7 +13,8 @@ void kern_main(void) {
 	serial_detect();
 	serial_init(0, SER_38400, SER_8N1);
 	
-	debug_write_fmt("JGSYS kern\nCompiled: " __DATE__ " " __TIME__ "\n");
+	debug_write_fmt("JGSYS kern\nCompiled: "
+		VER_COMPILE_DATE " " VER_COMPILE_TIME "\n");
 	
 	pci_enum();
 	
