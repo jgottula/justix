@@ -16,7 +16,7 @@ stage2_enter_unreal:
 	or al,0x01
 	mov cr0,eax
 	
-	; set fs and gs to descriptor 1
+	; set es to descriptor 1
 	mov bx,0x08
 	mov es,bx
 	
