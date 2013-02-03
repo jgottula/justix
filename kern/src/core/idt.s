@@ -1,6 +1,6 @@
 %include 'common/header.inc'
 %include 'core/idt.inc'
-%include 'core/exception.inc'
+%include 'core/trap.inc'
 	
 	section .text
 	
@@ -16,6 +16,10 @@ idt_setup:
 	
 	mov eax,0x0d
 	mov ecx,trap_gp
+	call idt_setup_trap
+	
+	mov eax,0x80
+	mov ecx,trap_syscall
 	call idt_setup_trap
 	
 	lidt [idt_table.info]
