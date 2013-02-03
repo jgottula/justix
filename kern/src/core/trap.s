@@ -6,7 +6,8 @@
 %macro auto_trap 1
 trap trap_%1
 	
-	invoke trap_common,[%$regs],0,[%$cs],[%$eip],[%$eflags],str_%1
+	lea eax,[%$regs]
+	invoke trap_common,eax,0,[%$cs],[%$eip],[%$eflags],str_%1
 	
 trap_end
 %endm
@@ -14,7 +15,8 @@ trap_end
 %macro auto_trap_code 1
 trap_code trap_%1
 	
-	invoke trap_common,[%$regs],[%$code],[%$cs],[%$eip],[%$eflags],str_%1
+	lea eax,[%$regs]
+	invoke trap_common,eax,[%$code],[%$cs],[%$eip],[%$eflags],str_%1
 	
 trap_end
 %endm
