@@ -6,33 +6,36 @@
 CC:=ccache gcc
 CFLAGS:=-std=gnu11 -O0 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -include stdbool.h -include stdint.h
 LDFLAGS:=
-	
-DEFINES:=-D_GNU_SOURCE
-LIBS:=-lbsd
 
-SETUP_BIN:=setup
-INSTALL_BIN:=install
-TEST_BIN:=test
-BINS:=$(SETUP_BIN) $(INSTALL_BIN) $(TEST_BIN)
+DEFINES:=-D_GNU_SOURCE
+INCLUDE:=../../jgfs/src/
+
+SETUP_LIBS:=
+INSTALL_LIBS:=-lbsd -ludev
+TEST_LIBS:=
 
 COMMON_OBJS=src/common.o
 
 
-.PHONY: all clean
+.PHONY: all clean setup install test
 
 # default rule
-all: $(BINS)
+all: setup install test
+
+setup:   bin/setup
+install: bin/install
+test:    bin/test
 
 clean:
-	rm -rf $(BINS) $(wildcard src/*.o) $(wildcard src/*.dep)
+	rm -rf $(wildcard bin/*) $(wildcard src/*.o) $(wildcard src/*.dep)
 
 
-$(SETUP_BIN): $(COMMON_OBJS) src/setup.o
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
-$(INSTALL_BIN): $(COMMON_OBJS) src/install.o
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
-$(TEST_BIN): $(COMMON_OBJS) src/test.o
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
+bin/setup: src/setup.o $(COMMON_OBJS)
+	$(CC) $(CFLAGS) $(SETUP_LIBS) -o $@ $^
+bin/install: src/install.o $(COMMON_OBJS)
+	$(CC) $(CFLAGS) $(INSTALL_LIBS) -o $@ $^
+bin/test: src/test.o $(COMMON_OBJS)
+	$(CC) $(CFLAGS) $(TEST_LIBS) -o $@ $^
 
 
 %.o: %.c Makefile

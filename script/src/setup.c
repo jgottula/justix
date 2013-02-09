@@ -1,7 +1,7 @@
 #include <argp.h>
-#include <bsd/string.h>
 #include <err.h>
 #include <inttypes.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include "common.h"
@@ -15,11 +15,11 @@ struct {
 	uint32_t part_start;
 } param =
 {
-	.image_file   = "test/zip100.img",
-	.loop_dev     = "/dev/loop0",
+	.image_file = "test/zip100.img",
+	.loop_dev   = "/dev/loop0",
 	
-	.image_size   = 196608 * 512,
-	.part_start   = 32,
+	.image_size = 196608 * 512,
+	.part_start = 32,
 };
 
 
@@ -67,17 +67,17 @@ error_t parse_opt(int key, char *arg, struct argp_state *state) {
 static const char doc[] = "Set up a loop device for jgsys testing.";
 static const char args_doc[] = "";
 static struct argp_option options[] = {
-	{ NULL, 0, NULL, 0, "string parameters:", 1 },
+	{ NULL, 0, NULL, 0, "path parameters:", 1 },
 	{ "image", 'I', "FILE", 0,
-		"image file             [default: test/zip100.img]", 1 },
+		"image file   [default: test/zip100.img]", 1 },
 	{ "dev", 'D', "DEVICE", 0,
-		"loop device            [default: /dev/loop0]", 1 },
+		"loop device  [default: /dev/loop0]", 1 },
 	
 	{ NULL, 0, NULL, 0, "size parameters:", 2 },
 	{ "size", 's', "NUMBER", 0,
-		"image size in bytes    [default: 100663296]", 2, },
+		"image size in bytes     [default: 100663296]", 2, },
 	{ "psect", 'p', "NUMBER", 0,
-		"partition start sector [default: 32]", 2, },
+		"partition start sector  [default: 32]", 2, },
 	
 	{ 0 }
 };
@@ -94,7 +94,6 @@ int main(int argc, char **argv) {
 	warnx("part start:  %" PRIu32, param.part_start);
 	
 	warnx("cleaning up...");
-	run(RF_QUIET, "killall -q jgfs");
 	run(RF_SUDO | RF_FATAL, "modprobe loop");
 	run(RF_SUDO | RF_QUIET, "losetup -d %s", param.loop_dev);
 	(void)unlink(param.image_file);

@@ -85,7 +85,7 @@ void run(unsigned int flag, const char *cmdline, ...) {
 		}
 		args[num_args] = NULL;
 		
-		if (execvpe(args[0], args, environ) == -1) {
+		if (execvp(args[0], args) == -1) {
 			*status = errno;
 			exit(0);
 		}
@@ -94,12 +94,12 @@ void run(unsigned int flag, const char *cmdline, ...) {
 		
 		siginfo_t siginfo;
 		if (waitid(P_PID, pid, &siginfo, WEXITED)  == -1) {
-			err(1, "waitpid filed");
+			err(1, "waitpid failed");
 		}
 		
 		if (*status != 0) {
 			errno = *status;
-			err(1, "execvpe on '%s' failed", prog);
+			err(1, "execvp on '%s' failed", prog);
 		}
 		
 		if (flag & RF_FATAL) {
