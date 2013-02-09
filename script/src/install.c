@@ -63,7 +63,7 @@ const char *process_dev_path(const char *orig) {
 		
 		return canonical;
 	} else {
-		return prepend_dev(orig);
+		return process_dev_path(prepend_dev(orig));
 	}
 }
 
@@ -399,12 +399,6 @@ void install_kern(void) {
 	free(mount_dir);
 }
 
-bool eject(int fd) {
-	warnx("eject not yet supported");
-	
-	return false;
-}
-
 int main(int argc, char **argv) {
 	argp_parse(&argp, argc, argv, 0, NULL, NULL);
 	
@@ -459,8 +453,10 @@ int main(int argc, char **argv) {
 	install_kern();
 	
 	if (param.eject) {
-		if (!eject(part_fd)) {
-			warnx("could not eject");
+		if (param.floppy) {
+			run(0, "eject %s", param.part_path);
+		} else {
+			run(0, "eject %s", param.dev_path);
 		}
 	}
 	
