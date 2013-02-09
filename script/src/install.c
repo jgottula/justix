@@ -20,7 +20,7 @@
 #define MBR_PATH    "boot/out/bin/mbr"
 #define STAGE1_PATH "boot/out/bin/stage1"
 #define STAGE2_PATH "boot/out/bin/stage2"
-#define KERN_PATH   "kern/out/kern.elf"
+#define KERN_PATH   "kern/out/kern.bin"
 
 #define MBR_SIZE    440
 #define STAGE1_SIZE 512
