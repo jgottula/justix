@@ -6,19 +6,22 @@
 TIMESTAMP=$(shell date +'%Y%m%d-%H%M')
 
 
-.PHONY: all clean backup boot kern
+.PHONY: all clean backup boot kern script
 
 # default rule
-all: boot kern
+all: boot kern script
 
 boot:
 	$(MAKE) -C boot all
 kern:
 	$(MAKE) -C kern all
+script:
+	$(MAKE) -C script all
 
 clean:
 	$(MAKE) -C boot clean
 	$(MAKE) -C kern clean
+	$(MAKE) -C script clean
 
 backup:
 	cd .. && tar -acvf backup/jgsys-$(TIMESTAMP).tar.xz jgsys/

@@ -1,8 +1,12 @@
 *.sublime-*
 *.dep
+*.o
 boot/out/
 kern/out/
 kern/src/*/*.inc
 kern/src/*/*.lst
 kern/src/*/*.[cs]o
+script/setup
+script/install
+script/test
 test/*.img
