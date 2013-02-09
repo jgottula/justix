@@ -6,7 +6,5 @@ kern/out/
 kern/src/*/*.inc
 kern/src/*/*.lst
 kern/src/*/*.[cs]o
-script/setup
-script/install
-script/test
+script/bin/
 test/*.img
