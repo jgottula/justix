@@ -44,8 +44,8 @@ void run(unsigned int flag, const char *cmdline, ...) {
 	char *prog = (flag & RF_SUDO) ? args[1] : args[0];
 	
 	if (!(flag & RF_NOECHO)) {
-		fprintf(stderr, "\x1b[;1m>> \x1b[%s;1m",
-			((flag & RF_SUDO) ? "31" : "33"));
+		fprintf(stderr, "\x1b[%s;1m>> \x1b[0m",
+			((flag & RF_SUDO) ? "33" : "37"));
 		
 		for (size_t i = 0; i < num_args; ++i) {
 			if (i != 0) {
@@ -55,7 +55,7 @@ void run(unsigned int flag, const char *cmdline, ...) {
 			fputs(args[i], stderr);
 		}
 		
-		fputs("\x1b[0m\n", stderr);
+		fputc('\n', stderr);
 	}
 	
 	int shmid;
