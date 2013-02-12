@@ -57,7 +57,9 @@ const char *process_dev_path(const char *orig) {
 	/* follow symlinks and add leading /dev/ component if missing */
 	if (strstr(orig, "/dev/") == orig) {
 		char *canonical = canonicalize_file_name(orig);
-		if (strlen(canonical) <= 5) {
+		if (canonical == NULL) {
+			err(1, "canonicalize_file_name failed");
+		} else if (strlen(canonical) <= 5) {
 			errx(1, "bad path: '%s'", canonical);
 		}
 		
