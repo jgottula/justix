@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	run(RF_FATAL, "script/bin/install");
 	
 	warnx("running bochs...");
-	run(0, "bochs");
+	run_nofork(0, "bochs");
 	
 	return 0;
 }
