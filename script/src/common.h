@@ -11,6 +11,7 @@ enum run_flag {
 
 
 void run(unsigned int flag, const char *cmdline, ...);
+void run_nofork(unsigned int flag, const char *cmdline, ...);
 
 
 #endif

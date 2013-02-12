@@ -12,23 +12,23 @@
 #include "common.h"
 
 
-void run(unsigned int flag, const char *cmdline, ...) {
+static char *prog, **args;
+size_t num_args;
+
+
+static void run_common(unsigned int flag, const char *cmdline, va_list ap) {
 	char buffer[4096];
-	
-	va_list ap;
-	va_start(ap, cmdline);
 	vsnprintf(buffer, sizeof(buffer), cmdline, ap);
-	va_end(ap);
 	
-	size_t num_args = 0;
-	char **args = malloc(128 * sizeof(char *));
-	char *strtok_save = NULL;
+	args = malloc(128 * sizeof(char *));
+	num_args = 0;
 	
 	if (flag & RF_SUDO) {
 		args[0] = strdup("sudo");
 		++num_args;
 	}
 	
+	char *strtok_save = NULL;
 	char *arg = strtok_r(buffer, " ", &strtok_save);
 	assert(arg != NULL);
 	do {
@@ -41,7 +41,7 @@ void run(unsigned int flag, const char *cmdline, ...) {
 		arg = strtok_r(NULL, " ", &strtok_save);
 	} while (arg != NULL);
 	
-	char *prog = (flag & RF_SUDO) ? args[1] : args[0];
+	prog = (flag & RF_SUDO) ? args[1] : args[0];
 	
 	if (!(flag & RF_NOECHO)) {
 		fprintf(stderr, "\x1b[%s;1m>> \x1b[0m",
@@ -57,6 +57,13 @@ void run(unsigned int flag, const char *cmdline, ...) {
 		
 		fputc('\n', stderr);
 	}
+}
+
+void run(unsigned int flag, const char *cmdline, ...) {
+	va_list ap;
+	va_start(ap, cmdline);
+	run_common(flag, cmdline, ap);
+	va_end(ap);
 	
 	int shmid;
 	if ((shmid = shmget(IPC_PRIVATE, sizeof(int),
@@ -124,4 +131,20 @@ void run(unsigned int flag, const char *cmdline, ...) {
 		free(args[num_args]);
 	}
 	free(args);
+}
+
+void run_nofork(unsigned int flag, const char *cmdline, ...) {
+	va_list ap;
+	va_start(ap, cmdline);
+	run_common(flag, cmdline, ap);
+	va_end(ap);
+	
+	if (num_args % 128 == 0) {
+		args = realloc(args, (num_args + 1) * sizeof(char *));
+	}
+	args[num_args] = NULL;
+	
+	if (execvp(args[0], args) == -1) {
+		err(1, "execvp on '%s' failed", prog);
+	}
 }
