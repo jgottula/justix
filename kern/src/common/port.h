@@ -56,7 +56,7 @@ really_inline void outd(uint16_t port, uint32_t val) {
 
 really_inline void insb(uint16_t port, uint8_t *dst, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep insb"
 		: "=D" (dst), "=c" (count)
 		: "d" (port), "0" (dst), "1" (count));
@@ -64,7 +64,7 @@ really_inline void insb(uint16_t port, uint8_t *dst, uint32_t count) {
 
 really_inline void insw(uint16_t port, uint16_t *dst, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep insw"
 		: "=D" (dst), "=c" (count)
 		: "d" (port), "0" (dst), "1" (count));
@@ -72,7 +72,7 @@ really_inline void insw(uint16_t port, uint16_t *dst, uint32_t count) {
 
 really_inline void insd(uint16_t port, uint32_t *dst, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep insl"
 		: "=D" (dst), "=c" (count)
 		: "d" (port), "0" (dst), "1" (count));
@@ -80,7 +80,7 @@ really_inline void insd(uint16_t port, uint32_t *dst, uint32_t count) {
 
 really_inline void outsb(uint16_t port, const uint8_t *src, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep outsb"
 		: "=S" (src), "=c" (count)
 		: "d" (port), "0" (src), "1" (count));
@@ -88,7 +88,7 @@ really_inline void outsb(uint16_t port, const uint8_t *src, uint32_t count) {
 
 really_inline void outsw(uint16_t port, const uint16_t *src, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep outsw"
 		: "=S" (src), "=c" (count)
 		: "d" (port), "0" (src), "1" (count));
@@ -96,7 +96,7 @@ really_inline void outsw(uint16_t port, const uint16_t *src, uint32_t count) {
 
 really_inline void outsd(uint16_t port, const uint32_t *src, uint32_t count) {
 	__asm__ __volatile__(
-		"cld"
+		"cld\n"
 		"rep outsl"
 		: "=S" (src), "=c" (count)
 		: "d" (port), "0" (src), "1" (count));

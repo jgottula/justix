@@ -16,7 +16,7 @@ NM     :=$(PREFIX)/nm
 
 ASFLAGS:=-felf -MP -Ox -Wall
 CPPFLAGS:=-std=gnu11 -Wall -x assembler-with-cpp -D__ASSEMBLY__
-CFLAGS:=-std=gnu11 -O1 -ggdb -Wall -Wextra -ffreestanding -fno-omit-frame-pointer -fno-strict-aliasing -fpack-struct -nodefaultlibs -nostdlib -march=pentium-mmx -mtune=pentium-mmx -include stdbool.h -include stdint.h
+CFLAGS:=-std=gnu11 -O1 -ggdb -Wall -Wextra -Wno-unused-variable -ffreestanding -fno-omit-frame-pointer -fno-strict-aliasing -fpack-struct -nodefaultlibs -nostdlib -march=pentium-mmx -mtune=pentium-mmx -include stdbool.h -include stdint.h -include common/macros.h
 LDFLAGS:=-Tkern.ld
 
 
@@ -28,11 +28,11 @@ SOURCE_S:=$(shell find . -type f -name '*.s')
 SOURCE_C:=$(shell find . -type f -name '*.c')
 SOURCE_ALL:=$(SOURCE_S) $(SOURCE_C)
 
-OBJ_S:=$(patsubst %.s,%.so,$(SOURCE_S))
-OBJ_C:=$(patsubst %.c,%.co,$(SOURCE_C))
+OBJ_S:=$(patsubst %.s,%.s.o,$(SOURCE_S))
+OBJ_C:=$(patsubst %.c,%.c.o,$(SOURCE_C))
 OBJ_ALL:=$(OBJ_S) $(OBJ_C)
 
-CLEAN:=$(wildcard out/*) $(shell find src -type f \( -iname '*.dep' -or -iname '*.so' -or -iname '*.co' -or -iname '*.inc' -or -iname '*.lst' \) )
+CLEAN:=$(wildcard out/*) $(shell find src -type f \( -iname '*.dep' -or -iname '*.o' -or -iname '*.inc' -or -iname '*.lst' \) )
 
 
 .PHONY: all clean kern
@@ -62,11 +62,11 @@ out/kern.elf: $(OBJ_ALL) kern.ld Makefile
 	$(LD) $(LDFLAGS) -o $@ $(OBJ_ALL)
 
 
-$(OBJ_C): %.co: %.c Makefile
-	$(CC) $(CFLAGS) -o $@ -Isrc/ -MP -MMD -MF $(<:%.c=%.dep) -c $<
+$(OBJ_C): %.c.o: %.c Makefile
+	$(CC) $(CFLAGS) -o $@ -Isrc/ -MP -MMD -MF $(<:%.c=%.c.dep) -c $<
 
-$(OBJ_S): %.so: %.s $(HEADERS_INC) Makefile
-	$(AS) $(ASFLAGS)  -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.dep) $<
+$(OBJ_S): %.s.o: %.s $(HEADERS_INC) Makefile
+	$(AS) $(ASFLAGS)  -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.s.dep) $<
 
 $(HEADERS_INC): %.inc: %.h Makefile
 	$(CC) $(CPPFLAGS) -E -o $@ $<

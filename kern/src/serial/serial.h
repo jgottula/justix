@@ -3,98 +3,124 @@
 
 #ifndef __ASSEMBLY__
 
-#define SER_115200  1
-#define SER_57600   2
-#define SER_38400   3
-#define SER_19200   6
-#define SER_9600   12
-#define SER_4800   24
-#define SER_2400   48
+#define SER_DIV_115200  1
+#define SER_DIV_57600   2
+#define SER_DIV_38400   3
+#define SER_DIV_19200   6
+#define SER_DIV_9600   12
+#define SER_DIV_4800   24
+#define SER_DIV_2400   48
 
-#define SER_5BIT 0b00
-#define SER_6BIT 0b01
-#define SER_7BIT 0b10
-#define SER_8BIT 0b11
-
-#define SER_PAR_NONE  0b000
-#define SER_PAR_ODD   0b001
-#define SER_PAR_EVEN  0b011
-#define SER_PAR_MARK  0b101
-#define SER_PAR_SPACE 0b111
-
-#define SER_1STOP 0b0
-#define SER_2STOP 0b1
-
-#define SER_8N1 (SER_8BIT | SER_PAR_NONE | SER_1STOP)
-
-#define SER_OFF_DLL 0x00 // rw dlab  divisor latch low byte
-#define SER_OFF_DLH 0x01 // rw dlab  divisor latch high byte
-#define SER_OFF_THR 0x00 //  w       transmitter holding buffer
-#define SER_OFF_RBR 0x00 // r        receiver buffer
-#define SER_OFF_IER 0x01 // rw       interrupt enable
-#define SER_OFF_IIR 0x02 // r        interrupt identification
-#define SER_OFF_FCR 0x02 //  w       fifo control
-#define SER_OFF_LCR 0x03 // rw       line control
-#define SER_OFF_MCR 0x04 // rw       modem control
-#define SER_OFF_LSR 0x05 // r        line status
-#define SER_OFF_MSR 0x06 // r        modem status
-#define SER_OFF_SR  0x07 // rw       scratch register
+#define SER_LCR_8N1 (LCR_WORD_8BIT | LCR_PAR_NONE)
 
 
-/* returns a bitmask of serial devices found (bit 0 = found serial 0) */
-uint8_t serial_detect(void);
-void serial_init(uint8_t dev, uint16_t divisor, uint8_t config);
-void serial_send_str(uint8_t dev, const char *str);
-void serial_send(uint8_t dev, char chr);
-char serial_recv(uint8_t dev);
+enum uart_bit {
+	IER_ALL        = 0b00001111,
+	IER_RBR_AVAIL  = _BV(0),
+	IER_THR_EMPTY  = _BV(1),
+	IER_LSR_CHG    = _BV(2),
+	IER_MSR_CHG    = _BV(3),
+	
+	IIR_INT_PEND   = _BV(0),
+	IIR_STATUS     = 0b00001111, // reset by:
+	IIR_MSR_CHG    = 0b00000000, // MSR read
+	IIR_THR_EMPTY  = 0b00000010, // IIR read / THR write
+	IIR_RBR_AVAIL  = 0b00000100, // RBR read
+	IIR_LSR_CHG    = 0b00000110, // LSR read
+	IIR_CHR_TMOUT  = 0b00001100, // RBR read
+	IIR_FIFO_IS64B = _BV(5),
+	IIR_FIFO_WORKS = _BV(6),
+	IIR_FIFO_EXIST = _BV(7),
+	
+	FCR_ENABLE     = _BV(0),
+	FCR_CLR_RX     = _BV(1),
+	FCR_CLR_TX     = _BV(2),
+	FCR_DMA_MODE   = _BV(3),
+	FCR_64B_ENABLE = _BV(5),
+	FCR_TRIG_LVL   = 0b11000000,
+	FCR_TRIG_1B    = 0b00000000,
+	FCR_TRIG_4B    = 0b01000000,
+	FCR_TRIG_8B    = 0b10000000,
+	FCR_TRIG_14B   = 0b11000000,
+	
+	LCR_WORD_LEN   = 0b00000011,
+	LCR_WORD_5BIT  = 0b00000000,
+	LCR_WORD_6BIT  = 0b00000001,
+	LCR_WORD_7BIT  = 0b00000010,
+	LCR_WORD_8BIT  = 0b00000011,
+	LCR_STOP_BITS  = _BV(2),
+	LCR_PARITY     = 0b00111000,
+	LCR_PAR_NONE   = 0b00000000,
+	LCR_PAR_ODD    = 0b00001000,
+	LCR_PAR_EVEN   = 0b00011000,
+	LCR_PAR_HIGH   = 0b00101000,
+	LCR_PAR_LOW    = 0b00111000,
+	LCR_BREAK      = _BV(6),
+	LCR_DLAB       = _BV(7),
+	
+	MCR_DTR        = _BV(0),
+	MCR_RTS        = _BV(1),
+	MCR_AUX_OUT1   = _BV(2),
+	MCR_AUX_OUT2   = _BV(3),
+	MCR_LOOPBACK   = _BV(4),
+	
+	LSR_RBR_AVAIL  = _BV(0),
+	LSR_ERR_OVER   = _BV(1),
+	LSR_ERR_PAR    = _BV(2),
+	LSR_ERR_FRAME  = _BV(3),
+	LSR_BREAK      = _BV(4),
+	LSR_THR_EMPTY  = _BV(5),
+	LSR_TXF_EMPTY  = _BV(6),
+	LSR_ERR_FIFO   = _BV(7),
+	
+	MSR_CTS_CHG    = _BV(0),
+	MSR_DSR_CHG    = _BV(1),
+	MSR_RI_TRAIL   = _BV(2),
+	MSR_CD_CHG     = _BV(3),
+	MSR_CTS        = _BV(4),
+	MSR_DSR        = _BV(5),
+	MSR_RING       = _BV(6),
+	MSR_CARRIER    = _BV(7),
+};
+
+enum uart_reg {
+	RBR = 0, // r
+	THR = 0, //  w
+	DLL = 0, // rw
+	IER = 1, // rw
+	DLM = 1, // rw
+	IIR = 2, // r
+	FCR = 2, //  w
+	LCR = 3, // rw
+	MCR = 4, // rw
+	LSR = 5, // r
+	MSR = 6, // r
+	SR  = 7, // rw
+};
+
+
+/* returns a bitmask of serial devices found (bit n = found dev n) */
+void serial_intr(void);
+uint8_t serial_init(void);
+void serial_config(uint8_t dev, uint16_t divisor, uint8_t lcr);
+void serial_send(uint8_t dev, uint8_t val);
+void serial_send_arr(uint8_t dev, uint32_t len, const uint8_t *arr);
+void serial_send_str(uint8_t dev, const uint8_t *str);
+bool serial_avail(uint8_t dev);
+bool serial_recv(uint8_t dev, uint8_t *val);
+void serial_flush(uint8_t dev);
 
 #else
 
-%assign SER_115200  1
-%assign SER_57600   2
-%assign SER_38400   3
-%assign SER_19200   6
-%assign SER_9600   12
-%assign SER_4800   24
-%assign SER_2400   48
-
-%assign SER_5BIT 0b00
-%assign SER_6BIT 0b01
-%assign SER_7BIT 0b10
-%assign SER_8BIT 0b11
-
-%assign SER_PAR_NONE  0b000
-%assign SER_PAR_ODD   0b001
-%assign SER_PAR_EVEN  0b011
-%assign SER_PAR_MARK  0b101
-%assign SER_PAR_SPACE 0b111
-
-%assign SER_1STOP 0b0
-%assign SER_2STOP 0b1
-
-%assign SER_8N1 (SER_8BIT | SER_PAR_NONE | SER_1STOP)
-
-%assign SER_OFF_DLL 0x00 ; rw dlab  divisor latch low byte
-%assign SER_OFF_DLH 0x01 ; rw dlab  divisor latch high byte
-%assign SER_OFF_THR 0x00 ;  w       transmitter holding buffer
-%assign SER_OFF_RBR 0x00 ; r        receiver buffer
-%assign SER_OFF_IER 0x01 ; rw       interrupt enable
-%assign SER_OFF_IIR 0x02 ; r        interrupt identification
-%assign SER_OFF_FCR 0x02 ;  w       fifo control
-%assign SER_OFF_LCR 0x03 ; rw       line control
-%assign SER_OFF_MCR 0x04 ; rw       modem control
-%assign SER_OFF_LSR 0x05 ; r        line status
-%assign SER_OFF_MSR 0x06 ; r        modem status
-%assign SER_OFF_SR  0x07 ; rw       scratch register
-
-extern serial_send_str
-
-%ifndef jgsys_kern_serial_serial
-extern serial_detect
+extern serial_intr
 extern serial_init
+extern serial_config
 extern serial_send
+extern serial_send_arr
+extern serial_send_str
+extern serial_avail
 extern serial_recv
-%endif
+extern serial_flush
 
 #endif
 

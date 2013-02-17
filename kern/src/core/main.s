@@ -1,16 +1,18 @@
 %include 'common/header.inc'
 %include 'core/main.inc'
+%include 'serial/serial.inc'
 	
 	section .text
 	
 	global kern_die:function
 kern_die:
-	; TODO: wait a bit before disabling interrupts to allow serial to flush
+	invoke serial_flush
 	
-	cli
+	;cli
 	hlt
 	
 	jmp $
+	
 	
 func user_test
 	
@@ -19,6 +21,8 @@ func user_test
 	nop
 	nop
 	int 0x80
+	
+	;jmp $
 	
 func_end
 	

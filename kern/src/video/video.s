@@ -1,8 +1,20 @@
 %include 'common/header.inc'
-%include 'lib/string.inc'
 %include 'video/video.inc'
+%include 'lib/string.inc'
+%include 'video/vid86.inc'
 	
 	section .text
+	
+func video_setup_v86
+	
+	
+	
+func_end
+	
+	
+	
+	
+	
 	
 	; NOTE: this stuff is all deprecated and should be replaced by the virtual
 	;       8086 monitor and video bios (int 0x10) calls

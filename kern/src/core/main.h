@@ -8,8 +8,8 @@ struct mem_map_entry {
 };
 
 
-extern void kern_syscall_stack_top;
-extern void kern_syscall_stack_bottom;
+extern void *kern_syscall_stack_top;
+extern void *kern_syscall_stack_bottom;
 
 extern struct mem_map_entry *mem_map;
 

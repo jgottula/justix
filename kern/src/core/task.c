@@ -1,7 +1,7 @@
-#include <core/task.h>
-#include <core/main.h>
-#include <core/gdt.h>
-#include <lib/string.h>
+#include "core/task.h"
+#include "core/main.h"
+#include "core/gdt.h"
+#include "lib/string.h"
 
 
 struct tss_entry tss_user;

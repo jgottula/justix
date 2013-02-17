@@ -3,6 +3,7 @@
 %include 'core/gdt.inc'
 %include 'core/idt.inc'
 %include 'core/main.inc'
+%include 'platform/pic.inc'
 %include 'lib/string.inc'
 	
 	section .text.init
@@ -34,8 +35,9 @@ kern_entry:
 	rep stosb
 	
 	call idt_setup
+	call pic_init
 	
-	;sti
+	sti
 	
 	call kern_main
 	

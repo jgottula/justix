@@ -1,6 +1,6 @@
-#include <bus/pci.h>
-#include <common/port.h>
-#include <lib/debug.h>
+#include "bus/pci.h"
+#include "common/port.h"
+#include "lib/debug.h"
 
 
 static uint16_t pci_read_config_word(uint8_t bus, uint8_t dev, uint8_t func,

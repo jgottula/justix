@@ -3,6 +3,10 @@
 
 #ifndef __ASSEMBLY__
 
+#define NULL 0
+
+#define _BV(_x) (1 << (_x))
+
 #else
 
 %assign true  1
@@ -37,7 +41,7 @@
 
 ; warning, CEIL will behave strangely if _x is zero
 %define CEIL(_x, _step) ((((_x) - 1) / (_step)) + 1)
-%define _BV(_x) (1 << _x)
+%define _BV(_x) (1 << (_x))
 
 %define param(_n) dword [ebp+(4*(_n+2))]
 %define local(_n) dword [ebp-(4*(_n))]

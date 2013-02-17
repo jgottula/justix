@@ -2,22 +2,42 @@
 %include 'core/idt.inc'
 %include 'core/gdt.inc'
 %include 'core/trap.inc'
+%include 'core/intr.inc'
 	
 	section .text
 	
 func idt_setup
-	invoke idt_setup_trap,0x06,trap_ud,0b10001111
-	invoke idt_setup_trap,0x08,trap_df,0b10001111
-	invoke idt_setup_trap,0x0d,trap_gp,0b10001111
+	save ebx
 	
-	invoke idt_setup_trap,0x80,trap_syscall,0b11101111
+	mov ebx,0x30
+	
+.fill_loop:
+	invoke idt_setup_gate,ebx,intr_bad,0b10001110
+	
+	inc ebx
+	cmp ebx,0x100
+	
+	jb .fill_loop
+	
+%assign irq 0
+%rep 0x10
+	invoke idt_setup_gate,0x20+irq,intr_irq%+irq,0b10001110
+%assign irq irq+1
+%endrep
+	
+	invoke idt_setup_gate,0x06,trap_ud,0b10001111
+	invoke idt_setup_gate,0x08,trap_df,0b10001111
+	invoke idt_setup_gate,0x0d,trap_gp,0b10001111
+	
+	invoke idt_setup_gate,0x80,trap_syscall,0b11101111
 	
 	lidt [idt_table.info]
 	
+	unsave ebx
 func_end
 	
 	
-func_priv idt_setup_trap
+func_priv idt_setup_gate
 	params index,addr,flag
 	
 	mov eax,[%$index]

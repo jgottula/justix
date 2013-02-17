@@ -1,14 +1,17 @@
-#include <lib/debug.h>
-#include <stdarg.h>
-#include <serial/serial.h>
+#include "lib/debug.h"
+#include "stdarg.h"
+#include "serial/serial.h"
+#include "common/port.h"
 
 
 void debug_write_chr(char chr) {
-	serial_send(0, chr);
+	outb(0xe9, chr);
 }
 
 void debug_write_str(const char *str) {
-	serial_send_str(0, str);
+	while (*str != '\0') {
+		debug_write_chr(*(str++));
+	}
 }
 
 void debug_write_fmt(const char *str, ...) {
@@ -37,8 +40,11 @@ void debug_write_fmt(const char *str, ...) {
 			case 'i':
 				debug_write_dec(va_arg(fmt, uint32_t));
 				break;
+			case 'c':
+				debug_write_chr((char)va_arg(fmt, uint32_t));
+				break;
 			case 's':
-				debug_write_str(va_arg(fmt, const char *));
+				debug_write_str((const char *)va_arg(fmt, uint32_t));
 				break;
 			default:
 				/* explicitly discard the next parameter of unknown type */

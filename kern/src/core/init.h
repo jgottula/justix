@@ -6,8 +6,8 @@
 #define MEM_MAP_OFFSET 0x7000
 
 
-extern void kern_init_stack_top;
-extern void kern_init_stack_bottom;
+extern void *kern_init_stack_top;
+extern void *kern_init_stack_bottom;
 
 #else
 

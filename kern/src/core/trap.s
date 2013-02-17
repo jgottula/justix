@@ -63,13 +63,6 @@ auto_trap      sx
 	
 trap trap_syscall
 	
-	; set IOPL to 0
-	pushf
-	pop eax
-	or eax,0x3000
-	push eax
-	popf
-	
 	invoke debug_write_fmt,str_syscall,[%$cs],[%$eip],[%$eflags]
 	
 	mov eax,[ebp]
