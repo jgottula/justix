@@ -18,6 +18,8 @@
 
 %define STACK_ADDR            0x7c00
 
+%define MBR_OFF_CODE          0x0050
+
 %define MBR_OFF_PTABLE        0x01b8
 %define MBR_OFF_PART1         0x01be
 %define MBR_OFF_PART2         0x01ce

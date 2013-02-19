@@ -12,6 +12,13 @@
 	
 	; from the bios:
 	; DL boot disk
+mbr_skip:
+	jmp mbr_init
+	
+	; zero-fill the FAT/DOS region so we don't confuse DOS/Windows
+mbr_bpb_fill:
+	fill_to MBR_OFF_CODE,0x00
+	
 mbr_init:
 	cli
 	
