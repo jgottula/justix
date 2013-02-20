@@ -59,14 +59,14 @@ out/kern.bin: out/kern.elf kern.ld Makefile
 	$(OBJCOPY) -S -O binary $< $@
 
 out/kern.elf: $(OBJ_ALL) kern.ld Makefile
-	$(LD) $(LDFLAGS) -o $@ $(OBJ_ALL)
+	$(LD) $(LDFLAGS) -Map=out/kern.ldmap -o $@ $(OBJ_ALL)
 
 
 $(OBJ_C): %.c.o: %.c Makefile
 	$(CC) $(CFLAGS) -o $@ -Isrc/ -MP -MMD -MF $(<:%.c=%.c.dep) -c $<
 
 $(OBJ_S): %.s.o: %.s $(HEADERS_INC) Makefile
-	$(AS) $(ASFLAGS)  -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.s.dep) $<
+	$(AS) $(ASFLAGS) -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.s.dep) $<
 
 $(HEADERS_INC): %.inc: %.h Makefile
 	$(CC) $(CPPFLAGS) -E -o $@ $<
