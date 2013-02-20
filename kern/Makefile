@@ -43,7 +43,7 @@ CLEAN:=$(wildcard out/*) $(shell find src -type f \( -iname '*.dep' -or -iname '
 # default rule
 all: kern
 
-kern: out/kern.bin out/kern.elf out/kern.map out/kern.dump
+kern: out/kern.bin out/kern.elf out/kern.debug out/kern.map out/kern.dump
 
 clean:
 	rm -rf $(CLEAN)
@@ -55,8 +55,11 @@ out/kern.dump: out/kern.elf Makefile
 out/kern.map: out/kern.elf Makefile
 	$(NM) -Cn $< >$@
 
-out/kern.bin: out/kern.elf kern.ld Makefile
+out/kern.debug: out/kern.elf Makefile
 	$(OBJCOPY) -S -O binary $< $@
+
+out/kern.bin: out/kern.elf kern.ld Makefile
+	$(OBJCOPY) --only-keep-debug $< $@
 
 out/kern.elf: $(OBJ_ALL) kern.ld Makefile
 	$(LD) $(LDFLAGS) -Map=out/kern.ldmap -o $@ $(OBJ_ALL)
