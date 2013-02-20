@@ -50,7 +50,7 @@ clean:
 
 
 out/kern.dump: out/kern.elf Makefile
-	$(OBJDUMP) -aCdfhp -M intel-mnemonic,i386 $< >$@
+	$(OBJDUMP) -aCdfhpS -M intel-mnemonic,i386 $< >$@
 
 out/kern.map: out/kern.elf Makefile
 	$(NM) -Cn $< >$@
@@ -64,9 +64,10 @@ out/kern.elf: $(OBJ_ALL) kern.ld Makefile
 
 $(OBJ_C): %.c.o: %.c Makefile
 	$(CC) $(CFLAGS) -o $@ -Isrc/ -MP -MMD -MF $(<:%.c=%.c.dep) -c $<
+	$(OBJDUMP) -CdS -M intel-mneumonic,i386 $@ >$(<:%.c=%.c.lst)
 
 $(OBJ_S): %.s.o: %.s $(HEADERS_INC) Makefile
-	$(AS) $(ASFLAGS) -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.lst) -MD $(<:%.s=%.s.dep) $<
+	$(AS) $(ASFLAGS) -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.s.lst) -MD $(<:%.s=%.s.dep) $<
 
 $(HEADERS_INC): %.inc: %.h Makefile
 	$(CC) $(CPPFLAGS) -E -o $@ $<
