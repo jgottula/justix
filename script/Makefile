@@ -12,19 +12,17 @@ INCLUDE:=../../jgfs/src/
 
 SETUP_LIBS:=
 INSTALL_LIBS:=-lbsd -ludev
-TEST_LIBS:=
 
 COMMON_OBJS=src/common.o
 
 
-.PHONY: all clean setup install test
+.PHONY: all clean setup install
 
 # default rule
-all: setup install test
+all: setup install
 
 setup:   bin/setup
 install: bin/install
-test:    bin/test
 
 clean:
 	rm -rf $(wildcard bin/*) $(wildcard src/*.o) $(wildcard src/*.dep)
@@ -34,8 +32,6 @@ bin/setup: src/setup.o $(COMMON_OBJS)
 	$(CC) $(CFLAGS) $(SETUP_LIBS) -o $@ $^
 bin/install: src/install.o $(COMMON_OBJS)
 	$(CC) $(CFLAGS) $(INSTALL_LIBS) -o $@ $^
-bin/test: src/test.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $(TEST_LIBS) -o $@ $^
 
 
 %.o: %.c Makefile
