@@ -1,4 +1,18 @@
+justix
 todo list
+
+
+build:
+- switch from make to redo
+  - boot/Makefile
+  - script/Makefile
+  - kern/Makefile
+  - Makefile
+
+script:
+- new script: process map file for use by stack trace
+  - also copy this to the fs in test/install
+  - maybe just use .symtab from the elf binary?
 
 stage2:
 - serial
@@ -7,10 +21,23 @@ stage2:
   - timeout if no keypresses/serial in time; then, use default
   - load the default from 'boot.txt' or something (if absent, use '')
   - serial/kbd will edit the preexisting default, or maybe just print it?
+  - parameters:
+    - serial: ...
+    - keyboard: ...
+    - root device: by jgfs label (default: 'justix')
+- jgfs2:
+  - verify that compression is off for boot files
 
 kern:
-- rename?
-- use redo instead of make
+- stage2 -> kern communication
+  - make a struct for this
+    - pass only the addr to the struct in a register
+    - this way, it can be anywhere in memory
+  - memory map
+    - add: which bios call(s) were used
+  - symbol map file
+  - command line
+  - kernel image size
 - stack trace: print function parameters as much as possible (hex dwords)
   - parse the dwarf in the elf file to get parameter info and add this to the
     map file that we're parsing for function names
@@ -18,34 +45,36 @@ kern:
     stack locals will be printed as params!
   - simple solution: limit to maximum of ~10 (less if we know there are less),
     and print in order (later params may be garbage)
-- new script: process map file and write to jgfs
-  - in stage2: also load map file (if present) and place at known address
-- also communicate from stage2: size of kernel
-- write exception handlers
-  - generate basic map file, write to jgfs, parse for textual trace!
 - video
   - virtual 8086 monitor for video bios interrupts
 - serial
+  - flush
   - RTS
   - CTS
-  - check FIFO/nofifo functionality
+  - simplify: enable fifo, but behave as though there isn't one
+    - adjust initialization sequence accordingly
+    - disable unneeded interrupts or other stuff
+    - probably don't need to use model info (probably still collect it)
 - gdb serial support
 - paging
+  - mmio
 - atapi
-- memory-mapped file IO
-- jgfs support
+- jgfs
 - timeout mechanism
   - call function with timeout and a buffer to set when the timeout trips
   - in the wait loop, continually check the buffer
   - deactivate the timeout upon successful completion
 - profiling mechanism
-  - use perf counters or pit
+  - use perf counters or the prog interval timer
   - print difference in count after function call
-- kernel memory allocator (algorithm?)
+- kernel memory allocator (algo?)
 - mmx memcpy
+- rewrite lib routines in assembly
 - syscall api
 - port newlib
-- shell
+- in-kernel shell
+- device abstraction layer
+- vfs layer
 
 features that would be cool:
 - self-update (read serial, write to zipdisk)
