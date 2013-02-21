@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_CORE_IDT
-#define JGSYS_KERN_CORE_IDT
+#ifndef JUSTIX_KERN_CORE_IDT
+#define JUSTIX_KERN_CORE_IDT
 
 #ifndef __ASSEMBLY__
 
@@ -19,7 +19,7 @@ extern struct idt_entry idt_table;
 
 #else
 
-%ifndef jgsys_kern_core_idt
+%ifndef justix_kern_core_idt
 extern idt_table
 
 extern idt_setup

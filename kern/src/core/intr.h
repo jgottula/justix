@@ -1,11 +1,11 @@
-#ifndef JGSYS_KERN_CORE_INTR
-#define JGSYS_KERN_CORE_INTR
+#ifndef JUSTIX_KERN_CORE_INTR
+#define JUSTIX_KERN_CORE_INTR
 
 #ifndef __ASSEMBLY__
 
 #else
 
-%ifndef jgsys_kern_core_intr
+%ifndef justix_kern_core_intr
 extern intr_irq0
 extern intr_irq1
 extern intr_irq2

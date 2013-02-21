@@ -1,4 +1,4 @@
-# jgsys
+# justix: hub makefile
 # (c) 2013 Justin Gottula
 # The source code of this project is distributed under the terms of the
 # simplified BSD license. See the LICENSE file for details.
@@ -24,4 +24,4 @@ clean:
 	$(MAKE) -C script clean
 
 backup:
-	cd .. && tar -acvf backup/jgsys-$(TIMESTAMP).tar.xz jgsys/
+	cd .. && tar -acvf backup/justix-$(TIMESTAMP).tar.xz justix/

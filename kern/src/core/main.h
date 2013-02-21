@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_CORE_MAIN
-#define JGSYS_KERN_CORE_MAIN
+#ifndef JUSTIX_KERN_CORE_MAIN
+#define JUSTIX_KERN_CORE_MAIN
 
 #ifndef __ASSEMBLY__
 
@@ -25,7 +25,7 @@ extern kern_mem_map
 
 extern kern_main
 
-%ifndef jgsys_kern_core_main
+%ifndef justix_kern_core_main
 extern kern_syscall_stack_top
 extern kern_syscall_stack_bottom
 

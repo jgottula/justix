@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_LIB_DEBUG
-#define JGSYS_KERN_LIB_DEBUG
+#ifndef JUSTIX_KERN_LIB_DEBUG
+#define JUSTIX_KERN_LIB_DEBUG
 
 #ifndef __ASSEMBLY__
 
@@ -26,7 +26,7 @@ extern debug_write_dec
 extern debug_dump_saved_reg
 extern debug_dump_mem
 
-%ifndef jgsys_kern_lib_debug
+%ifndef justix_kern_lib_debug
 extern debug_stack_trace
 %endif
 

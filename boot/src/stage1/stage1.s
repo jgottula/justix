@@ -200,7 +200,7 @@ stage1_data:
 .jgfs:
 	db JGFS_MAGIC,JGFS_VER_MAJOR,JGFS_VER_MINOR
 .msg_hello:
-	strz `JGSYS STAGE1`
+	strz `justix stage1`
 .msg_err_param:
 	strz `Param failed`
 .msg_err_read:

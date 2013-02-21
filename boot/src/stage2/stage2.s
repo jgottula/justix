@@ -191,7 +191,7 @@ stage2_stop:
 	
 stage2_data:
 .msg_hello:
-	strz `JGSYS STAGE2`
+	strz `justix stage2`
 .msg_err_a20:
 	strz `A20 gate could not be enabled`
 .msg_err_mem:

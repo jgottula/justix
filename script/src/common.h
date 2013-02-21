@@ -1,5 +1,5 @@
-#ifndef JGSYS_SCRIPT_COMMON_H
-#define JGSYS_SCRIPT_COMMON_H
+#ifndef JUSTIX_SCRIPT_COMMON_H
+#define JUSTIX_SCRIPT_COMMON_H
 
 
 enum run_flag {

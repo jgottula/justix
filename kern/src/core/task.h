@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_CORE_TASK
-#define JGSYS_KERN_CORE_TASK
+#ifndef JUSTIX_KERN_CORE_TASK
+#define JUSTIX_KERN_CORE_TASK
 
 #ifndef __ASSEMBLY__
 
@@ -42,7 +42,7 @@ void task_enter_ring3(void *addr);
 
 extern tss_init
 
-%ifndef jgsys_kern_core_task
+%ifndef justix_kern_core_task
 extern user_stack_top
 extern user_stack_bottom
 

@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_BUS_PCI
-#define JGSYS_KERN_BUS_PCI
+#ifndef JUSTIX_KERN_BUS_PCI
+#define JUSTIX_KERN_BUS_PCI
 
 #ifndef __ASSEMBLY__
 

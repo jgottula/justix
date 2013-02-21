@@ -64,7 +64,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 
 /* argp structures */
-static const char doc[] = "Set up a loop device for jgsys testing.";
+static const char doc[] = "Set up a loop device for justix testing.";
 static const char args_doc[] = "";
 static struct argp_option options[] = {
 	{ NULL, 0, NULL, 0, "path parameters:", 1 },

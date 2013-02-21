@@ -98,7 +98,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 
 /* argp structures */
-static const char doc[] = "Install jgsys to a device partition for testing.";
+static const char doc[] = "Install justix to a device partition for testing.";
 static const char args_doc[] = "[PARTITION] [DEVICE]";
 static struct argp_option options[] = {
 	{ NULL, 0, NULL, 0, "Device names may be symlinks or omit /dev.", 1 },
@@ -308,7 +308,7 @@ bool check_jgfs_mount(const char *mount_dir) {
 
 void install_kern(void) {
 	char *mount_dir;
-	if ((mount_dir = tempnam(NULL, "jgsys")) == NULL) {
+	if ((mount_dir = tempnam(NULL, "justix")) == NULL) {
 		errx(1, "could not generate a temporary mount dir name");
 	}
 	

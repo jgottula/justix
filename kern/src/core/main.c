@@ -15,7 +15,7 @@ void kern_main(void) {
 	serial_config(0, SER_DIV_115200, SER_LCR_8N1);
 	pic_enable(4);
 	
-	debug_write_fmt("JGSYS kern\nCompiled: "
+	debug_write_fmt("justix kern\nCompiled: "
 		VER_COMPILE_DATE " " VER_COMPILE_TIME "\n");
 	
 	//pci_enum();

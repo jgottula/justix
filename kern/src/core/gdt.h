@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_CORE_GDT
-#define JGSYS_KERN_CORE_GDT
+#ifndef JUSTIX_KERN_CORE_GDT
+#define JUSTIX_KERN_CORE_GDT
 
 #ifndef __ASSEMBLY__
 
@@ -61,7 +61,7 @@ extern struct gdt_entry gdt_table;
 %assign SEL_USER_CODE 0x20
 %assign SEL_TSS       0x28
 
-%ifndef jgsys_kern_core_gdt
+%ifndef justix_kern_core_gdt
 extern gdt_table
 
 extern gdt_setup

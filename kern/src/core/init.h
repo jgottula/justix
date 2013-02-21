@@ -1,5 +1,5 @@
-#ifndef JGSYS_KERN_CORE_INIT
-#define JGSYS_KERN_CORE_INIT
+#ifndef JUSTIX_KERN_CORE_INIT
+#define JUSTIX_KERN_CORE_INIT
 
 #ifndef __ASSEMBLY__
 
@@ -16,7 +16,7 @@ extern void *kern_init_stack_bottom;
 extern _BSS_START
 extern _BSS_SIZE
 
-%ifndef jgsys_kern_core_init
+%ifndef justix_kern_core_init
 extern kern_entry
 
 extern kern_init_stack_top

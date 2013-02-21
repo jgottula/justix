@@ -114,7 +114,7 @@ mbr_stop:
 	
 mbr_data:
 .msg_hello:
-	strz `JGSYS MBR`
+	strz `justix mbr`
 .msg_err_noactive:
 	strz `No active partition`
 .msg_err_read:

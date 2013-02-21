@@ -31,7 +31,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 
 /* argp structures */
-static const char doc[] = "Run a test of jgsys.";
+static const char doc[] = "Run a test of justix.";
 static const char args_doc[] = "";
 static struct argp_option options[] = {
 	{ NULL, 0, NULL, 0, "options:", 1 },

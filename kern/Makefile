@@ -1,4 +1,4 @@
-# jgsys: kern
+# justix: kern
 # (c) 2013 Justin Gottula
 # The source code of this project is distributed under the terms of the
 # simplified BSD license. See the LICENSE file for details.
@@ -70,7 +70,7 @@ $(OBJ_C): %.c.o: %.c Makefile
 	$(OBJDUMP) -CdS -M intel-mneumonic,i386 $@ >$(<:%.c=%.c.lst)
 
 $(OBJ_S): %.s.o: %.s $(HEADERS_INC) Makefile
-	$(AS) $(ASFLAGS) -o $@ -isrc/ -D$(subst src,jgsys_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.s.lst) -MD $(<:%.s=%.s.dep) $<
+	$(AS) $(ASFLAGS) -o $@ -isrc/ -D$(subst src,justix_kern,$(subst /,_,$(<:.s=))) -l$(<:%.s=%.s.lst) -MD $(<:%.s=%.s.dep) $<
 
 $(HEADERS_INC): %.inc: %.h Makefile
 	$(CC) $(CPPFLAGS) -E -o $@ $<
