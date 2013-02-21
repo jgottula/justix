@@ -144,18 +144,8 @@ void serial_intr(void) {
 		
 		debug_write_fmt("serial: dev %xb iir %xb\n", dev, iir);
 		
-		debug_write_fmt("serial: dev %xb rx buf len %xd:\n",
+		debug_write_fmt("serial: dev %xb rx buf len %xd\n",
 			dev, port->rx_buf.len);
-		for (uint32_t idx = port->rx_buf.begin, len = port->rx_buf.len;
-			len != 0; serial_buf_adv(&idx), --len) {
-			debug_write_fmt("%xb ", port->rx_buf.data[idx]);
-		}
-		debug_write_chr('\n');
-		for (uint32_t idx = port->rx_buf.begin, len = port->rx_buf.len;
-			len != 0; serial_buf_adv(&idx), --len) {
-			debug_write_fmt("'%c' ", port->rx_buf.data[idx]);
-		}
-		debug_write_chr('\n');
 	}
 }
 
