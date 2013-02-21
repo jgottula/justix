@@ -428,7 +428,7 @@ int main(int argc, char **argv) {
 	}
 	
 	warnx("making new jgfs on '%s'", param.part_path);
-	run(RF_SUDO | RF_FATAL, MKFS_PATH " -Z %s", param.part_path);
+	run(RF_SUDO | RF_FATAL, MKFS_PATH " -Z -L justix %s", param.part_path);
 	
 	int dev_fd  = -1;
 	int part_fd = -1;
