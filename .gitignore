@@ -5,6 +5,5 @@ boot/out/
 kern/out/
 kern/src/*/*.inc
 kern/src/*/*.lst
-kern/src/*/*.[cs]o
 script/bin/
 test/*.img
