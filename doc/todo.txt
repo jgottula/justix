@@ -1,22 +1,51 @@
 todo list
 
+stage2:
+- serial
+- keyboard
+- kernel command line
+  - timeout if no keypresses/serial in time; then, use default
+  - load the default from 'boot.txt' or something (if absent, use '')
+  - serial/kbd will edit the preexisting default, or maybe just print it?
+
 kern:
+- rename?
+- use redo instead of make
+- stack trace: print function parameters as much as possible (hex dwords)
+  - parse the dwarf in the elf file to get parameter info and add this to the
+    map file that we're parsing for function names
+  - if we naively assume that stack values in frames are params, then huge
+    stack locals will be printed as params!
+  - simple solution: limit to maximum of ~10 (less if we know there are less),
+    and print in order (later params may be garbage)
+- new script: process map file and write to jgfs
+  - in stage2: also load map file (if present) and place at known address
+- also communicate from stage2: size of kernel
 - write exception handlers
-  - stack trace
+  - generate basic map file, write to jgfs, parse for textual trace!
 - video
   - virtual 8086 monitor for video bios interrupts
 - serial
-  - input
-  - interrupts
+  - RTS
+  - CTS
+  - check FIFO/nofifo functionality
 - gdb serial support
 - paging
 - atapi
+- memory-mapped file IO
+- jgfs support
+- timeout mechanism
+  - call function with timeout and a buffer to set when the timeout trips
+  - in the wait loop, continually check the buffer
+  - deactivate the timeout upon successful completion
 - profiling mechanism
   - use perf counters or pit
   - print difference in count after function call
+- kernel memory allocator (algorithm?)
 - mmx memcpy
 - syscall api
 - port newlib
+- shell
 
 features that would be cool:
 - self-update (read serial, write to zipdisk)
