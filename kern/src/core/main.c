@@ -29,8 +29,7 @@ void kern_main(void) {
 		uint8_t rx;
 		
 		while (!serial_recv(0, &rx));
-		
-		debug_write_fmt("main: got %xb '%c'\n", rx, rx);
+		serial_send(0, rx);
 		
 		*(vid++) = rx;
 		*(vid++) = 0x07;
