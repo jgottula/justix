@@ -12,7 +12,7 @@ void debug_write_hex32(uint32_t hex);
 void debug_write_dec(uint32_t dec);
 void debug_stack_trace(void *base_ptr);
 void debug_dump_saved_reg(uint32_t *regs);
-void debug_dump_mem(void *addr, uint32_t len);
+void debug_dump_mem(const void *addr, uint32_t len);
 
 #else
 

@@ -121,7 +121,7 @@ void debug_dump_saved_reg(uint32_t *regs) {
 	debug_write_fmt("eflags %xd\n", regs[8]);
 }
 
-void debug_dump_mem(void *addr, uint32_t len) {
+void debug_dump_mem(const void *addr, uint32_t len) {
 	uintptr_t start = (uintptr_t)addr;
 	uintptr_t end   = (uintptr_t)((uint8_t *)addr + len);
 	
@@ -136,7 +136,7 @@ void debug_dump_mem(void *addr, uint32_t len) {
 	
 	debug_write_fmt("mem dump @ %xd (len %xd):\n", addr, len);
 	
-	uint8_t *ptr = (uint8_t *)start;
+	const uint8_t *ptr = (const uint8_t *)start;
 	uint32_t i   = 0;
 	
 	while (ptr != (uint8_t *)end) {
