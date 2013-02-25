@@ -3,6 +3,10 @@
 
 #ifndef __ASSEMBLY__
 
+
+#include <stdnoreturn.h>
+
+
 struct mem_map_entry {
 	
 };
@@ -15,7 +19,7 @@ extern struct mem_map_entry *mem_map;
 
 
 void kern_main(void);
-void kern_die(void);
+noreturn void kern_die(void);
 
 void user_test(void);
 
