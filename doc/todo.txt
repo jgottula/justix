@@ -2,6 +2,9 @@ justix
 todo list
 
 
+toolchain:
+- fix the PKGBUILD so binutils isn't at a stupid prefix
+
 build:
 - switch from make to redo
   - boot/Makefile
@@ -30,6 +33,8 @@ stage2:
 
 kern:
 - stage2 -> kern communication
+  - have a look at http://www.cs.fsu.edu/~baker/devices/lxr/http/source/linux/
+    Documentation/x86/zero-page.txt
   - make a struct for this
     - pass only the addr to the struct in a register
     - this way, it can be anywhere in memory
