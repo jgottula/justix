@@ -1,0 +1,17 @@
+justix
+hw ideas
+
+atapi:
+- support zip disks primarily
+
+video:
+- basic graphics support
+
+ethernet:
+- rudimentary network support
+
+modem:
+- networking (dial in to another modem card)
+
+usb:
+- mass storage device
