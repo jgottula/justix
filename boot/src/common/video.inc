@@ -3,6 +3,7 @@
 ; The source code of this project is distributed under the terms of the
 ; simplified BSD license. See the LICENSE file for details.
 
+
 %define BLACK     0b0000
 %define BLUE      0b0001
 %define GREEN     0b0010

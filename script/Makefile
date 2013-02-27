@@ -1,7 +1,8 @@
-# justix: scripts
+# justix
 # (c) 2013 Justin Gottula
 # The source code of this project is distributed under the terms of the
 # simplified BSD license. See the LICENSE file for details.
+
 
 CC:=ccache gcc
 CFLAGS:=-std=gnu11 -O0 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -include stdbool.h -include stdint.h

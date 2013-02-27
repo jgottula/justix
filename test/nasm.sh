@@ -4,6 +4,7 @@
 # The source code of this project is distributed under the terms of the
 # simplified BSD license. See the LICENSE file for details.
 
+
 usage() {
   echo "usage: $0 [16|32]"
   exit 1
