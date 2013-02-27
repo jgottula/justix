@@ -1,3 +1,8 @@
+; justix
+; (c) 2013 Justin Gottula
+; The source code of this project is distributed under the terms of the
+; simplified BSD license. See the LICENSE file for details.
+
 	; CF clear if A20 enabled
 stage2_test_a20:
 	cli

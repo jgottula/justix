@@ -1,3 +1,8 @@
+; justix
+; (c) 2013 Justin Gottula
+; The source code of this project is distributed under the terms of the
+; simplified BSD license. See the LICENSE file for details.
+
 	; CF clear on success
 stage2_mem_e820:
 	mov edx,0x534d4150
