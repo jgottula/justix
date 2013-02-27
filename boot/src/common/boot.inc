@@ -1,3 +1,8 @@
+; justix
+; (c) 2013 Justin Gottula
+; The source code of this project is distributed under the terms of the
+; simplified BSD license. See the LICENSE file for details.
+
 %define MBR_OFFSET            0x0c00
 %define JGFS_SECT_OFFSET      0x0e00
 %define JGFS_CLUST_OFFSET     0x1000

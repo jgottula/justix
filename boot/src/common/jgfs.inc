@@ -1,3 +1,8 @@
+; justix
+; (c) 2013 Justin Gottula
+; The source code of this project is distributed under the terms of the
+; simplified BSD license. See the LICENSE file for details.
+
 %define JGFS_MAGIC          `JGFS`
 %define JGFS_VER_MAJOR        0x04
 %define JGFS_VER_MINOR        0x01
